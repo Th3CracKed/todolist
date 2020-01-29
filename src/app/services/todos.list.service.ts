@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Item } from '../models';
+import { TodoList } from '../models';
 import { Observable } from 'rxjs';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root'
 })
-export class TodoService {
-    private todos$: AngularFirestoreCollection<Item>;
+export class TodosListService {
+    private todos$: AngularFirestoreCollection<TodoList>;
 
     constructor(private db: AngularFirestore) {
-        this.todos$ = this.db.collection<Item>('/todos');
+        this.todos$ = this.db.collection<TodoList>('/todoLists');
      }
     
-    get(): Observable<Item[]>{
+    get(): Observable<TodoList[]>{
       return this.todos$.valueChanges();
     }
   
-    add(item: Item) {
+    add(item: TodoList) {
         this.todos$.add(item);
     }
   

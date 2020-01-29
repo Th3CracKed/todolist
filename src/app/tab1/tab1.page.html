@@ -12,7 +12,7 @@
     <ion-item-sliding *ngFor="let item of list$ | async; let i = index">
       <ion-item>
         <ion-label>
-          <h2>{{ item.title }} </h2>
+          <h2>{{ item?.title }} </h2>
         </ion-label>
       </ion-item>
 
@@ -25,6 +25,6 @@
   </ion-list>
   <section>   
   <ion-button expand="block" [routerDirection]="'root'"
-  [routerLink]="'/addtodo'">Add a New Item</ion-button>
+  [routerLink]="'/list/add'">Add a New Item</ion-button>
   </section>
 </ion-content>
