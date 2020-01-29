@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { List } from '../models';
+import { TodoService } from '../services/todo.service';
 
 @Component({
   selector: 'app-tab1',
@@ -7,6 +9,16 @@ import { Component } from '@angular/core';
 })
 export class Tab1Page {
 
-  constructor() {}
+  list: List;
 
+  constructor(private listService: TodoService) {}
+
+  ngOnInit(): void {
+    this.list = this.listService.get();
+  }  
+
+  delete(pos: number){
+    this.listService.delete(pos);
+    this.listService.get();
+  }
 }
