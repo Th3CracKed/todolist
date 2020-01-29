@@ -9,7 +9,15 @@ const routes: Routes = [
   {
     path: 'addtodo',
     loadChildren: () => import('./addtodo/addtodo.module').then( m => m.AddtodoPageModule)
+  },  {
+    path: 'help',
+    loadChildren: () => import('./tutorial/help/help.module').then( m => m.HelpPageModule)
+  },
+  {
+    path: 'main',
+    loadChildren: () => import('./home/main/main.module').then( m => m.MainPageModule)
   }
+
 ];
 @NgModule({
   imports: [
