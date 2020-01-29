@@ -1,0 +1,26 @@
+<ion-header translucent>
+    <ion-toolbar>
+        <ion-title>TODO APP</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen padding scroll-y="false">
+
+    <ion-slides pager>
+
+        <ion-slide>
+            <img src="../../../assets/survey.png"/>
+            <h2>Bienvenue sur <b>TODO APP</b></h2>
+            <p>Ce <b>gestionnaire de tâches</b> est parfait pour améliorer votre productivité.</p>
+        </ion-slide>
+
+        <ion-slide>
+            <img src="../../../assets/startup.png"/>
+            <h2>La productivité mise en orbite !</h2>
+          <p><b>Gagnez du temps</b> avec nos dernières technologies de machine learning (<b>a.k.a if else</b>).</p>
+          <ion-button fill="clear" [routerLink]="'/main'">Continuer<ion-icon slot="end" name="arrow-forward"></ion-icon></ion-button>
+        </ion-slide>
+
+    </ion-slides>
+
+</ion-content>
