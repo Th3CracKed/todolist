@@ -1,25 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Item, List } from '../models';
-
+import { Item } from '../models';
+import { Observable } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TodoService {
+    private todos$: AngularFirestoreCollection<Item>;
 
-    list = { id: '1', title: 'Ma Liste', items: [{ id: '1', title: 'Faire à manger', isDone: true } as Item, { id: '2', title: 'Faire le ménage', isDone: false } as Item] } as List
-
-    constructor() { }
+    constructor(private db: AngularFirestore) {
+        this.todos$ = this.db.collection<Item>('/todos');
+     }
     
-    get(): List {
-      return this.list;
+    get(): Observable<Item[]>{
+      return this.todos$.valueChanges();
     }
   
     add(item: Item) {
-      this.list.items.push(item);
+        this.todos$.add(item);
     }
   
     delete(pos: number){
-      this.list.items.splice(pos, 1);
+    //   this.[].items.splice(pos, 1);
+        console.log('delete '+pos);
     }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { List } from '../models';
+import { Item, List } from '../models';
 import { TodoService } from '../services/todo.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tab1',
@@ -9,16 +10,15 @@ import { TodoService } from '../services/todo.service';
 })
 export class Tab1Page {
 
-  list: List;
+  list$: Observable<Item[]>;
 
   constructor(private listService: TodoService) {}
 
   ngOnInit(): void {
-    this.list = this.listService.get();
+    this.list$ = this.listService.get();
   }  
 
   delete(pos: number){
     this.listService.delete(pos);
-    this.listService.get();
   }
 }

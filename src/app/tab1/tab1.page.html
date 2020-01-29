@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      {{ list.title }}
+      Home
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,10 +9,10 @@
 
 <ion-content fullscreen>
   <ion-list>
-    <ion-item-sliding *ngFor="let item of list.items; let i = index">
+    <ion-item-sliding *ngFor="let item of list$ | async; let i = index">
       <ion-item>
         <ion-label>
-          <h2>{{ item.title }}</h2>
+          <h2>{{ item.title }} </h2>
         </ion-label>
       </ion-item>
 
