@@ -1,45 +1,93 @@
 <ion-content>
-  <ion-menu side="start">
-    <ion-header>
-      <ion-toolbar translucent>
-        <ion-title>TODO APP</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item>
-          <ion-icon name="home" slot="start"></ion-icon>
-          <ion-label>Mes tâches</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="person" slot="start"></ion-icon>
-          <ion-label>Mon Compte</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="settings" slot="start"></ion-icon>
-          <ion-label>Settings</ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
-
-  <div class="ion-page" main>
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Mes tâches</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-
-<!--      Content of main page is here-->
-
-<!--      Content of main page is here-->
+    <ion-menu side="start">
+        <ion-header>
+            <ion-toolbar translucent>
+                <ion-title>TODO APP</ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-list>
+                <ion-item>
+                    <ion-icon name="home" slot="start"></ion-icon>
+                    <ion-label>Mes tâches</ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-icon name="person" slot="start"></ion-icon>
+                    <ion-label>Mon Compte</ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-icon name="settings" slot="start"></ion-icon>
+                    <ion-label>Paramètres</ion-label>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-menu>
 
 
-    </ion-content>
-  </div>
+    <div class="ion-page" main>
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-menu-button></ion-menu-button>
+                </ion-buttons>
+                <ion-title>Mes tâches</ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+            <!--      Content of main page is here-->
 
+            <ion-searchbar placeholder="Rechercher une note"></ion-searchbar>
+
+
+            <!--          list of todos-->
+
+            <ion-card>
+                <ion-item>
+                    <ion-icon name="person" slot="start"></ion-icon>
+                    <ion-label>Ma todo titre</ion-label>
+                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
+                        <ion-icon slot="icon-only" name="settings"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </ion-card>
+
+            <ion-card>
+                <ion-item>
+                    <ion-icon name="person" slot="start"></ion-icon>
+                    <ion-label>Ma todo titre 2</ion-label>
+                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
+                        <ion-icon slot="icon-only" name="settings"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </ion-card>
+
+            <ion-card>
+                <ion-item>
+                    <ion-icon name="people" slot="start"></ion-icon>
+                    <ion-label>Ma todo titre collab</ion-label>
+
+                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
+                        <ion-icon slot="icon-only" name="settings"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </ion-card>
+
+
+            <ion-card>
+                <ion-item>
+                    <ion-icon name="person" slot="start"></ion-icon>
+                    <ion-label>Ma todo titre 4</ion-label>
+                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
+                        <ion-icon slot="icon-only" name="settings"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </ion-card>
+
+            <!--      Content of main page is here-->
+
+            <!--          Quand l'utilisateur clique sur settings-->
+            <!--          <ion-action-sheet-controller></ion-action-sheet-controller>-->
+
+        </ion-content>
+    </div>
 </ion-content>
