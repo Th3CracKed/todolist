@@ -16,6 +16,10 @@ const routes: Routes = [
   {
     path: 'main',
     loadChildren: () => import('./home/main/main.module').then( m => m.MainPageModule)
+  },
+  {
+    path: 'addlist',
+    loadChildren: () => import('./home/addlist/addlist.module').then( m => m.AddlistPageModule)
   }
 
 ];
