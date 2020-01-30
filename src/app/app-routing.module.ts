@@ -9,7 +9,12 @@ const routes: Routes = [
   {
     path: 'list/add',
     loadChildren: () => import('./addList/addList.module').then( m => m.AddListPageModule)
+  },
+  {
+    path: 'list/:id',
+    loadChildren: () => import('./todos-list/todos-list.module').then( m => m.TodosListPageModule)
   }
+
 ];
 @NgModule({
   imports: [
