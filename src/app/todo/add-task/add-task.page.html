@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tasks"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Ajouter une tâche</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Nouvelle tâche</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Nom de la tâche</ion-label>
+        <ion-input></ion-input>
+      </ion-item>
+      <div class="ion-margin-vertical">
+        <ion-button expand="block" fill="blank" color="secondary"  [routerLink]="'/tasks'">Annuler</ion-button> <!--TODO clean input value?-->
+        <ion-button expand="block" color="primary">Créer</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>
