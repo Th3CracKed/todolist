@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-main',
@@ -8,7 +9,8 @@ import {ActionSheetController, AlertController, ToastController} from '@ionic/an
 })
 export class MainPage implements OnInit {
 
-    constructor(public actionSheetController: ActionSheetController, public toastController: ToastController, public alertController: AlertController) {
+    constructor(public actionSheetController: ActionSheetController, public toastController: ToastController,
+                public alertController: AlertController, private router: Router) {
     }
 
     ngOnInit() {
@@ -84,5 +86,6 @@ export class MainPage implements OnInit {
 
     openList() {
         console.log('route to new page');
+        this.router.navigateByUrl('/tasks');
     }
 }

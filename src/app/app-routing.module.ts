@@ -20,6 +20,14 @@ const routes: Routes = [
   {
     path: 'addlist',
     loadChildren: () => import('./home/addlist/addlist.module').then( m => m.AddlistPageModule)
+  },
+  {
+    path: 'tasks',
+    loadChildren: () => import('./todo/tasks/tasks.module').then( m => m.TasksPageModule)
+  },
+  {
+    path: 'add-task',
+    loadChildren: () => import('./todo/add-task/add-task.module').then( m => m.AddTaskPageModule)
   }
 
 ];
