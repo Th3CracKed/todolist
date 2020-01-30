@@ -6,6 +6,17 @@ export const environment = {
   production: false
 };
 
+export const firebaseConfig = {
+  apiKey: "AIzaSyCZz7ONaBOTGKbRuGJk2hr0XmNFzzH7vSU",
+  authDomain: "todolist-uga.firebaseapp.com",
+  databaseURL: "https://todolist-uga.firebaseio.com",
+  projectId: "todolist-uga",
+  storageBucket: "todolist-uga.appspot.com",
+  messagingSenderId: "201259008916",
+  appId: "1:201259008916:web:85afd7c2943a39f4258581",
+  measurementId: "G-616NKZL5XG"
+};
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

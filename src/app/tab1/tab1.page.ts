@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { List } from '../models';
-import { TodoService } from '../services/todo.service';
+import { TodoList } from '../models';
+import { TodosListService } from '../services/todosList/todos.list.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tab1',
@@ -9,16 +10,15 @@ import { TodoService } from '../services/todo.service';
 })
 export class Tab1Page {
 
-  list: List;
+  todoLists$: Observable<TodoList[]>;
 
-  constructor(private listService: TodoService) {}
+  constructor(private listService: TodosListService) {}
 
   ngOnInit(): void {
-    this.list = this.listService.get();
+    this.todoLists$ = this.listService.getAll(true);
   }  
 
-  delete(pos: number){
-    this.listService.delete(pos);
-    this.listService.get();
+  delete(id: string){
+    this.listService.delete(id);
   }
 }
