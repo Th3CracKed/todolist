@@ -1,32 +1,41 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="main"></ion-back-button>
-    </ion-buttons>
-    <ion-title>TODOLIST HERE</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="main"></ion-back-button>
+        </ion-buttons>
+        <ion-title>TODOLIST HERE</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-list>
-    <ion-item *ngFor="let entry of ['Pain','Soupe','Café','Cookie']">
-      <ion-label>{{entry}}</ion-label>
-      <ion-checkbox slot="start" [(ngModel)]="entry.isChecked"></ion-checkbox>
-    </ion-item>
-  </ion-list>
+    <ion-list>
+        <ion-item-sliding *ngFor="let task of ['Pain','Soupe','Café','Cookie']">
+            <ion-item>
+                <ion-label>{{task}}</ion-label>
+                <ion-checkbox slot="start" [(ngModel)]="task.isChecked"></ion-checkbox>
+            </ion-item>
+
+            <ion-item-options side="end">
+                <ion-item-option color="danger" expandable>
+                    Supprimer
+                </ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+
 
 </ion-content>
 
 
 <ion-footer>
-  <ion-toolbar>
-    <ion-title>3/4</ion-title>
-    <ion-buttons slot="primary">
-      <ion-button [routerLink]="'/add-task'" color="primary" fill="clear">
-        Ajouter une tâche
-        <ion-icon slot="end" name="add"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>3/4</ion-title>
+        <ion-buttons slot="primary">
+            <ion-button [routerLink]="'/add-task'" color="primary" fill="clear">
+                Ajouter une tâche
+                <ion-icon slot="end" name="add"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-footer>
