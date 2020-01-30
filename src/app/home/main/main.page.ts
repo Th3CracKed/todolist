@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActionSheetController} from '@ionic/angular';
+import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
 
 @Component({
     selector: 'app-main',
@@ -8,12 +8,45 @@ import {ActionSheetController} from '@ionic/angular';
 })
 export class MainPage implements OnInit {
 
-    constructor(public actionSheetController: ActionSheetController) {
+    constructor(public actionSheetController: ActionSheetController, public toastController: ToastController, public alertController: AlertController) {
     }
 
     ngOnInit() {
     }
-  // Quand l'utilisateur clique sur settings
+
+    async presentToast() {
+        const toast = await this.toastController.create({
+            message: 'Nouvelle liste créée',
+            duration: 2000
+        });
+        toast.present();
+    }
+
+
+    async presentAlertConfirm() {
+        const alert = await this.alertController.create({
+            header: 'Confirmation!',
+            message: 'Supprimer la note <strong>liste Name Here</strong> ?',
+            buttons: [
+                {
+                    text: 'Annuler',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: (blah) => {
+                        console.log('Confirm Cancel: blah');
+                    }
+                }, {
+                    text: 'Supprimer',
+                    handler: () => {
+                        console.log('Confirm Okay');
+                    }
+                }
+            ]
+        });
+        await alert.present();
+    }
+
+    // Quand l'utilisateur clique sur settings
     async presentActionSheet() {
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
@@ -23,6 +56,7 @@ export class MainPage implements OnInit {
                 icon: 'trash',
                 handler: () => {
                     console.log('Delete clicked');
+                    this.presentAlertConfirm();
                 }
             }, {
                 text: 'Partager',
