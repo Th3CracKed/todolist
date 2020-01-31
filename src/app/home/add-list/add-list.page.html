@@ -1,0 +1,34 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>Create New List</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form (ngSubmit)="addList()" [formGroup]="addListForm">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Create New List</ion-card-title>
+            </ion-card-header>
+    
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="stacked">List Name</ion-label>
+                    <ion-input required type="text" name="title" formControlName="title" #ctrlTitle placeholder="Liste de courses, tâches travail"></ion-input>
+                    <ion-text *ngIf="!addListForm.valid" color="danger">Title is required</ion-text>
+                    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+                    </ion-list>    
+                </ion-item>
+                <div class="ion-margin-vertical">
+                    <ion-button expand="block" fill="blank" color="secondary"  (click)="resetForm()" >clear</ion-button>
+                    <ion-button expand="block" type="submit" color="primary" [disabled]="!addListForm.valid">
+                      Add item</ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    
+      </form>
+</ion-content>

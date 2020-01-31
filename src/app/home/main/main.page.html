@@ -1,0 +1,44 @@
+<ion-content>
+    <div class="ion-page" main id="side-bar">
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-menu-button></ion-menu-button>
+                </ion-buttons>
+                <ion-title>Mes tâches</ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+
+            <ion-searchbar placeholder="Search for a task"></ion-searchbar>
+
+            <!--            button ?  https://github.com/ionic-team/ionic/pull/17997-->
+            <!--            peut pas utiliser button car sinon le bouton setting ne marche plus l'event est pris par le ion-card-->
+            <!--            actuellement si l'utilsateur ne clique pas exactement sur l'icone ou sur le label il y a l'effet sur le ion card mais pas l'action...-->
+            <div *ngFor="let list of todoLists$ | async">
+                <ion-card class="ion-activatable">
+                    <ion-item>
+                        <ion-icon (click)="openList(list?.id)" name="person" slot="start"></ion-icon>
+                        <ion-label (click)="openList(list?.id)">{{ list?.title }}</ion-label>
+                        <ion-button color="secondary" fill="clear" (click)="presentActionSheet(list?.id)">
+                            <ion-icon slot="icon-only" name="settings"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                    <ion-ripple-effect></ion-ripple-effect>
+                </ion-card>
+            </div>
+        </ion-content>
+
+
+        <ion-footer>
+            <ion-toolbar>
+                <ion-buttons slot="primary">
+                    <ion-button [routerLink]="'/list/add'" color="primary" fill="clear">
+                        Create a liste
+                        <ion-icon slot="end" name="add"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-footer>
+    </div>
+</ion-content>
