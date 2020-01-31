@@ -4,7 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    loadChildren: () => import('./home/main/main.module').then( m => m.MainPageModule)
   },
   {
     path: 'help',
@@ -12,27 +12,15 @@ const routes: Routes = [
   },
   {
     path: 'list/add',
-    loadChildren: () => import('./addList/addList.module').then( m => m.AddListPageModule)
+    loadChildren: () => import('./home/add-list/add-list.module').then( m => m.AddlistPageModule)
   },
   {
     path: 'list/:id',
     loadChildren: () => import('./todos-list/todos-list.module').then( m => m.TodosListPageModule)
   },
   {
-    path: 'main',
-    loadChildren: () => import('./home/main/main.module').then( m => m.MainPageModule)
-  },
-  {
-    path: 'addlist',
-    loadChildren: () => import('./home/addlist/addlist.module').then( m => m.AddlistPageModule)
-  },
-  {
     path: 'tasks',
     loadChildren: () => import('./todo/tasks/tasks.module').then( m => m.TasksPageModule)
-  },
-  {
-    path: 'add-task',
-    loadChildren: () => import('./todo/add-task/add-task.module').then( m => m.AddTaskPageModule)
   }
 
 ];

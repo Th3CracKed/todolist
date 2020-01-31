@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
 import {Router} from '@angular/router';
+import { TodosListService } from '../../services';
+import { TodoList } from '../../models';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-main',
@@ -8,13 +11,19 @@ import {Router} from '@angular/router';
     styleUrls: ['./main.page.scss'],
 })
 export class MainPage implements OnInit {
+    
+    todoLists$: Observable<TodoList[]>;
 
-    constructor(public actionSheetController: ActionSheetController, public toastController: ToastController,
-                public alertController: AlertController, private router: Router) {
+    constructor(private actionSheetController: ActionSheetController,
+                private toastController: ToastController,
+                private alertController: AlertController,
+                private router: Router,
+                private listService: TodosListService) {
     }
-
-    ngOnInit() {
-    }
+  
+    ngOnInit(): void {
+      this.todoLists$ = this.listService.getAll(true);
+    }  
 
     async presentToast() {
         const toast = await this.toastController.create({
@@ -25,7 +34,7 @@ export class MainPage implements OnInit {
     }
 
 
-    async presentAlertConfirm() {
+    async presentAlertConfirm(id: string) {
         const alert = await this.alertController.create({
             header: 'Confirmation!',
             message: 'Supprimer la note <strong>liste Name Here</strong> ?',
@@ -40,7 +49,7 @@ export class MainPage implements OnInit {
                 }, {
                     text: 'Supprimer',
                     handler: () => {
-                        console.log('Confirm Okay');
+                        this.delete(id);
                     }
                 }
             ]
@@ -49,43 +58,46 @@ export class MainPage implements OnInit {
     }
 
     // Quand l'utilisateur clique sur settings
-    async presentActionSheet() {
+    async presentActionSheet(id: string) {
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [{
-                text: 'Supprimer',
+                text: 'Delete',
                 role: 'destructive',
                 icon: 'trash',
                 handler: () => {
                     console.log('Delete clicked');
-                    this.presentAlertConfirm();
+                    this.presentAlertConfirm(id);
                 }
             }, {
-                text: 'Partager',
+                text: 'Share',
                 icon: 'person-add',
                 handler: () => {
-                    console.log('Partager clicked');
+                    console.log('Share clicked');
                 }
             }, {
-                text: 'Epingler',
+                text: 'Pinned',
                 icon: 'pin',
                 handler: () => {
-                    console.log('tâche epinglé');
+                    console.log('Pinned task');
                 }
             }, {
-                text: 'Annuler',
+                text: 'Cancel',
                 icon: 'close',
                 role: 'cancel',
                 handler: () => {
-                    console.log('Annuler clicked');
+                    console.log('Cancel clicked');
                 }
             }]
         });
         await actionSheet.present();
     }
 
-    openList() {
-        console.log('route to new page');
-        this.router.navigateByUrl('/tasks');
+    openList(id: string) {
+        this.router.navigateByUrl(`list/${id}`);
+    }
+
+    private delete(id: string){
+        this.listService.delete(id);
     }
 }

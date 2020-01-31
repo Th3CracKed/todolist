@@ -1,30 +1,5 @@
 <ion-content>
-    <ion-menu side="start">
-        <ion-header>
-            <ion-toolbar translucent>
-                <ion-title>TODO APP</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content>
-            <ion-list>
-                <ion-item>
-                    <ion-icon name="home" slot="start"></ion-icon>
-                    <ion-label>Mes tâches</ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-icon name="person" slot="start"></ion-icon>
-                    <ion-label>Mon Compte</ion-label>
-                </ion-item>
-                <ion-item>
-                    <ion-icon name="settings" slot="start"></ion-icon>
-                    <ion-label>Paramètres</ion-label>
-                </ion-item>
-            </ion-list>
-        </ion-content>
-    </ion-menu>
-
-
-    <div class="ion-page" main>
+    <div class="ion-page" main id="side-bar">
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -34,72 +9,32 @@
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-            <!--      Content of main page is here-->
 
-            <ion-searchbar placeholder="Rechercher une note"></ion-searchbar>
+            <ion-searchbar placeholder="Search for a task"></ion-searchbar>
 
-
-            <!--          list of todos-->
-
-            <ion-card class="ion-activatable">
-                <ion-item>
-                    <ion-icon (click)="openList()" name="person" slot="start"></ion-icon>
-                    <ion-label (click)="openList()">Ma todo titre</ion-label>
-                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
-                        <ion-icon slot="icon-only" name="settings"></ion-icon>
-                    </ion-button>
-                </ion-item>
-                <ion-ripple-effect></ion-ripple-effect>
-            </ion-card>
-
-            <ion-card class="ion-activatable">
-                <ion-item>
-                    <ion-icon (click)="openList()" name="person" slot="start"></ion-icon>
-                    <ion-label (click)="openList()">Ma todo titre 2</ion-label>
-                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
-                        <ion-icon slot="icon-only" name="settings"></ion-icon>
-                    </ion-button>
-                </ion-item>
-                <ion-ripple-effect></ion-ripple-effect>
-            </ion-card>
-
-            <ion-card class="ion-activatable">
-                <ion-item>
-                    <ion-icon (click)="openList()" name="people" slot="start"></ion-icon>
-                    <ion-label (click)="openList()">Ma todo titre collab</ion-label>
-
-                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
-                        <ion-icon slot="icon-only" name="settings"></ion-icon>
-                    </ion-button>
-                </ion-item>
-                <ion-ripple-effect></ion-ripple-effect>
-            </ion-card>
-
-<!--            button ?  https://github.com/ionic-team/ionic/pull/17997-->
-<!--            peut pas utiliser button car sinon le bouton setting ne marche plus l'event est pris par le ion-card-->
-<!--            actuellement si l'utilsateur ne clique pas exactement sur l'icone ou sur le label il y a l'effet sur le ion card mais pas l'action...-->
-            <ion-card class="ion-activatable">
-                <ion-item>
-                    <ion-icon  (click)="openList()" name="person" slot="start"></ion-icon>
-                    <ion-label (click)="openList()">Ma todo titre 4</ion-label>
-                    <ion-button color="secondary" fill="clear" (click)="presentActionSheet()">
-                        <ion-icon slot="icon-only" name="settings"></ion-icon>
-                    </ion-button>
-                </ion-item>
-                <ion-ripple-effect></ion-ripple-effect>
-            </ion-card>
-
-            <!--      Content of main page is here-->
-
-
+            <!--            button ?  https://github.com/ionic-team/ionic/pull/17997-->
+            <!--            peut pas utiliser button car sinon le bouton setting ne marche plus l'event est pris par le ion-card-->
+            <!--            actuellement si l'utilsateur ne clique pas exactement sur l'icone ou sur le label il y a l'effet sur le ion card mais pas l'action...-->
+            <div *ngFor="let list of todoLists$ | async">
+                <ion-card class="ion-activatable">
+                    <ion-item>
+                        <ion-icon (click)="openList(list?.id)" name="person" slot="start"></ion-icon>
+                        <ion-label (click)="openList(list?.id)">{{ list?.title }}</ion-label>
+                        <ion-button color="secondary" fill="clear" (click)="presentActionSheet(list?.id)">
+                            <ion-icon slot="icon-only" name="settings"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                    <ion-ripple-effect></ion-ripple-effect>
+                </ion-card>
+            </div>
         </ion-content>
 
 
         <ion-footer>
             <ion-toolbar>
                 <ion-buttons slot="primary">
-                    <ion-button [routerLink]="'/addlist'" color="primary" fill="clear">
-                        Créer une liste
+                    <ion-button [routerLink]="'/list/add'" color="primary" fill="clear">
+                        Create a liste
                         <ion-icon slot="end" name="add"></ion-icon>
                     </ion-button>
                 </ion-buttons>

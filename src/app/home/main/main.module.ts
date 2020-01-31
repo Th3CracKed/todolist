@@ -7,8 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { MainPageRoutingModule } from './main-routing.module';
 
 import { MainPage } from './main.page';
-import {SidemenuComponent} from '../../menu/sidemenu/sidemenu.component';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -16,6 +14,6 @@ import {SidemenuComponent} from '../../menu/sidemenu/sidemenu.component';
     IonicModule,
     MainPageRoutingModule
   ],
-  declarations: [MainPage, SidemenuComponent]
+  declarations: [MainPage]
 })
 export class MainPageModule {}

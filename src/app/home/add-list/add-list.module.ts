@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddlistPageRoutingModule } from './addlist-routing.module';
+import { AddlistPageRoutingModule } from './add-list-routing.module';
 
-import { AddlistPage } from './addlist.page';
+import { AddlistPage } from './add-list.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     AddlistPageRoutingModule
   ],
