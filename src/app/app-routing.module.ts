@@ -16,10 +16,6 @@ const routes: Routes = [
   },
   {
     path: 'list/:id',
-    loadChildren: () => import('./todos-list/todos-list.module').then( m => m.TodosListPageModule)
-  },
-  {
-    path: 'tasks',
     loadChildren: () => import('./todo/tasks/tasks.module').then( m => m.TasksPageModule)
   }
 

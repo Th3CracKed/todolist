@@ -31,14 +31,14 @@ export class TodosListService {
     }
 
     add(todoList: TodoList) {
-        this.todoList$.add(todoList);
+        return this.todoList$.add(todoList);
     }
 
     update(id: string, newTodoList: TodoList){
-       this.db.doc<TodoList>(`/todoLists/${id}`).update(newTodoList);
+       return this.db.doc<TodoList>(`/todoLists/${id}`).update(newTodoList);
     }
 
     delete(id: string) {
-        this.db.doc<TodoList>(`/todoLists/${id}`).delete();
+        return this.db.doc<TodoList>(`/todoLists/${id}`).delete();
     }
 }

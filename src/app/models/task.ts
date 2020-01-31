@@ -1,4 +1,4 @@
-export interface Todo {    
+export interface Task {    
   listId: string; 
   taskId?: string;
   name: string;
