@@ -8,13 +8,13 @@
 </ion-header>
 
 <ion-content>
-
+    {{tasks$ | async | json}}
     <ion-list>
         <ion-list-header>
             <ion-text>TODO</ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let task of tasks$ | async">
-            <ion-item *ngIf="task.isDone==false">
+            <ion-item *ngIf="task.isDone==false || !task.isDone">
                 <ion-label>{{task.name}}</ion-label>
                 <ion-checkbox slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone"></ion-checkbox>
             </ion-item>
