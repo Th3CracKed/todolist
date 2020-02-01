@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { MainPageRoutingModule } from './main-routing.module';
-
+import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 import { MainPage } from './main.page';
 @NgModule({
   imports: [
@@ -14,6 +14,7 @@ import { MainPage } from './main.page';
     IonicModule,
     MainPageRoutingModule
   ],
-  declarations: [MainPage]
+  declarations: [MainPage,
+    ClickStopPropagationDirective]
 })
 export class MainPageModule {}

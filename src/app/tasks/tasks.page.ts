@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {TasksService, TodosListService} from '../../services';
-import {Task, TodoList} from '../../models';
+import {TasksService, TodosListService} from '../services';
+import {Task, TodoList} from '../models';
 import {Observable} from 'rxjs';
 
 

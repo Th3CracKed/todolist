@@ -8,7 +8,7 @@ const routes: Routes = [
   },
   {
     path: 'help',
-    loadChildren: () => import('./tutorial/help/help.module').then( m => m.HelpPageModule)
+    loadChildren: () => import('./help/help.module').then( m => m.HelpPageModule)
   },
   {
     path: 'list/add',
@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'list/:id',
-    loadChildren: () => import('./todo/tasks/tasks.module').then( m => m.TasksPageModule)
+    loadChildren: () => import('./tasks/tasks.module').then( m => m.TasksPageModule)
   }
 
 ];
