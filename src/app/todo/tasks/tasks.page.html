@@ -31,11 +31,12 @@
 
 <ion-footer>
     <ion-toolbar>
-        <ion-title>3/4</ion-title>
-        <ion-buttons slot="primary">
+
+        <ion-input class="ion-margin-horizontal addnewtask"  clearInput placeholder="New task" ></ion-input>
+        <ion-buttons class="ion-margin-horizontal" slot="primary">
             <ion-button (click)="addTask()" color="primary" fill="clear">
-                Add a task
-                <ion-icon slot="end" name="add"></ion-icon>
+                Add task
+                <ion-icon slot="end"  name="add-circle"></ion-icon>
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
