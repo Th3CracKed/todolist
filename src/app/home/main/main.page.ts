@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
     styleUrls: ['./main.page.scss'],
 })
 export class MainPage implements OnInit {
-    
+
     todoLists$: Observable<TodoList[]>;
 
     constructor(private actionSheetController: ActionSheetController,
@@ -20,10 +20,10 @@ export class MainPage implements OnInit {
                 private router: Router,
                 private listService: TodosListService) {
     }
-  
+
     ngOnInit(): void {
       this.todoLists$ = this.listService.getAll(true);
-    }  
+    }
 
     async presentToast() {
         const toast = await this.toastController.create({
@@ -80,6 +80,12 @@ export class MainPage implements OnInit {
                 icon: 'pin',
                 handler: () => {
                     console.log('Pinned task');
+                }
+            }, {
+                text: 'Rename',
+                icon: 'create',
+                handler: () => {
+                    console.log('Edit list name');
                 }
             }, {
                 text: 'Cancel',
