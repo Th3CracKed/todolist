@@ -10,14 +10,14 @@
 <ion-content>
 
     <ion-list>
-        <ion-item-sliding *ngFor="let task of ['Pain','Soupe','Café','Cookie']">
+        <ion-item-sliding *ngFor="let task of tasks$ | async">
             <ion-item>
-                <ion-label>{{task}}</ion-label>
-                <ion-checkbox slot="start" [(ngModel)]="task.isChecked"></ion-checkbox>
+                <ion-label>{{task.name}}</ion-label>
+                <ion-checkbox slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone"></ion-checkbox>
             </ion-item>
 
             <ion-item-options side="end">
-                <ion-item-option color="danger" expandable>
+                <ion-item-option (click)="deleteTask(task?.id)" color="danger" expandable>
                     Delete
                 </ion-item-option>
             </ion-item-options>
@@ -27,12 +27,10 @@
 
 </ion-content>
 
-  {{ todo$ | async | json}}
-
 <ion-footer>
     <ion-toolbar>
 
-        <ion-input class="ion-margin-horizontal addnewtask"  clearInput placeholder="New task" ></ion-input>
+        <ion-input class="ion-margin-horizontal addnewtask" [(ngModel)]="newTaskName" clearInput placeholder="New task" ></ion-input>
         <ion-buttons class="ion-margin-horizontal" slot="primary">
             <ion-button (click)="addTask()" color="primary" fill="clear">
                 Add task

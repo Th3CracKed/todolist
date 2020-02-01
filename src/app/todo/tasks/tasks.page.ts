@@ -13,7 +13,8 @@ import { Observable } from 'rxjs';
 export class TasksPage implements OnInit {
 
   todoList: TodoList = { title: 'Loading...' };
-  todo$: Observable<Task[]>;
+  tasks$: Observable<Task[]>;
+  newTaskName: string;
   private id: string;
 
   constructor(private route: ActivatedRoute,
@@ -25,11 +26,21 @@ export class TasksPage implements OnInit {
   ngOnInit() {
     this.todoListService.getOne(this.id)
       .subscribe(todoList => this.todoList = todoList);
-    this.todo$ = this.tasksService.getAll(this.id, true);
+    this.tasks$ = this.tasksService.getAll(this.id, true);
   }
 
   addTask() {
-    console.log('open Dialog');
-    // todo add task to this.todoList.id
+    this.tasksService.add({ name: this.newTaskName, listId: this.id })
+      .then(()=> this.newTaskName = '')
+      .catch(() => this.newTaskName = '');
   }
+
+  toogleIsDone(task: Task) {
+    this.tasksService.update(task.id, {isDone: task.isDone});
+  }
+ 
+  deleteTask(taskId: string) {
+    this.tasksService.delete(taskId);
+  }
+
 }
