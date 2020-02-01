@@ -37,17 +37,17 @@ export class MainPage implements OnInit {
     async presentAlertConfirm(id: string) {
         const alert = await this.alertController.create({
             header: 'Confirmation!',
-            message: 'Supprimer la note <strong>liste Name Here</strong> ?',
+            message: 'Delete note <strong>liste Name Here</strong> ?',
             buttons: [
                 {
-                    text: 'Annuler',
+                    text: 'Cancel',
                     role: 'cancel',
                     cssClass: 'secondary',
                     handler: (blah) => {
                         console.log('Confirm Cancel: blah');
                     }
                 }, {
-                    text: 'Supprimer',
+                    text: 'Delete',
                     handler: () => {
                         this.delete(id);
                     }
