@@ -12,15 +12,12 @@
 
             <ion-searchbar placeholder="Search for a task"></ion-searchbar>
 
-            <!--            button ?  https://github.com/ionic-team/ionic/pull/17997-->
-            <!--            peut pas utiliser button car sinon le bouton setting ne marche plus l'event est pris par le ion-card-->
-            <!--            actuellement si l'utilsateur ne clique pas exactement sur l'icone ou sur le label il y a l'effet sur le ion card mais pas l'action...-->
             <div *ngFor="let list of todoLists$ | async">
                 <ion-card class="ion-activatable">
-                    <ion-item>
-                        <ion-icon (click)="openList(list?.id)" name="person" slot="start"></ion-icon>
-                        <ion-label (click)="openList(list?.id)">{{ list?.title }}</ion-label>
-                        <ion-button color="secondary" fill="clear" (click)="presentActionSheet(list?.id)">
+                    <ion-item (click)="openList(list?.id)">
+                        <ion-icon name="person" slot="start"></ion-icon>
+                        <ion-label>{{ list?.title }}</ion-label>
+                        <ion-button click-stop-propagation color="secondary" fill="clear" (click)="presentActionSheet(list?.id)">
                             <ion-icon slot="icon-only" name="settings"></ion-icon>
                         </ion-button>
                     </ion-item>
