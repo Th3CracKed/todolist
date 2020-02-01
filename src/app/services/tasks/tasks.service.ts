@@ -36,7 +36,7 @@ export class TasksService {
       return this.todos$.add(todo);
   }
 
-  update(id: string, newTodo: Task) {
+  update(id: string, newTodo: Partial<Task>) {
      return this.db.doc<Task>(`/todoList/${id}`).update(newTodo);
   }
 
