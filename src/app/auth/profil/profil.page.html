@@ -1,0 +1,54 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>My account</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+    <ion-card>
+
+
+        <ion-card-content>
+            <ion-grid>
+                <ion-row>
+                    <ion-col size="2">
+                        <div class="ion-text-uppercase">
+                            <ion-avatar>
+                                <img class="ion-margin-vertical"
+                                     src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"/>
+                            </ion-avatar>
+                        </div>
+                    </ion-col>
+                    <ion-col size="10">
+                        <div>
+                            <ion-item>
+                                <ion-label position="stacked">Firstname</ion-label>
+                                <ion-input readonly="true">Auguste</ion-input>
+                            </ion-item>
+                            <ion-item>
+                                <ion-label position="stacked">Lastname</ion-label>
+                                <ion-input readonly="true">LALA</ion-input>
+                            </ion-item>
+                        </div>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col class="ion-float-end">
+                        <ion-button float-right fill="outline" color="secondary">Edit
+                            profile
+                        </ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+
+        </ion-card-content>
+    </ion-card>
+
+
+</ion-content>
