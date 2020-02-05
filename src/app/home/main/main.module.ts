@@ -7,7 +7,6 @@ import { IonicModule } from '@ionic/angular';
 import { MainPageRoutingModule } from './main-routing.module';
 import { ClickStopPropagationDirective } from '../../directives/click-stop-propagation.directive';
 import { MainPage } from './main.page';
-import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
 @NgModule({
   imports: [
     CommonModule,
@@ -16,7 +15,6 @@ import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
     MainPageRoutingModule
   ],
   declarations: [MainPage,
-    ClickStopPropagationDirective],
-    providers: [AngularFireAuthGuard]
+    ClickStopPropagationDirective]
 })
 export class MainPageModule {}

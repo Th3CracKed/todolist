@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,14 +11,15 @@ import { auth } from 'firebase/app';
 })
 export class AuthPage implements OnInit {
 
-  constructor(public afAuth: AngularFireAuth) {
+  constructor(public afAuth: AngularFireAuth, private router: Router) {
   }
 
   ngOnInit() {
   }
   
   login() {
-    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+      .then(()=> this.router.navigate(['']));
   }
   logout() {
     this.afAuth.auth.signOut();
