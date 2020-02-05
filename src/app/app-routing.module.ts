@@ -23,13 +23,13 @@ const routes: Routes = [
   },
   {
     path: 'list/:id',
-    loadChildren: () => import('./tasks/tasks.module').then( m => m.TasksPageModule),
-    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
+    loadChildren: () => import('./tasks/tasks.module').then( m => m.TasksPageModule)
   },
   {
-    path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then( m => m.AuthPageModule)
+    path: 'login',
+    loadChildren: () => import('./auth/login/login.module').then( m => m.LoginPageModule)
   }
+
 
 ];
 @NgModule({
