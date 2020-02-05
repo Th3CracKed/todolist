@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth } from 'firebase/app';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -12,7 +15,7 @@ export class LoginPage implements OnInit {
         password: new FormControl('', [Validators.required, Validators.minLength(3)])
     });
 
-    constructor() {
+    constructor(private afAuth: AngularFireAuth, private router: Router) {
     }
 
     ngOnInit() {
@@ -23,11 +26,15 @@ export class LoginPage implements OnInit {
     }
 
     loginGoogle() {
-        alert('google');
+        this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+      .then(()=> this.router.navigate(['']));
     }
 
     loginFacebook() {
         alert('Facebook');
     }
 
+    logout() {
+        this.afAuth.auth.signOut();
+      }
 }
