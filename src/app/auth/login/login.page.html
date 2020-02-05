@@ -1,0 +1,67 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>Login</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div *ngIf="afAuth.user | async as user; else showLogin">
+        <h1>Hello {{ user.displayName }}!</h1>
+        <button (click)="logout()">Logout</button>
+    </div>
+    <ng-template #showLogin>
+        <form (ngSubmit)="login()" [formGroup]="userLogin">
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-title>Login</ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content>
+                    <ion-item>
+                        <ion-label position="stacked">Login
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input required="true" type="email" name="login" formControlName="login"
+                            placeholder="Email"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked">Password
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input required="true" type="password" name="password" formControlName="password"
+                            placeholder="Password"></ion-input>
+                    </ion-item>
+                    <div class="ion-margin-vertical">
+                        <ion-button expand="block" type="submit" color="primary" [disabled]="!userLogin.valid">
+                            LOGIN
+                        </ion-button>
+                    </div>
+                    <section class="ion-text-center">
+                        <header class="ion-text-center">- OR -</header>
+                        <ion-grid>
+                            <ion-row>
+                                <ion-col col-6>
+                                    <ion-button (click)="loginGoogle()" color="danger" fill="outline" expand="block">
+                                        Google
+                                        <ion-icon slot="start" name="logo-google"></ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                                <ion-col col-6>
+                                    <ion-button (click)="loginFacebook()" fill="outline" expand="block">Facebook
+                                        <ion-icon slot="start" name="logo-facebook"></ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </section>
+                    <section>
+                        <p class="ion-text-center">Or create an account: <a [routerLink]="">Register</a></p>
+                    </section>
+                </ion-card-content>
+            </ion-card>
+        </form>
+    </ng-template>
+</ion-content>

@@ -17,10 +17,8 @@
             <ion-card-content>
                 <ion-item>
                     <ion-label position="stacked">List Name</ion-label>
-                    <ion-input required type="text" name="title" formControlName="title" #ctrlTitle placeholder="Liste de courses, tâches travail"></ion-input>
+                    <ion-input required type="text" name="title" formControlName="title" placeholder="Liste de courses, tâches travail"></ion-input>
                     <ion-text *ngIf="!addListForm.valid" color="danger">Title is required</ion-text>
-                    <ion-list lines="full" class="ion-no-margin ion-no-padding">
-                    </ion-list>    
                 </ion-item>
                 <div class="ion-margin-vertical">
                     <ion-button expand="block" fill="blank" color="secondary"  (click)="resetForm()" >clear</ion-button>
