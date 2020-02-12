@@ -25,7 +25,11 @@ const routes: Routes = [
   {
     path: 'profil',
     loadChildren: () => import('./auth/profil/profil.module').then( m => m.ProfilPageModule)
+  },  {
+    path: 'register',
+    loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
   }
+
 
 
 
