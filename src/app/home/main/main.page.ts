@@ -22,7 +22,7 @@ export class MainPage implements OnInit {
     }
 
     ngOnInit(): void {
-      this.todoLists$ = this.listService.getAll(true);
+      this.todoLists$ = this.listService.getAll();
     }
 
     async presentToast() {
