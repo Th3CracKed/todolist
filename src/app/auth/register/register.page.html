@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Create New Account</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Firstname
+            <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input required type="text" name="title" placeholder="Firstname"></ion-input>
+        </ion-item>
+          <ion-text *ngIf="1" color="danger">Firstname is required</ion-text>
+        <ion-item>
+          <ion-label position="stacked">Lastname
+            <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input required type="text" name="title" placeholder="Lastname"></ion-input>
+        </ion-item>
+          <ion-text *ngIf="1" color="danger">Lastname is required</ion-text>
+        <ion-item>
+          <ion-label position="stacked">Email
+            <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input required type="text" name="title" placeholder="Email"></ion-input>
+        </ion-item>
+          <ion-text *ngIf="1" color="danger">Email is required</ion-text>
+        <ion-item>
+          <ion-label position="stacked">Password
+            <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input required type="text" name="title" placeholder="Password"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Confirm password
+            <ion-text color="danger">*</ion-text></ion-label>
+          <ion-input required type="text" name="title" placeholder="Confirm"></ion-input>
+        </ion-item>
+        <ion-text *ngIf="1" color="danger">Password doesn't match</ion-text>
+
+        <div class="ion-margin-vertical">
+          <ion-button expand="block" type="submit" color="primary" [disabled]="!0">
+            Register</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  </form>
+</ion-content>
