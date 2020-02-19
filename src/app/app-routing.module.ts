@@ -1,22 +1,30 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+import { AngularFireAuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(["login"]);
+
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./home/main/main.module').then( m => m.MainPageModule)
+    loadChildren: () => import('./home/main/main.module').then( m => m.MainPageModule),
+    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
   {
     path: 'help',
-    loadChildren: () => import('./help/help.module').then( m => m.HelpPageModule)
+    loadChildren: () => import('./help/help.module').then( m => m.HelpPageModule),
+    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
   {
     path: 'list/add',
-    loadChildren: () => import('./home/add-list/add-list.module').then( m => m.AddlistPageModule)
+    loadChildren: () => import('./home/add-list/add-list.module').then( m => m.AddlistPageModule),
+    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
   {
     path: 'list/:id',
-    loadChildren: () => import('./tasks/tasks.module').then( m => m.TasksPageModule)
+    loadChildren: () => import('./tasks/tasks.module').then( m => m.TasksPageModule),
+    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
   {
     path: 'login',
@@ -24,16 +32,16 @@ const routes: Routes = [
   },
   {
     path: 'profil',
-    loadChildren: () => import('./auth/profil/profil.module').then( m => m.ProfilPageModule)
-  },  {
+    loadChildren: () => import('./auth/profil/profil.module').then( m => m.ProfilPageModule),
+    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
+  },
+  {
     path: 'register',
-    loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
+    loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule),
+    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
   }
-
-
-
-
 ];
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
