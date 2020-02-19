@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
 })
 export class TasksPage implements OnInit {
 
-    todoList: TodoList = {title: 'Loading...'};
+    todoList: TodoList;
     tasks$: Observable<Task[]>;
     newTaskName: string;
     doneCounter: string;

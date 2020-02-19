@@ -1,29 +1,46 @@
 import { Injectable } from '@angular/core';
 import { TodoList } from '../../models';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators'
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { map, first, switchMap } from 'rxjs/operators'
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Globals } from '../globals';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TodosListService {
-    private todoList$: AngularFirestoreCollection<TodoList>;
 
-    constructor(private db: AngularFirestore) {
-        this.todoList$ = this.db.collection<TodoList>('/todoLists');
+    constructor(
+        private afAuth: AngularFireAuth,
+        private db: AngularFirestore,
+        private globals: Globals) { }
+
+    getAll(): Observable<TodoList[]> {
+        return this.globals.currentUserId ? this.getTodoLists(this.globals.currentUserId) : this.getUserIdThenList();
     }
 
-    getAll(withId: boolean = false): Observable<TodoList[]> {
-        return withId ? this.todoList$.snapshotChanges()
-            .pipe(map(todoListsWithMetaData => {
-                return todoListsWithMetaData.map(todoListWithMetaData => {
+    getUserIdThenList(): Observable<TodoList[]> {
+        return this.afAuth.user
+            .pipe(
+                first(),
+                switchMap(user => {
+                    this.globals.currentUserId = user.uid;
+                    return this.getTodoLists(user.uid);
+                })
+            );
+    }
+
+    private getTodoLists(userId: string): Observable<TodoList[]> {
+        return this.db.collection<TodoList>('/todoLists', ref => ref.where('userId', '==', userId)).snapshotChanges()
+            .pipe(map(todoListsWithMetaData =>
+                todoListsWithMetaData.map(todoListWithMetaData => {
                     return {
                         id: todoListWithMetaData.payload.doc.id,
                         ...todoListWithMetaData.payload.doc.data()
                     } as TodoList;
-                });
-            })) : this.todoList$.valueChanges();
+                })
+            ));
     }
 
     getOne(id: string): Observable<TodoList> {
@@ -31,11 +48,11 @@ export class TodosListService {
     }
 
     add(todoList: TodoList) {
-        return this.todoList$.add(todoList);
+        return this.db.collection<TodoList>('/todoLists').add(todoList);
     }
 
-    update(id: string, newTodoList: TodoList){
-       return this.db.doc<TodoList>(`/todoLists/${id}`).update(newTodoList);
+    update(id: string, newTodoList: TodoList) {
+        return this.db.doc<TodoList>(`/todoLists/${id}`).update(newTodoList);
     }
 
     delete(id: string) {
