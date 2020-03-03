@@ -38,7 +38,12 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'list-sharing',
+    loadChildren: () => import('./home/list-sharing/list-sharing.module').then( m => m.ListSharingPageModule)
   }
+
 ];
 
 @NgModule({
