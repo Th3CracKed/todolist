@@ -1,0 +1,74 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>Shared list: <b>My list name here</b></ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form (ngSubmit)="addSharedUserToList()" [formGroup]="addSharedUser">
+        <ion-card>
+            <ion-card-header>
+                <ion-text>Share this list with other people using their email address</ion-text>
+            </ion-card-header>
+
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="stacked">User email</ion-label>
+                    <ion-input required type="text" name="title" formControlName="newSharedUser" placeholder="todo@gmail.com"></ion-input>
+                </ion-item>
+                <div class="ion-margin-vertical">
+                    <ion-button expand="block" type="submit" color="primary" [disabled]="!addSharedUser.valid">
+                        Add to list
+                    </ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+    </form>
+
+
+    <ion-list>
+        <ion-list-header>
+            <ion-text>Read only</ion-text>
+        </ion-list-header>
+        <ion-item-sliding *ngFor="let user of fakeListOfUsers">
+            <ion-item *ngIf="user.canEdit==false">
+                <ion-label>{{user.email}}</ion-label>
+                <ion-checkbox slot="start" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-checkbox>
+            </ion-item>
+
+            <!--          //*ngIf="user.canEdit==true"-->
+
+            <ion-item-options side="end">
+                <ion-item-option (click)="deleteSharedUser(user?.id)" color="danger" expandable>
+                    Delete
+                </ion-item-option>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+
+
+  <ion-list>
+    <ion-list-header>
+      <ion-text>Read and Edit</ion-text>
+    </ion-list-header>
+    <ion-item-sliding *ngFor="let user of fakeListOfUsers">
+      <ion-item *ngIf="user.canEdit==true">
+        <ion-label>{{user.email}}</ion-label>
+        <ion-checkbox slot="start" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-checkbox>
+      </ion-item>
+
+      <!--          //*ngIf="user.canEdit==true"-->
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="deleteSharedUser(user?.id)" color="danger" expandable>
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-text *ngIf="fakeListOfUsers.length==0">This list is not shared</ion-text>
+  </ion-list>
+
+</ion-content>

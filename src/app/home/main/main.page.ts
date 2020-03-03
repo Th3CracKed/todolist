@@ -74,6 +74,7 @@ export class MainPage implements OnInit {
                 icon: 'person-add',
                 handler: () => {
                     console.log('Share clicked');
+                    this.router.navigateByUrl(`list-sharing`);
                 }
             }, {
                 text: 'Pinned',
