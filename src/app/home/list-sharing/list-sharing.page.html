@@ -31,12 +31,21 @@
 
     <ion-list>
         <ion-list-header>
+<<<<<<< HEAD
             <ion-text>Read only</ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let user of fakeListOfUsers">
             <ion-item *ngIf="user.canEdit==false">
                 <ion-label>{{user.email}}</ion-label>
                 <ion-checkbox slot="start" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-checkbox>
+=======
+            <ion-text>User can edit</ion-text>
+        </ion-list-header>
+        <ion-item-sliding *ngFor="let user of fakeListOfUsers">
+            <ion-item>
+                <ion-label>{{user.email}}</ion-label>
+                <ion-toggle slot="start" color="primary" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-toggle>
+>>>>>>> feature/listSharing
             </ion-item>
 
             <!--          //*ngIf="user.canEdit==true"-->
@@ -49,6 +58,7 @@
         </ion-item-sliding>
     </ion-list>
 
+<<<<<<< HEAD
 
   <ion-list>
     <ion-list-header>
@@ -71,4 +81,6 @@
     <ion-text *ngIf="fakeListOfUsers.length==0">This list is not shared</ion-text>
   </ion-list>
 
+=======
+>>>>>>> feature/listSharing
 </ion-content>
