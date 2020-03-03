@@ -1,57 +1,85 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Register</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/login"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Register</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <form>
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Create New Account</ion-card-title>
-      </ion-card-header>
+    <form (ngSubmit)="addNewUser()" [formGroup]="addUserForm">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Create New Account</ion-card-title>
+            </ion-card-header>
 
-      <ion-card-content>
-        <ion-item>
-          <ion-label position="stacked">Firstname
-            <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input required type="text" name="title" placeholder="Firstname"></ion-input>
-        </ion-item>
-          <ion-text *ngIf="1" color="danger">Firstname is required</ion-text>
-        <ion-item>
-          <ion-label position="stacked">Lastname
-            <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input required type="text" name="title" placeholder="Lastname"></ion-input>
-        </ion-item>
-          <ion-text *ngIf="1" color="danger">Lastname is required</ion-text>
-        <ion-item>
-          <ion-label position="stacked">Email
-            <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input required type="text" name="title" placeholder="Email"></ion-input>
-        </ion-item>
-          <ion-text *ngIf="1" color="danger">Email is required</ion-text>
-        <ion-item>
-          <ion-label position="stacked">Password
-            <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input required type="text" name="title" placeholder="Password"></ion-input>
-        </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="stacked">Firstname
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input required type="text" name="firstname" placeholder="Firstname"
+                               formControlName="firstname"></ion-input>
+                </ion-item>
+                <ion-text *ngIf="addUserForm.get('firstname').invalid" color="danger">Firstname is required</ion-text>
+                <ion-item>
+                    <ion-label position="stacked">Lastname
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input required type="text" name="lastname" placeholder="Lastname"
+                               formControlName="lastname"></ion-input>
+                </ion-item>
+                <ion-text *ngIf="addUserForm.get('lastname').invalid" color="danger">Lastname is required</ion-text>
+                <ion-item>
+                    <ion-label position="stacked">Email
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input required type="text" name="email" placeholder="Email"
+                               formControlName="email"></ion-input>
+                </ion-item>
+                <ion-text *ngIf="addUserForm.get('email').invalid" color="danger">Email is required</ion-text>
 
-        <ion-item>
-          <ion-label position="stacked">Confirm password
-            <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input required type="text" name="title" placeholder="Confirm"></ion-input>
-        </ion-item>
-        <ion-text *ngIf="1" color="danger">Password doesn't match</ion-text>
+                <div formGroupName="passwords" appCheckPassword>
+                    <ion-item>
+                        <ion-label position="stacked">Password
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input required type="text" name="password" placeholder="Password"
+                                   formControlName="password"
+                                   name="password"></ion-input>
+                    </ion-item>
+                    <ion-text *ngIf="addUserForm.get('passwords.password').invalid" color="danger">Password is required</ion-text>
 
-        <div class="ion-margin-vertical">
-          <ion-button expand="block" type="submit" color="primary" [disabled]="!0">
-            Register</ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card>
+                    <ion-item>
+                        <ion-label position="stacked">Confirm password
+                            <ion-text color="danger">*</ion-text>
+                        </ion-label>
+                        <ion-input required type="text" name="passwordConfirm" placeholder="Confirm"
+                                   formControlName="passwordConfirm"
+                                   name="passwordConfirm"></ion-input>
+                    </ion-item>
 
-  </form>
+                    <ion-text
+                            *ngIf="addUserForm.get('passwords.passwordConfirm').invalid && (addUserForm.get('passwords.password').dirty || addUserForm.get('passwords.password').touched)"
+                            color="danger">
+                        Please confirm your password.
+                    </ion-text>
+
+                    <ion-text
+                            *ngIf="addUserForm.get('passwords').errors?.passwordCheck && (addUserForm.get('passwords.passwordConfirm').dirty || addUserForm.get('passwords.passwordConfirm').touched)"
+                            color="danger">
+                        Passwords do not match.
+                    </ion-text>
+                </div>
+
+                <div class="ion-margin-vertical">
+                    <ion-button expand="block" type="submit" color="primary" [disabled]="!addUserForm.valid">
+                        Register
+                    </ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+    </form>
 </ion-content>
