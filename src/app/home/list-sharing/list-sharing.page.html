@@ -31,12 +31,12 @@
 
     <ion-list>
         <ion-list-header>
-            <ion-text>Read only</ion-text>
+            <ion-text>User can edit</ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let user of fakeListOfUsers">
-            <ion-item *ngIf="user.canEdit==false">
+            <ion-item>
                 <ion-label>{{user.email}}</ion-label>
-                <ion-checkbox slot="start" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-checkbox>
+                <ion-toggle slot="start" color="primary" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-toggle>
             </ion-item>
 
             <!--          //*ngIf="user.canEdit==true"-->
@@ -48,27 +48,5 @@
             </ion-item-options>
         </ion-item-sliding>
     </ion-list>
-
-
-  <ion-list>
-    <ion-list-header>
-      <ion-text>Read and Edit</ion-text>
-    </ion-list-header>
-    <ion-item-sliding *ngFor="let user of fakeListOfUsers">
-      <ion-item *ngIf="user.canEdit==true">
-        <ion-label>{{user.email}}</ion-label>
-        <ion-checkbox slot="start" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-checkbox>
-      </ion-item>
-
-      <!--          //*ngIf="user.canEdit==true"-->
-
-      <ion-item-options side="end">
-        <ion-item-option (click)="deleteSharedUser(user?.id)" color="danger" expandable>
-          Delete
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-    <ion-text *ngIf="fakeListOfUsers.length==0">This list is not shared</ion-text>
-  </ion-list>
 
 </ion-content>
