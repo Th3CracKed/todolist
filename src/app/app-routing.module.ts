@@ -37,8 +37,7 @@ const routes: Routes = [
   },
   {
     path: 'register',
-    loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule),
-    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
+    loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
   }
 ];
 
