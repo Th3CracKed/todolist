@@ -9,10 +9,9 @@ import {CheckPasswordDirective} from '../../directives/check-password.directive'
     SharedModule,
     MainPageRoutingModule
   ],
-  exports: [
-    CheckPasswordDirective
-  ],
-  declarations: [MainPage,
-    ClickStopPropagationDirective, CheckPasswordDirective]
+  declarations: [
+    MainPage,
+    ClickStopPropagationDirective,
+    CheckPasswordDirective]
 })
 export class MainPageModule {}
