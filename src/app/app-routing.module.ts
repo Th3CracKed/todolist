@@ -25,6 +25,7 @@ const routes: Routes = [
     path: 'list/:id',
     loadChildren: () => import('./tasks/tasks.module').then( m => m.TasksPageModule),
     canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
+    // TODO children root lazy loaded? list-sharing
   },
   {
     path: 'login',
@@ -40,8 +41,9 @@ const routes: Routes = [
     loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
   },
   {
-    path: 'list-sharing',
-    loadChildren: () => import('./home/list-sharing/list-sharing.module').then( m => m.ListSharingPageModule)
+    path: 'list/:id/share',
+    loadChildren: () => import('./home/list-sharing/list-sharing.module').then( m => m.ListSharingPageModule),
+    canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
   }
 
 ];
