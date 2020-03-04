@@ -26,7 +26,14 @@ export class LoginPage implements OnInit {
     }
 
     login() {
-        this.presentToast('Login not implemented yet');
+        // TODO isMail ? login : checkIfUserNameExistsThenLogin
+        this.afAuth.auth
+            .signInWithEmailAndPassword(this.userLogin.get('login').value, this.userLogin.get('password').value)
+            .then(() => {
+                this.userLogin.reset();
+                this.router.navigate(['']);
+            });
+        // TODO login failed
     }
 
     loginGoogle() {
@@ -41,6 +48,10 @@ export class LoginPage implements OnInit {
 
     loginFacebook() {
         alert('Facebook');
+    }
+
+    resetPassword(email: string): Promise<void> {
+        return this.afAuth.auth.sendPasswordResetEmail(email);
     }
 
     logout() {
