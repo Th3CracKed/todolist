@@ -55,7 +55,12 @@
                         </ion-grid>
                     </section>
                     <section>
-                        <p class="ion-text-center">Or create an account: <a [routerLink]="'/register'">Register</a></p>
+                        <p class="ion-text-center">Or create an account:</p>
+                        <div class="ion-margin-vertical">
+                            <ion-button expand="block" fill="outline" color="medium" type="submit" [routerLink]="'/register'">
+                                Register
+                            </ion-button>
+                        </div>
                     </section>
                 </ion-card-content>
             </ion-card>
