@@ -4,6 +4,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {auth} from 'firebase/app';
 import {Router} from '@angular/router';
 import {Globals} from 'src/app/services';
+import {ToastController} from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -15,10 +16,11 @@ export class LoginPage implements OnInit {
         login: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
         password: new FormControl('', [Validators.required, Validators.minLength(3)])
     });
-    isLoading: boolean = false;
+    isLoading = false;
 
     constructor(private afAuth: AngularFireAuth,
                 private router: Router,
+                private toastController: ToastController,
                 private globals: Globals) {
     }
 
@@ -26,7 +28,7 @@ export class LoginPage implements OnInit {
     }
 
     login() {
-        alert('Login');
+        this.presentToast('Login not implemented yet');
     }
 
     loginGoogle() {
@@ -36,7 +38,9 @@ export class LoginPage implements OnInit {
                 this.globals.currentUserId = credentials.user.uid;
                 this.router.navigate(['']);
                 this.isLoading = false;
-            });
+            }).catch(err => {
+            this.presentToast(err);
+        });
     }
 
     loginFacebook() {
@@ -45,5 +49,13 @@ export class LoginPage implements OnInit {
 
     logout() {
         this.afAuth.auth.signOut();
+    }
+
+    async presentToast(msg: string, durationMs: number = 3000) {
+        const toast = await this.toastController.create({
+            message: msg,
+            duration: durationMs
+        });
+        toast.present();
     }
 }
