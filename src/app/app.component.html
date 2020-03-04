@@ -1,5 +1,5 @@
 <ion-app>
-    <ion-menu side="start" menuId="sideMenu" contentId="side-bar">
+    <ion-menu *ngIf="canDisplay()" side="start" menuId="sideMenu" contentId="side-bar">
 
         <ion-header>
             <ion-toolbar translucent>
