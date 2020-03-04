@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-    <form (ngSubmit)="addNewUser()" [formGroup]="addUserForm">
+    <form (ngSubmit)="signupUser()" [formGroup]="addUserForm">
         <ion-card>
             <ion-card-header>
                 <ion-card-title>Create New Account</ion-card-title>
@@ -19,18 +19,26 @@
                     <ion-label position="stacked">Firstname
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input required type="text" name="firstname" placeholder="Firstname"
-                               formControlName="firstname"></ion-input>
+                    <ion-input required type="text" name="firstName" placeholder="Firstname"
+                               formControlName="firstName"></ion-input>
                 </ion-item>
-                <ion-text *ngIf="addUserForm.get('firstname').invalid" color="danger">Firstname is required</ion-text>
+                <ion-text *ngIf="addUserForm.get('firstName').invalid" color="danger">Firstname is required</ion-text>
                 <ion-item>
                     <ion-label position="stacked">Lastname
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input required type="text" name="lastname" placeholder="Lastname"
-                               formControlName="lastname"></ion-input>
+                    <ion-input required type="text" name="lastName" placeholder="Lastname"
+                               formControlName="lastName"></ion-input>
                 </ion-item>
-                <ion-text *ngIf="addUserForm.get('lastname').invalid" color="danger">Lastname is required</ion-text>
+                <ion-text *ngIf="addUserForm.get('userName').invalid" color="danger">username is required</ion-text>
+                <ion-item>
+                    <ion-label position="stacked">username
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input required type="text" name="userName" placeholder="username"
+                               formControlName="userName"></ion-input>
+                </ion-item>
+                <ion-text *ngIf="addUserForm.get('userName').invalid" color="danger">username is required</ion-text>
                 <ion-item>
                     <ion-label position="stacked">Email
                         <ion-text color="danger">*</ion-text>
