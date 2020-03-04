@@ -22,14 +22,14 @@
                             <ion-text color="danger">*</ion-text>
                         </ion-label>
                         <ion-input required="true" type="email" name="login" formControlName="login"
-                            placeholder="Email"></ion-input>
+                                   placeholder="Email"></ion-input>
                     </ion-item>
                     <ion-item>
                         <ion-label position="stacked">Password
                             <ion-text color="danger">*</ion-text>
                         </ion-label>
                         <ion-input required="true" type="password" name="password" formControlName="password"
-                            placeholder="Password"></ion-input>
+                                   placeholder="Password"></ion-input>
                     </ion-item>
                     <div class="ion-margin-vertical">
                         <ion-button expand="block" type="submit" color="primary" [disabled]="!userLogin.valid">
@@ -57,13 +57,18 @@
                     <section>
                         <p class="ion-text-center">Or create an account:</p>
                         <div class="ion-margin-vertical">
-                            <ion-button expand="block" fill="outline" color="medium" type="submit" [routerLink]="'/register'">
+                            <ion-button expand="block" fill="outline" color="medium" type="submit"
+                                        [routerLink]="'/register'">
                                 Register
                             </ion-button>
                         </div>
                     </section>
                 </ion-card-content>
+                <div *ngIf="isLoading" class="ion-text-center">
+                    <ion-spinner></ion-spinner>
+                </div>
             </ion-card>
         </form>
+
     </ng-template>
 </ion-content>
