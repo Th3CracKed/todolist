@@ -7,12 +7,21 @@
     </ion-toolbar>
 </ion-header>
 
+
+<ion-content class="ion-text-center" *ngIf="!tasks || tasks.length==0">
+    <div class="ion-margin-vertical">
+        <p>This list is empty!</p>
+        <p>You can add a new task bellow.</p>
+        <ion-icon size="large" name="happy"></ion-icon>
+    </div>
+</ion-content>
+
 <ion-content>
     <ion-list>
         <ion-list-header>
-            <ion-text>TODO</ion-text>
+            <ion-text *ngIf="tasks && tasks.length>0">TODO</ion-text>
         </ion-list-header>
-        <ion-item-sliding *ngFor="let task of tasks$ | async">
+        <ion-item-sliding *ngFor="let task of tasks">
             <ion-item *ngIf="task.isDone==false || !task.isDone">
                 <ion-label>{{task.name}}</ion-label>
                 <ion-checkbox slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone"></ion-checkbox>
@@ -28,9 +37,9 @@
 
     <ion-list>
         <ion-list-header>
-            <ion-text>DONE</ion-text>
+            <ion-text *ngIf="tasks && tasks.length>0">DONE</ion-text>
         </ion-list-header>
-        <ion-item-sliding *ngFor="let task of tasks$ | async">
+        <ion-item-sliding *ngFor="let task of tasks">
             <ion-item *ngIf="task.isDone==true">
                 <ion-label color="medium" class="task-done">{{task.name}}</ion-label>
                 <ion-checkbox color="medium" slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone">
@@ -50,7 +59,7 @@
     <ion-toolbar>
 
         <ion-input class="ion-margin-horizontal addnewtask" [(ngModel)]="newTaskName" required clearInput
-            placeholder="New task"></ion-input>
+                   placeholder="New task"></ion-input>
         <ion-buttons class="ion-margin-horizontal" slot="primary">
             <ion-button (click)="addTask()" color="primary" fill="clear">
                 Add task

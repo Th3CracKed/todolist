@@ -13,7 +13,7 @@ import {Observable} from 'rxjs';
 export class TasksPage implements OnInit {
 
     todoList: TodoList;
-    tasks$: Observable<Task[]>;
+    tasks: Task[];
     newTaskName: string;
     doneCounter: string;
     private id: string;
@@ -27,13 +27,9 @@ export class TasksPage implements OnInit {
     ngOnInit() {
         this.todoListService.getOne(this.id)
             .subscribe(todoList => this.todoList = todoList);
-        this.tasks$ = this.tasksService.getAll(this.id, true);
-        this.getRemainingCounter();
-    }
-
-    getRemainingCounter() {
-        this.tasksService.getAll(this.id, true).subscribe((todos) => {
-            this.setRemainingCounter(todos);
+        this.tasksService.getAll(this.id, true).subscribe((tasks) =>{
+            this.setRemainingCounter(tasks);
+            this.tasks = tasks;
         });
     }
 
