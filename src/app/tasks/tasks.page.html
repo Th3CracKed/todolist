@@ -3,7 +3,15 @@
         <ion-buttons slot="start">
             <ion-back-button defaultHref=""></ion-back-button>
         </ion-buttons>
-        <ion-title>{{todoList?.title || 'Loading...'}} <b class="ion-float-end">{{doneCounter}}</b></ion-title>
+
+        <ion-grid>
+            <ion-row>
+                <ion-title>{{todoList?.title || 'Loading...'}} </ion-title>
+                <ion-button fill="none" [routerLink]="'/list-sharing'">
+                    <ion-icon slot="icon-only" name="person-add"></ion-icon>
+                </ion-button>
+            </ion-row>
+        </ion-grid>
     </ion-toolbar>
 </ion-header>
 
@@ -16,10 +24,10 @@
     </div>
 </ion-content>
 
-<ion-content>
+<ion-content *ngIf="tasks && tasks.length>0">
     <ion-list>
         <ion-list-header>
-            <ion-text *ngIf="tasks && tasks.length>0">TODO</ion-text>
+            <ion-text>TODO</ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let task of tasks">
             <ion-item *ngIf="task.isDone==false || !task.isDone">
@@ -37,7 +45,8 @@
 
     <ion-list>
         <ion-list-header>
-            <ion-text *ngIf="tasks && tasks.length>0">DONE</ion-text>
+            <ion-text>DONE</ion-text>
+            <ion-text class="ion-margin-end"><b>{{doneCounter}}</b></ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let task of tasks">
             <ion-item *ngIf="task.isDone==true">
