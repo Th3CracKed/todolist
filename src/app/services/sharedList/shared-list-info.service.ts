@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { AutorizedUser, TodoList } from '../../models';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { map, first, switchMap } from 'rxjs/operators';
-import { Globals } from '../globals';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { map, switchMap } from 'rxjs/operators';
 import { FirebaseUtilsService } from '../utils/firebase-utils.service';
 
 @Injectable({
@@ -12,9 +10,7 @@ import { FirebaseUtilsService } from '../utils/firebase-utils.service';
 })
 export class SharedListService {
 
-    constructor(private afAuth: AngularFireAuth,
-        private db: AngularFirestore,
-        private globals: Globals,
+    constructor(private db: AngularFirestore,
         private firebaseUtilsService: FirebaseUtilsService) { }
 
     getListsSharedInfo(listId: string): Observable<AutorizedUser[]> {
@@ -23,22 +19,12 @@ export class SharedListService {
     }
 
     getAllUserSharedList(): Observable<TodoList[]> {
-        return this.globals.currentUserId ? this.getUserSharedTodoLists(this.globals.currentUserId) : this.getUserIdThenGetSharedList();
+        return this.firebaseUtilsService.getCurrentUser()
+            .pipe(switchMap(currentUser => this.getUserSharedTodoLists(currentUser.email)));
     }
 
-    private getUserIdThenGetSharedList(): Observable<TodoList[]> {
-        return this.afAuth.user
-            .pipe(
-                first(),
-                switchMap(user => {
-                    this.globals.currentUserId = user.uid;
-                    return this.getUserSharedTodoLists(user.uid);
-                })
-            );
-    }
-
-    private getUserSharedTodoLists(userId: string): Observable<TodoList[]> {
-        return this.db.collectionGroup<TodoList>(`authorizedUsers`, ref => ref.where('userId', 'array-contains', userId))
+    private getUserSharedTodoLists(email: string): Observable<TodoList[]> {
+        return this.db.collectionGroup<TodoList>(`authorizedUsers`, ref => ref.where('email', 'array-contains', email))
             .snapshotChanges().pipe(map(this.firebaseUtilsService.includeIds));
     }
 

@@ -1,10 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+<<<<<<< HEAD
 import {AngularFireAuth} from '@angular/fire/auth';
 import {auth} from 'firebase/app';
 import {Router} from '@angular/router';
 import {Globals} from 'src/app/services';
 import {ToastController} from '@ionic/angular';
+=======
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth } from 'firebase/app';
+import { Router } from '@angular/router';
+import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
+>>>>>>> get user globally, cleaner solution
 
 @Component({
     selector: 'app-login',
@@ -19,9 +26,13 @@ export class LoginPage implements OnInit {
     isLoading = false;
 
     constructor(private afAuth: AngularFireAuth,
+<<<<<<< HEAD
                 private router: Router,
                 private toastController: ToastController,
                 private globals: Globals) {
+=======
+                private router: Router) {
+>>>>>>> get user globally, cleaner solution
     }
 
     ngOnInit() {
@@ -34,6 +45,7 @@ export class LoginPage implements OnInit {
     loginGoogle() {
         this.isLoading = true;
         this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+<<<<<<< HEAD
             .then((credentials) => {
                 this.globals.currentUserId = credentials.user.uid;
                 this.router.navigate(['']);
@@ -41,6 +53,11 @@ export class LoginPage implements OnInit {
             }).catch(err => {
             this.presentToast(err);
         });
+=======
+      .then(credentials =>{
+        this.router.navigate(['']);
+      });
+>>>>>>> get user globally, cleaner solution
     }
 
     loginFacebook() {

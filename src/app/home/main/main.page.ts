@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { TodosListService, SharedListService, Globals } from '../../services';
-import { TodoList, AutorizedUser } from '../../models';
+import { TodosListService, SharedListService } from '../../services';
+import { TodoList } from '../../models';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main',
@@ -31,7 +30,7 @@ export class MainPage implements OnInit {
                 this.todoLists = todoLists
         });
         this.sharedListService.getAllUserSharedList()
-            .subscribe(todoLists => this.sharedLists = todoLists);
+            .subscribe(sharedLists => this.sharedLists = sharedLists);
     }
 
     async presentToast() {
