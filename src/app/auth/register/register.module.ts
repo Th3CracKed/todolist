@@ -8,6 +8,7 @@ import { RegisterPageRoutingModule } from './register-routing.module';
 
 import { RegisterPage } from './register.page';
 import { SharedModule } from 'src/app/shared.module';
+import { CheckPasswordDirective } from 'src/app/directives/check-password.directive';
 
 @NgModule({
   imports: [
@@ -18,6 +19,9 @@ import { SharedModule } from 'src/app/shared.module';
     IonicModule,
     RegisterPageRoutingModule
   ],
-  declarations: [RegisterPage]
+  declarations: [
+    RegisterPage,
+    CheckPasswordDirective
+  ]
 })
 export class RegisterPageModule { }
