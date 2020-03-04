@@ -4,6 +4,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
+import { UserService } from 'src/app/services/user/user.service';
+import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
+import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -18,6 +21,8 @@ export class LoginPage implements OnInit {
     isLoading = false;
 
     constructor(private afAuth: AngularFireAuth,
+        private userService: UserService,
+        private firebaseUtilsService: FirebaseUtilsService,
         private router: Router,
         private toastController: ToastController) {
     }
@@ -39,10 +44,22 @@ export class LoginPage implements OnInit {
     loginGoogle() {
         this.isLoading = true;
         this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-            .then(credentials => {
-                this.router.navigate(['']);
-            }).catch(err => {
-                this.presentToast(err);
+            .then(credentials => this.createUserIfNew(credentials))
+            .catch(this.presentToast);
+    }
+
+    createUserIfNew(credentials: auth.UserCredential) {
+        this.firebaseUtilsService.getCurrentUser()
+            .subscribe((user) => {
+                if (!user) {
+                    this.userService.add(
+                        {
+                            userId: credentials.user.uid,
+                            email: credentials.user.email
+                        }
+                    ).catch(this.presentToast);
+                }
+                this.router.navigateByUrl('');
             });
     }
 

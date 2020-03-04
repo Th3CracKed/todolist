@@ -12,7 +12,7 @@ import { Observable, of } from 'rxjs';
 })
 export class FirebaseUtilsService {
 
-    currentUser: User;
+    private currentUser: User;
 
     constructor(private afAuth: AngularFireAuth,
         private db: AngularFirestore) { }
