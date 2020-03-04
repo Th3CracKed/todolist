@@ -1,10 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {auth} from 'firebase/app';
-import {Router} from '@angular/router';
-import {Globals} from 'src/app/services';
-import {ToastController} from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth } from 'firebase/app';
+import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -19,9 +18,8 @@ export class LoginPage implements OnInit {
     isLoading = false;
 
     constructor(private afAuth: AngularFireAuth,
-                private router: Router,
-                private toastController: ToastController,
-                private globals: Globals) {
+        private router: Router,
+        private toastController: ToastController) {
     }
 
     ngOnInit() {
@@ -34,13 +32,11 @@ export class LoginPage implements OnInit {
     loginGoogle() {
         this.isLoading = true;
         this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-            .then((credentials) => {
-                this.globals.currentUserId = credentials.user.uid;
+            .then(credentials => {
                 this.router.navigate(['']);
-                this.isLoading = false;
             }).catch(err => {
-            this.presentToast(err);
-        });
+                this.presentToast(err);
+            });
     }
 
     loginFacebook() {

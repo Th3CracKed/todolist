@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Task} from '../../models';
-import {Observable} from 'rxjs';
-import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
-import {map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Task } from '../../models';
+import { Observable } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -28,13 +28,13 @@ export class TasksService {
             })) : filteredTodos$.valueChanges();
     }
 
-  getOne(id: string): Observable<Task> {
-      return this.db.doc<Task>(`/todoList/${id}`).valueChanges();
-  }
+    getOne(id: string): Observable<Task> {
+        return this.db.doc<Task>(`/todoList/${id}`).valueChanges();
+    }
 
-  add(todo: Task) {
-      return this.todos$.add(todo);
-  }
+    add(todo: Task) {
+        return this.todos$.add(todo);
+    }
 
     update(id: string, newTodo: Partial<Task>) {
         return this.db.doc<Task>(`/todoList/${id}`).update(newTodo);

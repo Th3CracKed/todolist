@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
-import {Router} from '@angular/router';
-import { TodosListService } from '../../services';
+import { Component, OnInit } from '@angular/core';
+import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { TodosListService, SharedListService } from '../../services';
 import { TodoList } from '../../models';
 import { Observable } from 'rxjs';
 
@@ -12,17 +12,25 @@ import { Observable } from 'rxjs';
 })
 export class MainPage implements OnInit {
 
-    todoLists$: Observable<TodoList[]>;
+    todoLists: TodoList[];
+    sharedLists: TodoList[];
+    todoListsShared$: Observable<TodoList[]>;
 
     constructor(private actionSheetController: ActionSheetController,
-                private toastController: ToastController,
-                private alertController: AlertController,
-                private router: Router,
-                private listService: TodosListService) {
+        private toastController: ToastController,
+        private alertController: AlertController,
+        private router: Router,
+        private listService: TodosListService,
+        private sharedListService: SharedListService) {
     }
 
     ngOnInit(): void {
-      this.todoLists$ = this.listService.getAll();
+        this.listService.getAllUserList()
+            .subscribe((todoLists) => {
+                this.todoLists = todoLists
+        });
+        this.sharedListService.getAllUserSharedList()
+            .subscribe(sharedLists => this.sharedLists = sharedLists);
     }
 
     async presentToast() {
@@ -58,7 +66,7 @@ export class MainPage implements OnInit {
     }
 
     // Quand l'utilisateur clique sur settings
-    async presentActionSheet(id: string) {
+    async presentActionSheet(listId: string) {
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [{
@@ -67,14 +75,13 @@ export class MainPage implements OnInit {
                 icon: 'trash',
                 handler: () => {
                     console.log('Delete clicked');
-                    this.presentAlertConfirm(id);
+                    this.presentAlertConfirm(listId);
                 }
             }, {
                 text: 'Share',
                 icon: 'person-add',
                 handler: () => {
-                    console.log('Share clicked');
-                    this.router.navigateByUrl(`list-sharing`);
+                    this.router.navigateByUrl(`list/${listId}/share`);
                 }
             }, {
                 text: 'Pinned',
@@ -104,7 +111,7 @@ export class MainPage implements OnInit {
         this.router.navigateByUrl(`list/${id}`);
     }
 
-    private delete(id: string){
+    private delete(id: string) {
         this.listService.delete(id);
     }
 }

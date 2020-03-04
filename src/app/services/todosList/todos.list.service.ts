@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TodoList } from '../../models';
 import { Observable } from 'rxjs';
-import { map, first, switchMap } from 'rxjs/operators'
+import { map, switchMap } from 'rxjs/operators'
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Globals } from '../globals';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { FirebaseUtilsService } from '../utils/firebase-utils.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,23 +11,12 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class TodosListService {
 
     constructor(
-        private afAuth: AngularFireAuth,
         private db: AngularFirestore,
-        private globals: Globals) { }
+        private firebaseUtilsService: FirebaseUtilsService) { }
 
-    getAll(): Observable<TodoList[]> {
-        return this.globals.currentUserId ? this.getTodoLists(this.globals.currentUserId) : this.getUserIdThenList();
-    }
-
-    getUserIdThenList(): Observable<TodoList[]> {
-        return this.afAuth.user
-            .pipe(
-                first(),
-                switchMap(user => {
-                    this.globals.currentUserId = user.uid;
-                    return this.getTodoLists(user.uid);
-                })
-            );
+    getAllUserList(): Observable<TodoList[]> {
+        return this.firebaseUtilsService.getCurrentUser()
+            .pipe(switchMap(currentUser => this.getTodoLists(currentUser.userId)));
     }
 
     private getTodoLists(userId: string): Observable<TodoList[]> {
@@ -44,11 +32,21 @@ export class TodosListService {
     }
 
     getOne(id: string): Observable<TodoList> {
-        return this.db.doc<TodoList>(`/todoLists/${id}`).valueChanges();
+        return this.db.doc<TodoList>(`/todoLists/${id}`).snapshotChanges()
+            .pipe(map(todoList => {
+                return {
+                    id: todoList.payload.id,
+                    ...todoList.payload.data
+                } as TodoList;
+            }));
     }
 
-    add(todoList: TodoList) {
-        return this.db.collection<TodoList>('/todoLists').add(todoList);
+    add(partialTodoList: { title: string }) {
+        return this.firebaseUtilsService.getCurrentUser()
+            .pipe(switchMap(currentUser => {
+                const todoList: TodoList = { ...partialTodoList, userId: currentUser.userId };
+                return this.db.collection<TodoList>('/todoLists').add(todoList);
+            }));
     }
 
     update(id: string, newTodoList: TodoList) {
