@@ -49,4 +49,12 @@
         </ion-item-sliding>
     </ion-list>
 
+    <ion-content class="ion-text-center" *ngIf="!fakeListOfUsers || fakeListOfUsers.length==0">
+        <div class="ion-margin-vertical">
+            <p>This list is not shared with anyone!</p>
+            <p>You can share it by entering an email adress above.</p>
+            <ion-icon size="large" name="happy"></ion-icon>
+        </div>
+    </ion-content>
+
 </ion-content>
