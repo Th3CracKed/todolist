@@ -5,6 +5,8 @@ import { map, first, switchMap } from 'rxjs/operators'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Globals } from '../globals';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { SharedListService } from '../sharedList/shared-list-info.service';
+import { firestore } from 'firebase';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +18,7 @@ export class TodosListService {
         private db: AngularFirestore,
         private globals: Globals) { }
 
-    getAll(): Observable<TodoList[]> {
+    getAllUserList(): Observable<TodoList[]> {
         return this.globals.currentUserId ? this.getTodoLists(this.globals.currentUserId) : this.getUserIdThenList();
     }
 
@@ -44,7 +46,13 @@ export class TodosListService {
     }
 
     getOne(id: string): Observable<TodoList> {
-        return this.db.doc<TodoList>(`/todoLists/${id}`).valueChanges();
+        return this.db.doc<TodoList>(`/todoLists/${id}`).snapshotChanges()
+            .pipe(map(todoList => {
+                return {
+                    id: todoList.payload.id,
+                    ...todoList.payload.data
+                } as TodoList;
+            }));
     }
 
     add(todoList: TodoList) {

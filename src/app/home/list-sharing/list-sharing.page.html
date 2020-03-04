@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-back-button defaultHref=""></ion-back-button>
         </ion-buttons>
-        <ion-title>Shared list: <b>My list name here</b></ion-title>
+        <ion-title>{{todoList?.title}}</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -17,7 +17,8 @@
             <ion-card-content>
                 <ion-item>
                     <ion-label position="stacked">User email</ion-label>
-                    <ion-input required type="text" name="title" formControlName="newSharedUser" placeholder="todo@gmail.com"></ion-input>
+                    <ion-input required type="text" name="title" formControlName="email" placeholder="todo@gmail.com">
+                    </ion-input>
                 </ion-item>
                 <div class="ion-margin-vertical">
                     <ion-button expand="block" type="submit" color="primary" [disabled]="!addSharedUser.valid">
@@ -33,23 +34,23 @@
         <ion-list-header>
             <ion-text>User can edit</ion-text>
         </ion-list-header>
-        <ion-item-sliding *ngFor="let user of fakeListOfUsers">
-            <ion-item>
-                <ion-label>{{user.email}}</ion-label>
-                <ion-toggle slot="start" color="primary" (ionChange)="toogleCanEdit(user)" [(ngModel)]="user.canEdit"></ion-toggle>
-            </ion-item>
-
-            <!--          //*ngIf="user.canEdit==true"-->
-
-            <ion-item-options side="end">
-                <ion-item-option (click)="deleteSharedUser(user?.id)" color="danger" expandable>
-                    Delete
-                </ion-item-option>
-            </ion-item-options>
+        <ion-item-sliding *ngFor="let autorizedUser of autorizedUsers">
+            <div *ngIf="autorizedUser">
+                <ion-item>
+                    <ion-label>{{autorizedUser?.email}}</ion-label>
+                    <ion-toggle slot="start" color="primary" (ionChange)="toogleCanEdit(autorizedUser)"
+                        [(ngModel)]="autorizedUser.canEdit"></ion-toggle>
+                </ion-item>
+                <ion-item-options side="end">
+                    <ion-item-option (click)="deleteSharedUser(autorizedUser)" color="danger" expandable>
+                        Delete
+                    </ion-item-option>
+                </ion-item-options>
+            </div>
         </ion-item-sliding>
     </ion-list>
 
-    <ion-content class="ion-text-center" *ngIf="!fakeListOfUsers || fakeListOfUsers.length==0">
+    <ion-content class="ion-text-center" *ngIf="!autorizedUsers || autorizedUsers.length==0">
         <div class="ion-margin-vertical">
             <p>This list is not shared with anyone!</p>
             <p>You can share it by entering an email adress above.</p>
