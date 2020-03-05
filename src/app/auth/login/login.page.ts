@@ -3,10 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
 import { UserService } from 'src/app/services/user/user.service';
 import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
-import { catchError } from 'rxjs/operators';
+import { UtilsService } from 'src/app/services/utils/utils';
 
 @Component({
     selector: 'app-login',
@@ -22,9 +21,9 @@ export class LoginPage implements OnInit {
 
     constructor(private afAuth: AngularFireAuth,
         private userService: UserService,
+        private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
-        private router: Router,
-        private toastController: ToastController) {
+        private router: Router) {
     }
 
     ngOnInit() {
@@ -45,7 +44,7 @@ export class LoginPage implements OnInit {
         this.isLoading = true;
         this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
             .then(credentials => this.createUserIfNew(credentials))
-            .catch(this.presentToast);
+            .catch(this.utilsService.presentToast);
     }
 
     createUserIfNew(credentials: auth.UserCredential) {
@@ -57,7 +56,7 @@ export class LoginPage implements OnInit {
                             userId: credentials.user.uid,
                             email: credentials.user.email
                         }
-                    ).catch(this.presentToast);
+                    ).catch(this.utilsService.presentToast);
                 }
                 this.router.navigateByUrl('');
             });
@@ -73,13 +72,5 @@ export class LoginPage implements OnInit {
 
     logout() {
         this.afAuth.auth.signOut();
-    }
-
-    async presentToast(msg: string, durationMs: number = 3000) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: durationMs
-        });
-        toast.present();
     }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
+import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TodosListService, SharedListService } from '../../services';
 import { TodoList } from '../../models';
@@ -17,7 +17,6 @@ export class MainPage implements OnInit {
     todoListsShared$: Observable<TodoList[]>;
 
     constructor(private actionSheetController: ActionSheetController,
-        private toastController: ToastController,
         private alertController: AlertController,
         private router: Router,
         private listService: TodosListService,
@@ -32,15 +31,6 @@ export class MainPage implements OnInit {
         this.sharedListService.getAllUserSharedList()
             .subscribe(sharedLists => this.sharedLists = sharedLists);
     }
-
-    async presentToast() {
-        const toast = await this.toastController.create({
-            message: 'Nouvelle liste créée',
-            duration: 2000
-        });
-        toast.present();
-    }
-
 
     async presentAlertConfirm(id: string) {
         const alert = await this.alertController.create({

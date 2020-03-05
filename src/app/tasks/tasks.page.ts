@@ -26,7 +26,10 @@ export class TasksPage implements OnInit {
 
     ngOnInit() {
         this.todoListService.getOne(this.id)
-            .subscribe(todoList => this.todoList = todoList);
+            .subscribe(todoList => {
+                this.todoList = todoList;
+                console.log(todoList.title)
+            });
         this.tasksService.getAll(this.id, true).subscribe((tasks) =>{
             this.setRemainingCounter(tasks);
             this.tasks = tasks;
