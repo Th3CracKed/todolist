@@ -17,15 +17,15 @@ export class FirebaseUtilsService {
     constructor(private afAuth: AngularFireAuth,
         private db: AngularFirestore) { }
 
-    includeIds = <T>(documentChangeAction: DocumentChangeAction<T>[]) => {
-        return <T[]>documentChangeAction.map(snap => this.includeId(snap));
+    includeIds = <T>(documentChangeActions: DocumentChangeAction<T>[]) => {
+        return <T[]>documentChangeActions.map(documentChangeAction => this.includeId(documentChangeAction));
     }
 
     includeId = <T>(documentChangeAction: DocumentChangeAction<T>) => {
-        return <T>{
+        return documentChangeAction ? <T>{
             id: documentChangeAction.payload.doc.id,
             ...documentChangeAction.payload.doc.data()
-        };
+        } : undefined;
     }
 
     getCurrentUser = (): Observable<User> => {
@@ -44,14 +44,18 @@ export class FirebaseUtilsService {
                         map(infos => infos[0]),
                         map(this.includeId),
                         map(storedUserInfo => {
-                            this.currentUser = {
-                                userId: userId,
-                                email: email,
-                                firstName: storedUserInfo.firstName,
-                                lastName: storedUserInfo.lastName,
-                                userName: storedUserInfo.userName
+                            if (storedUserInfo) {
+                                this.currentUser = {
+                                    id: storedUserInfo.id,
+                                    userId: userId,
+                                    email: email,
+                                    firstName: storedUserInfo.firstName,
+                                    lastName: storedUserInfo.lastName,
+                                    userName: storedUserInfo.userName
+                                }
+                                return this.currentUser;
                             }
-                            return this.currentUser;
+                            return undefined;
                         })
                     );
             })
