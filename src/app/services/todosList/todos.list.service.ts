@@ -24,12 +24,12 @@ export class TodosListService {
             .pipe(map(this.firebaseUtilsService.includeIds));
     }
 
-    getOne(id: string): Observable<TodoList> {
-        return this.db.doc<TodoList>(`/todoLists/${id}`).snapshotChanges()
+    getOne(listId: string): Observable<TodoList> {
+        return this.db.doc<TodoList>(`/todoLists/${listId}`).valueChanges()
             .pipe(map(todoList => {
                 return {
-                    id: todoList.payload.id,
-                    ...todoList.payload.data
+                    id: listId,
+                    ...todoList
                 } as TodoList;
             }));
     }
