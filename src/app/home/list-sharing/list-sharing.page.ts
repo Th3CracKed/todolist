@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Task, TodoList, AutorizedUser } from '../../models';
+import { TodoList, AutorizedUser } from '../../models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToastController } from '@ionic/angular';
 import { TodosListService } from 'src/app/services';
 import { ActivatedRoute } from '@angular/router';
 import { SharedListService } from 'src/app/services/sharedList/shared-list-info.service';
+import { UtilsService } from 'src/app/services/utils/utils';
 
 @Component({
     selector: 'app-list-sharing',
@@ -18,8 +17,8 @@ export class ListSharingPage implements OnInit {
     autorizedUsers: AutorizedUser[];
     constructor(
         private route: ActivatedRoute,
-        private toastController: ToastController,
         private todoListService: TodosListService,
+        private utilsService: UtilsService,
         private sharedListInfoService: SharedListService) {
     }
 
@@ -27,15 +26,6 @@ export class ListSharingPage implements OnInit {
         email: new FormControl('', [Validators.required, Validators.email,
         Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])
     });
-
-
-    async presentToast(msg: string, durationMs: number = 3000) {
-        const toast = await this.toastController.create({
-            message: msg,
-            duration: durationMs
-        });
-        toast.present();
-    }
 
     ngOnInit() {
         this.route.params.subscribe(async params => {
@@ -65,14 +55,14 @@ export class ListSharingPage implements OnInit {
     toogleCanEdit(autorizedUser: AutorizedUser) {
         this.sharedListInfoService.update(this.todoList.id, autorizedUser.id, { canEdit: autorizedUser.canEdit })
             .then(() => {
-                this.presentToast('Updated Successfully', 800);
+                this.utilsService.presentToast('Updated Successfully', 800);
             })
     }
 
     deleteSharedUser(autorizedUser: AutorizedUser) {
         this.sharedListInfoService.delete(this.todoList.id, autorizedUser.id)
             .then(() => {
-                this.presentToast(`Access revocked`);
+                this.utilsService.presentToast(`Access revocked`);
             })
             // TODO error handling
     }

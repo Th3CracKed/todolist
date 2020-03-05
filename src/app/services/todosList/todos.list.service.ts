@@ -21,22 +21,15 @@ export class TodosListService {
 
     private getTodoLists(userId: string): Observable<TodoList[]> {
         return this.db.collection<TodoList>('/todoLists', ref => ref.where('userId', '==', userId)).snapshotChanges()
-            .pipe(map(todoListsWithMetaData =>
-                todoListsWithMetaData.map(todoListWithMetaData => {
-                    return {
-                        id: todoListWithMetaData.payload.doc.id,
-                        ...todoListWithMetaData.payload.doc.data()
-                    } as TodoList;
-                })
-            ));
+            .pipe(map(this.firebaseUtilsService.includeIds));
     }
 
-    getOne(id: string): Observable<TodoList> {
-        return this.db.doc<TodoList>(`/todoLists/${id}`).snapshotChanges()
+    getOne(listId: string): Observable<TodoList> {
+        return this.db.doc<TodoList>(`/todoLists/${listId}`).valueChanges()
             .pipe(map(todoList => {
                 return {
-                    id: todoList.payload.id,
-                    ...todoList.payload.data
+                    id: listId,
+                    ...todoList
                 } as TodoList;
             }));
     }

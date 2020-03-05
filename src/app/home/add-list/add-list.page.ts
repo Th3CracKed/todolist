@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {TodosListService} from '../../services';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+import { UtilsService } from 'src/app/services/utils/utils';
 
 
 @Component({
@@ -16,16 +17,20 @@ export class AddlistPage implements OnInit {
     });
 
     constructor(private todosListService: TodosListService,
-                private router: Router) {
+                private router: Router,
+                private utils: UtilsService) {
     }
 
     ngOnInit() {
     }
 
     addList() {
-        this.todosListService.add( {title: this.addListForm.get('title').value});
-        this.addListForm.reset();
-        this.router.navigate(['']); // TODO continue filling the form, TODO show toast informing user that List is created
+        this.todosListService.add( {title: this.addListForm.get('title').value})
+            .subscribe(list => {
+                this.addListForm.reset();
+                this.utils.presentToast('List Created Successfully', 1000);
+                this.router.navigate([`list/${list.id}`]);
+            }, err => this.utils.presentErrorToast(err));
     }
 
     resetForm() {
