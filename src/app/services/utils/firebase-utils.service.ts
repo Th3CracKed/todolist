@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { DocumentChangeAction, AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../../models';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { first, switchMap, map, take } from 'rxjs/operators';
+import { first, map, take, flatMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
 
@@ -35,7 +35,7 @@ export class FirebaseUtilsService {
     private fetchUser = (): Observable<User> => {
         return this.afAuth.user.pipe(
             first(),
-            switchMap(firebaseUser => {
+            flatMap(firebaseUser => {
                 const userId = firebaseUser.uid;
                 const email = firebaseUser.email;
                 return this.db.collection<User>(`users`, ref => ref.where('userId', '==', userId).limit(1))

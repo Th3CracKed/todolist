@@ -1,12 +1,14 @@
+
 export interface TodoList {    
   id?: string;
   title: string;
   userId: string;
-  autorizedUsers?: AutorizedUser[];
+  members?: Member;
 }
 
-export interface AutorizedUser {
-  id?: string;
+export interface Member { [userId: string]: CoreMember }
+
+export interface CoreMember {
   email: string;
-  canEdit: boolean;
+  canEdit: boolean
 }

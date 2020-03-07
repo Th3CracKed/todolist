@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { User } from 'src/app/models';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user/user.service';
+import { RegisterService } from 'src/app/services/register/register.service';
+import { UtilsService } from 'src/app/services/utils/utils';
 
 @Component({
   selector: 'app-register',
@@ -23,31 +24,26 @@ export class RegisterPage implements OnInit {
     }),
   });
 
-  constructor(private afAuth: AngularFireAuth, private router: Router, private userService: UserService) { }
+  constructor(private router: Router,
+    private registerService: RegisterService,
+    private utilsService: UtilsService) { }
 
 
   ngOnInit() {
   }
 
   signupUser() {
-    const email = this.addUserForm.get('email').value;
+    const user: Partial<User> = {
+      email: this.addUserForm.get('email').value,
+      firstName: this.addUserForm.get('firstName').value,
+      lastName: this.addUserForm.get('lastName').value,
+      userName: this.addUserForm.get('userName').value
+    }
     const password = this.addUserForm.get('passwords.password').value;
-    this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-      .then((firebaseUser) => {
-        this.userService.add(
-          {
-            userId: firebaseUser.user.uid,
-            firstName: this.addUserForm.get('firstName').value,
-            lastName: this.addUserForm.get('lastName').value,
-            userName: this.addUserForm.get('userName').value,
-            email: this.addUserForm.get('email').value
-          }
-        ).then(() => {
-          this.addUserForm.reset();
-          this.router.navigateByUrl('');
-        })
-        // TODO error handling
-      });
-    // TODO error handling
+    this.registerService.signupUser(user, password)
+      .then(() => {
+        this.addUserForm.reset();
+        this.router.navigateByUrl('');
+      }).catch(this.utilsService.presentErrorToast)
   }
 }

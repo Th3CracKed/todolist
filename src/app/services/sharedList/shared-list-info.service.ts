@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AutorizedUser, TodoList } from '../../models';
+import { TodoList, CoreMember } from '../../models';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { map, switchMap } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
+import { map, flatMap } from 'rxjs/operators';
 import { FirebaseUtilsService } from '../utils/firebase-utils.service';
 
 @Injectable({
@@ -13,30 +14,34 @@ export class SharedListService {
     constructor(private db: AngularFirestore,
         private firebaseUtilsService: FirebaseUtilsService) { }
 
-    getListsSharedInfo(listId: string): Observable<AutorizedUser[]> {
-        return this.db.collection<AutorizedUser>(`/todoLists/${listId}/authorizedUsers`)
-            .snapshotChanges().pipe(map(this.firebaseUtilsService.includeIds));
-    }
-
-    getAllUserSharedList(): Observable<TodoList[]> {
+    getAllUserList(): Observable<TodoList[]> {
         return this.firebaseUtilsService.getCurrentUser()
-            .pipe(switchMap(currentUser => this.getUserSharedTodoLists(currentUser.email)));
+            .pipe(flatMap(currentUser => this.getUserSharedTodoLists(currentUser.userId)));
     }
 
-    private getUserSharedTodoLists(email: string): Observable<TodoList[]> {
-        return this.db.collectionGroup<TodoList>(`authorizedUsers`, ref => ref.where('email', 'array-contains', email))
+    private getUserSharedTodoLists(userId: string): Observable<TodoList[]> {
+        return this.db.collection<TodoList>(`/todoLists`, ref => ref.orderBy(`members.${userId}`))
             .snapshotChanges().pipe(map(this.firebaseUtilsService.includeIds));
     }
 
-    add(listId: string, authorizedUser: AutorizedUser) {
-        return this.db.collection<AutorizedUser>(`/todoLists/${listId}/authorizedUsers`).add(authorizedUser);
+    add(listId: string, userId: string, email: string, canEdit: boolean = false) {
+        const coreMember: CoreMember = { email: email, canEdit: canEdit };
+        return this.editMapValue(listId, userId, () => coreMember );
     }
 
-    update(listId: string, authorizedUserId: string, autorizedUser: Partial<AutorizedUser>) {
-        return this.db.doc<AutorizedUser>(`/todoLists/${listId}/authorizedUsers/${authorizedUserId}`).update(autorizedUser);
+    update(listId: string, userId: string, coreMember: CoreMember) {
+        return this.editMapValue(listId, userId, () => coreMember );
     }
 
-    delete(listId: string, authorizedUserId: string) {
-        return this.db.doc<AutorizedUser>(`/todoLists/${listId}/authorizedUsers/${authorizedUserId}`).delete();
+    delete(listId: string, userId: string) {
+        return this.editMapValue(listId, userId, () => firebase.firestore.FieldValue.delete());
+    }
+    //TODO extract this to firebaseUtils, while fixing the FieldValue delete type issue
+    private editMapValue(listId: string, userId: string, factoryValue: () => CoreMember | firebase.firestore.FieldValue) {
+        return this.db.doc<any>(`/todoLists/${listId}`).set({
+            members: {
+                [userId]: factoryValue()
+            }
+        }, {merge: true});
     }
 }

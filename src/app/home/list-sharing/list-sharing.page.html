@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-    <form (ngSubmit)="addSharedUserToList()" [formGroup]="addSharedUser">
+    <form (ngSubmit)="addUserToList()" [formGroup]="addSharedUser">
         <ion-card>
             <ion-card-header>
                 <ion-text>Share this list with other people using their email address</ion-text>
@@ -34,15 +34,16 @@
         <ion-list-header>
             <ion-text>User can edit</ion-text>
         </ion-list-header>
-        <ion-item-sliding *ngFor="let autorizedUser of autorizedUsers">
-            <div *ngIf="autorizedUser">
+        <ion-item-sliding *ngFor="let member of todoList?.members | keyvalue">
+            <div *ngIf="member && member.key !== todoList?.userId">
                 <ion-item>
-                    <ion-label>{{autorizedUser?.email}}</ion-label>
-                    <ion-toggle slot="start" color="primary" (ionChange)="toogleCanEdit(autorizedUser)"
-                        [(ngModel)]="autorizedUser.canEdit"></ion-toggle>
+                    <ion-label>{{member?.value.email}}</ion-label>
+                    <ion-toggle  slot="start" color="primary"
+                        (ionChange)="toogleCanEdit(member.key, member.value)" [(ngModel)]="member.value.canEdit">
+                    </ion-toggle>
                 </ion-item>
-                <ion-item-options side="end">
-                    <ion-item-option (click)="deleteSharedUser(autorizedUser)" color="danger" expandable>
+                <ion-item-options *ngIf="currentUserId === todoList?.userId" side="end">
+                    <ion-item-option (click)="deleteUserFromList(member.key)" color="danger" expandable>
                         Delete
                     </ion-item-option>
                 </ion-item-options>
@@ -50,7 +51,7 @@
         </ion-item-sliding>
     </ion-list>
 
-    <ion-content class="ion-text-center" *ngIf="!autorizedUsers || autorizedUsers.length==0">
+    <ion-content class="ion-text-center" *ngIf="!todoList?.members || (todoList?.members | json) == '{}'">
         <div class="ion-margin-vertical">
             <p>This list is not shared with anyone!</p>
             <p>You can share it by entering an email adress above.</p>

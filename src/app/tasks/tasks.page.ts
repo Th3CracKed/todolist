@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {TasksService, TodosListService} from '../services';
-import {Task, TodoList} from '../models';
-import {Observable} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TasksService, TodosListService, FirebaseUtilsService } from '../services';
+import { Task, TodoList } from '../models';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -17,38 +17,58 @@ export class TasksPage implements OnInit {
     newTaskName: string;
     doneCounter: string;
     private id: string;
+    currentUserId: string;
+    canEdit = false;
 
     constructor(private route: ActivatedRoute,
-                private todoListService: TodosListService,
-                private tasksService: TasksService) {
+        private todoListService: TodosListService,
+        private firebaseUtilsService: FirebaseUtilsService,
+        private tasksService: TasksService) {
         this.id = this.route.snapshot.paramMap.get('id');
     }
 
     ngOnInit() {
+        this.firebaseUtilsService.getCurrentUser()
+            .subscribe(user => {
+                this.currentUserId = user.userId;
+                this.getTodoList();
+                this.getTasks();
+            }, console.error)
+    }
+
+    private getTodoList() {
         this.todoListService.getOne(this.id)
             .subscribe(todoList => {
                 this.todoList = todoList;
-                console.log(todoList.title)
-            });
-        this.tasksService.getAll(this.id, true).subscribe((tasks) =>{
-            this.setRemainingCounter(tasks);
-            this.tasks = tasks;
-        });
+                this.checkIfHasEditPermission();
+            }, console.error);
     }
 
-    setRemainingCounter(data: Task[]) {
+    private checkIfHasEditPermission() {
+        this.canEdit = this.todoList.members[this.currentUserId].canEdit;
+    }
+
+    private getTasks() {
+        this.tasksService.getAll(this.id, true)
+            .subscribe((tasks) => {
+                this.setRemainingCounter(tasks);
+                this.tasks = tasks;
+            }, console.error);
+    }
+
+    private setRemainingCounter(data: Task[]) {
         const remaining = data.filter(d => d.isDone === true);
         this.doneCounter = `${remaining.length}/${data.length}`;
     }
 
     addTask() {
-        this.tasksService.add({name: this.newTaskName, listId: this.id})
+        this.tasksService.add({ name: this.newTaskName, listId: this.id })
             .then(() => this.newTaskName = '')
             .catch(() => this.newTaskName = '');
     }
 
     toogleIsDone(task: Task) {
-        this.tasksService.update(task.id, {isDone: task.isDone});
+        this.tasksService.update(task.id, { isDone: task.isDone });
     }
 
     deleteTask(taskId: string) {

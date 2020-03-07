@@ -7,7 +7,7 @@
         <ion-grid>
             <ion-row>
                 <ion-title>{{todoList?.title}} </ion-title>
-                <ion-button fill="none" [routerLink]="['share']">
+                <ion-button *ngIf="todoList?.userId === currentUserId" fill="none" [routerLink]="['share']">
                     <ion-icon slot="icon-only" name="person-add"></ion-icon>
                 </ion-button>
             </ion-row>
@@ -24,7 +24,7 @@
     </div>
 </ion-content>
 
-<ion-content *ngIf="tasks && tasks.length>0">
+<ion-content *ngIf="tasks && tasks.length > 0">
     <ion-list>
         <ion-list-header>
             <ion-text>TODO</ion-text>
@@ -32,10 +32,10 @@
         <ion-item-sliding *ngFor="let task of tasks">
             <ion-item *ngIf="task.isDone==false || !task.isDone">
                 <ion-label>{{task.name}}</ion-label>
-                <ion-checkbox slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone"></ion-checkbox>
+                <ion-checkbox *ngIf="canEdit" slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone"></ion-checkbox>
             </ion-item>
 
-            <ion-item-options side="end">
+            <ion-item-options *ngIf="canEdit" side="end">
                 <ion-item-option (click)="deleteTask(task?.id)" color="danger" expandable>
                     Delete
                 </ion-item-option>
@@ -51,11 +51,11 @@
         <ion-item-sliding *ngFor="let task of tasks">
             <ion-item *ngIf="task.isDone==true">
                 <ion-label color="medium" class="task-done">{{task.name}}</ion-label>
-                <ion-checkbox color="medium" slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone">
+                <ion-checkbox *ngIf="canEdit"color="medium" slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone">
                 </ion-checkbox>
             </ion-item>
 
-            <ion-item-options side="end">
+            <ion-item-options *ngIf="canEdit" side="end">
                 <ion-item-option (click)="deleteTask(task?.id)" color="danger" expandable>
                     Delete
                 </ion-item-option>
@@ -64,7 +64,7 @@
     </ion-list>
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="canEdit">
     <ion-toolbar>
 
         <ion-input class="ion-margin-horizontal addnewtask" [(ngModel)]="newTaskName" required clearInput
