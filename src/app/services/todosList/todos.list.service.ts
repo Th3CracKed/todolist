@@ -34,10 +34,19 @@ export class TodosListService {
             }));
     }
 
-    add(partialTodoList: { title: string }) {
+    add(title: string) {
         return this.firebaseUtilsService.getCurrentUser()
             .pipe(switchMap(currentUser => {
-                const todoList: TodoList = { ...partialTodoList, userId: currentUser.userId };
+                const todoList: TodoList = {
+                    title: title,
+                    userId: currentUser.userId,
+                    members: {
+                        [currentUser.userId]: {
+                            email: currentUser.email,
+                            canEdit: true
+                        }
+                    }
+                };
                 return this.db.collection<TodoList>('/todoLists').add(todoList);
             }));
     }
