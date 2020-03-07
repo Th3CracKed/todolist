@@ -3,7 +3,7 @@ import { TodoList, CoreMember } from '../../models';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { map, switchMap } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { FirebaseUtilsService } from '../utils/firebase-utils.service';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class SharedListService {
 
     getAllUserList(): Observable<TodoList[]> {
         return this.firebaseUtilsService.getCurrentUser()
-            .pipe(switchMap(currentUser => this.getUserSharedTodoLists(currentUser.userId)));
+            .pipe(flatMap(currentUser => this.getUserSharedTodoLists(currentUser.userId)));
     }
 
     private getUserSharedTodoLists(userId: string): Observable<TodoList[]> {

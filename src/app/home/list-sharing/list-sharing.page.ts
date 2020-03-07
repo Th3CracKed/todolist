@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TodoList, CoreMember } from '../../models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TodosListService } from 'src/app/services';
+import { TodosListService, FirebaseUtilsService } from 'src/app/services';
 import { ActivatedRoute } from '@angular/router';
 import { SharedListService } from 'src/app/services/sharedList/shared-list-info.service';
 import { UtilsService } from 'src/app/services/utils/utils';
@@ -16,12 +16,14 @@ import { RegisterService } from 'src/app/services/register/register.service';
 export class ListSharingPage implements OnInit {
 
     todoList: TodoList;
+    currentUserId: string;
     constructor(
         private route: ActivatedRoute,
         private todoListService: TodosListService,
         private userService: UserService,
         private registerService: RegisterService,
         private utilsService: UtilsService,
+        private firebaseUtilsService: FirebaseUtilsService,
         private sharedListInfoService: SharedListService) {
     }
 
@@ -34,14 +36,17 @@ export class ListSharingPage implements OnInit {
         this.route.params.subscribe(async params => {
             const listId = params['id'];
             this.getAuthorizedUsers(listId);
+            this.firebaseUtilsService.getCurrentUser()
+                .subscribe(user => this.currentUserId = user.userId);
         }, (err: string) => this.utilsService.presentErrorToast(err));
     }
 
     private getAuthorizedUsers(listId: string) {
         this.todoListService.getOne(listId)
-            .subscribe((todoList) => {
-                this.todoList = todoList;
-            }, (err: string) => this.utilsService.presentErrorToast(err));
+            .subscribe(
+                todoList => this.todoList = todoList,
+                this.utilsService.presentErrorToast
+            );
 
     }
 
@@ -49,12 +54,12 @@ export class ListSharingPage implements OnInit {
         const email: string = this.addSharedUser.get('email').value;
         this.userService.getUserByEmail(email)
             .subscribe(user => {
-                if(user){
+                if (user) {
                     this.addUserToListCore(user.userId, user.email);
                 } else {
                     this.registerService.signupUser({ email: email }, 'defaultPassword') // TODO replace with Passwordless invitation
-                    .then((user) => this.addUserToListCore(user.uid, user.email))
-                    .catch(this.utilsService.presentErrorToast);
+                        .then((user) => this.addUserToListCore(user.uid, user.email))
+                        .catch(this.utilsService.presentErrorToast);
                 }
             }, this.utilsService.presentErrorToast);
     }
@@ -77,8 +82,12 @@ export class ListSharingPage implements OnInit {
     }
 
     deleteUserFromList(userId: string) {
-        this.sharedListInfoService.delete(this.todoList.id, userId)
-            .then(() => this.utilsService.presentToast(`Access revoked`))
-            .catch(err => this.utilsService.presentErrorToast(err));
+        if (userId !== this.todoList.userId) {
+            this.sharedListInfoService.delete(this.todoList.id, userId)
+                .then(() => this.utilsService.presentToast(`Access revoked`))
+                .catch(err => this.utilsService.presentErrorToast(err));
+        } else {
+            this.utilsService.presentToast(`Owner Can't be removed`);
+        }
     }
 }

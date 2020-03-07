@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TodoList } from '../../models';
 import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators'
+import { map, flatMap } from 'rxjs/operators'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirebaseUtilsService } from '../utils/firebase-utils.service';
 
@@ -16,7 +16,7 @@ export class TodosListService {
 
     getAllUserList(): Observable<TodoList[]> {
         return this.firebaseUtilsService.getCurrentUser()
-            .pipe(switchMap(currentUser => this.getTodoLists(currentUser.userId)));
+            .pipe(flatMap(currentUser => this.getTodoLists(currentUser.userId)));
     }
 
     private getTodoLists(userId: string): Observable<TodoList[]> {
@@ -36,7 +36,7 @@ export class TodosListService {
 
     add(title: string) {
         return this.firebaseUtilsService.getCurrentUser()
-            .pipe(switchMap(currentUser => {
+            .pipe(flatMap(currentUser => {
                 const todoList: TodoList = {
                     title: title,
                     userId: currentUser.userId,

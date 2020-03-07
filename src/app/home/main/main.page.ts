@@ -29,7 +29,7 @@ export class MainPage implements OnInit {
     ngOnInit(): void {
         this.firebaseUtilsService.getCurrentUser()
             .subscribe(user => {
-                this.currentUserId = user.id;
+                this.currentUserId = user.userId;
                 this.sharedListService.getAllUserList()
                     .subscribe(todoLists => this.todoLists = todoLists,
                         this.utilsService.presentErrorToast);
@@ -41,46 +41,49 @@ export class MainPage implements OnInit {
     }
 
     // When user click on settings
-    async presentActionSheet(listId: string) {
-        const conditionalDeleteMenu = this.currentUserId === listId ? [{
+    async presentActionSheet(list: TodoList) {
+        const conditionalDeleteMenu = this.currentUserId === list.userId ? [{
             text: 'Delete',
             role: 'destructive',
             icon: 'trash',
             handler: () => {
                 console.log('Delete clicked');
-                this.presentAlertConfirm(listId);
+                this.presentAlertConfirm(list.id);
+            }
+        }]: [];
+        const conditionalSharingMenu = this.currentUserId === list.userId? [   {
+            text: 'Share',
+            icon: 'person-add',
+            handler: () => {
+                this.router.navigateByUrl(`list/${list.id}/share`);
             }
         }]: [];
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [
             ...conditionalDeleteMenu, 
-                {
-                text: 'Share',
-                icon: 'person-add',
-                handler: () => {
-                    this.router.navigateByUrl(`list/${listId}/share`);
-                }
-            }, {
+            ...conditionalSharingMenu, 
+            {
                 text: 'Pinned',
                 icon: 'pin',
                 handler: () => {
                     console.log('Pinned task');
                 }
-            }, {
+            },
+             {
                 text: 'Rename',
                 icon: 'create',
                 handler: () => {
                     console.log('Edit list name');
                 }
-            }, {
+            }, 
+            {
                 text: 'Cancel',
                 icon: 'close',
                 role: 'cancel',
-                handler: () => {
-                    console.log('Cancel clicked');
-                }
-            }]
+                handler: () => undefined
+            }
+        ]
         });
         await actionSheet.present();
     }

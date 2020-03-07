@@ -17,7 +17,7 @@
                     <ion-item (click)="openList(list?.id)">
                         <ion-icon [attr.name]="list.userId === currentUserId ? 'document' : 'people'" slot="start"></ion-icon>
                         <ion-label>{{ list?.title }}</ion-label>
-                        <ion-button click-stop-propagation color="secondary" fill="clear" (click)="presentActionSheet(list?.id)">
+                        <ion-button click-stop-propagation color="secondary" fill="clear" (click)="presentActionSheet(list)">
                             <ion-icon slot="icon-only" name="settings"></ion-icon>
                         </ion-button>
                     </ion-item>

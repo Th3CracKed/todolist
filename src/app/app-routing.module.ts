@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { AngularFireAuthGuard, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
+import { ListSharingGuard } from './auth/guards/list-sharing.guard';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(["login"]);
 const redirectAuthorizedToHome = () => redirectLoggedInTo([""]);
@@ -26,7 +27,6 @@ const routes: Routes = [
     path: 'list/:id',
     loadChildren: () => import('./tasks/tasks.module').then( m => m.TasksPageModule),
     canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
-    // TODO children root lazy loaded? list-sharing
   },
   {
     path: 'login',
@@ -45,6 +45,7 @@ const routes: Routes = [
   {
     path: 'list/:id/share',
     loadChildren: () => import('./home/list-sharing/list-sharing.module').then( m => m.ListSharingPageModule),
+    canLoad: [ListSharingGuard],
     canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
   }
 

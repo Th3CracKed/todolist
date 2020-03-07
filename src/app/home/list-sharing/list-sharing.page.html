@@ -35,13 +35,14 @@
             <ion-text>User can edit</ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let member of todoList?.members | keyvalue">
-            <div *ngIf="member">
+            <div *ngIf="member && member.key !== todoList?.userId">
                 <ion-item>
                     <ion-label>{{member?.value.email}}</ion-label>
-                    <ion-toggle slot="start" color="primary" (ionChange)="toogleCanEdit(member.key, member.value)"
-                        [(ngModel)]="member.value.canEdit"></ion-toggle>
+                    <ion-toggle  slot="start" color="primary"
+                        (ionChange)="toogleCanEdit(member.key, member.value)" [(ngModel)]="member.value.canEdit">
+                    </ion-toggle>
                 </ion-item>
-                <ion-item-options side="end">
+                <ion-item-options *ngIf="currentUserId === todoList?.userId" side="end">
                     <ion-item-option (click)="deleteUserFromList(member.key)" color="danger" expandable>
                         Delete
                     </ion-item-option>
