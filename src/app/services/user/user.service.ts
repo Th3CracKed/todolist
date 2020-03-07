@@ -1,26 +1,35 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { User } from 'src/app/models';
 import { FirebaseUtilsService } from '../utils/firebase-utils.service';
 import { map, take } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
   constructor(private db: AngularFirestore,
     private firebaseUtilsService: FirebaseUtilsService) { }
 
   getUserByEmail(email: string) {
-    return this.db.collection<User>(`/users`, ref => ref.where('email', '==', email))
-      .snapshotChanges()
-      .pipe(
-        take(1),
-        map(datas => datas[0]),
-        map(this.firebaseUtilsService.includeId)
-      );
+    const user$ = this.db.collection<User>(`/users`, ref => ref.where('email', '==', email)).snapshotChanges();
+    return this.getOneUserAndIncludeDocumentId(user$);
+  }
+
+  
+  getUserByUserName(userName: string) {
+    const user$ = this.db.collection<User>(`/users`, ref => ref.where('userName', '==', userName)).snapshotChanges();
+    return this.getOneUserAndIncludeDocumentId(user$);
+  }
+
+  private getOneUserAndIncludeDocumentId(observable: Observable<DocumentChangeAction<User>[]>){
+    return observable.pipe(
+      take(1),
+      map(datas => datas[0]),
+      map(this.firebaseUtilsService.includeId)
+    );
   }
 
   add(user: User) {
