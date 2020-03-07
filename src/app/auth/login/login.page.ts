@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ import { UtilsService } from 'src/app/services/utils/utils';
 })
 export class LoginPage implements OnInit {
     userLogin = new FormGroup({
-        login: new FormControl('', [Validators.required, Validators.minLength(3), Validators.email]),
+        login: new FormControl('', [Validators.required, Validators.minLength(3)]),
         password: new FormControl('', [Validators.required, Validators.minLength(3)])
     });
     isLoading = false;
@@ -30,14 +30,24 @@ export class LoginPage implements OnInit {
     }
 
     login() {
-        // TODO isMail ? login : checkIfUserNameExistsThenLogin
+        const isNotValidMail = Validators.email(this.userLogin.get('login'));
+        if (isNotValidMail) {
+            this.userService.getUserByUserName(this.userLogin.get('login').value)
+                .subscribe(user => this.loginCore(user.email, this.userLogin.get('password').value),
+                    this.utilsService.presentErrorToast);
+        } else {
+            this.loginCore(this.userLogin.get('login').value, this.userLogin.get('password').value);
+        }
+    }
+
+    private loginCore(email: string, password: string) {
         this.afAuth.auth
-            .signInWithEmailAndPassword(this.userLogin.get('login').value, this.userLogin.get('password').value)
+            .signInWithEmailAndPassword(email, password)
             .then(() => {
                 this.userLogin.reset();
                 this.router.navigate(['']);
-            });
-        // TODO login failed
+            })
+            .catch(this.utilsService.presentErrorToast);
     }
 
     loginGoogle() {

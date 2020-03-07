@@ -36,7 +36,7 @@ export class SharedListService {
     delete(listId: string, userId: string) {
         return this.editMapValue(listId, userId, () => firebase.firestore.FieldValue.delete());
     }
-    //TODO extract this to firebaseUtils, while fixing the FieldValue delete type issue
+    
     private editMapValue(listId: string, userId: string, factoryValue: () => CoreMember | firebase.firestore.FieldValue) {
         return this.db.doc<any>(`/todoLists/${listId}`).set({
             members: {
