@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from 'src/app/models';
+import { FirebaseUtilsService } from '../utils/firebase-utils.service';
+import { map, take } from 'rxjs/operators';
 
 
 @Injectable({
@@ -8,8 +10,18 @@ import { User } from 'src/app/models';
 })
 export class UserService {
 
-  constructor(private db: AngularFirestore) { }
+  constructor(private db: AngularFirestore,
+    private firebaseUtilsService: FirebaseUtilsService) { }
 
+  getUserByEmail(email: string) {
+    return this.db.collection<User>(`/users`, ref => ref.where('email', '==', email))
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        map(datas => datas[0]),
+        map(this.firebaseUtilsService.includeId)
+      );
+  }
 
   add(user: User) {
     return this.db.collection<User>('/users').add(user);
