@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { TodosListService, SharedListService } from '../../services';
+import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
 import { TodoList } from '../../models';
 import { Observable } from 'rxjs';
+import { UtilsService } from 'src/app/services/utils/utils';
 
 @Component({
     selector: 'app-main',
@@ -13,61 +14,48 @@ import { Observable } from 'rxjs';
 export class MainPage implements OnInit {
 
     todoLists: TodoList[];
-    sharedLists: TodoList[];
     todoListsShared$: Observable<TodoList[]>;
+    currentUserId: string;
 
     constructor(private actionSheetController: ActionSheetController,
         private alertController: AlertController,
         private router: Router,
         private listService: TodosListService,
-        private sharedListService: SharedListService) {
+        private sharedListService: SharedListService,
+        private utilsService: UtilsService,
+        private firebaseUtilsService: FirebaseUtilsService) {
     }
 
     ngOnInit(): void {
-        this.listService.getAllUserList()
-            .subscribe((todoLists) => {
-                this.todoLists = todoLists
-        });
-        this.sharedListService.getAllUserSharedList()
-            .subscribe(sharedLists => this.sharedLists = sharedLists);
+        this.firebaseUtilsService.getCurrentUser()
+            .subscribe(user => {
+                this.currentUserId = user.id;
+                this.sharedListService.getAllUserList()
+                    .subscribe(todoLists => this.todoLists = todoLists,
+                        this.utilsService.presentErrorToast);
+            });
     }
 
-    async presentAlertConfirm(id: string) {
-        const alert = await this.alertController.create({
-            header: 'Confirmation!',
-            message: 'Delete note <strong>liste Name Here</strong> ?',
-            buttons: [
-                {
-                    text: 'Cancel',
-                    role: 'cancel',
-                    cssClass: 'secondary',
-                    handler: (blah) => {
-                        console.log('Confirm Cancel: blah');
-                    }
-                }, {
-                    text: 'Delete',
-                    handler: () => {
-                        this.delete(id);
-                    }
-                }
-            ]
-        });
-        await alert.present();
+    openList(id: string) {
+        this.router.navigateByUrl(`list/${id}`);
     }
 
-    // Quand l'utilisateur clique sur settings
+    // When user click on settings
     async presentActionSheet(listId: string) {
+        const conditionalDeleteMenu = this.currentUserId === listId ? [{
+            text: 'Delete',
+            role: 'destructive',
+            icon: 'trash',
+            handler: () => {
+                console.log('Delete clicked');
+                this.presentAlertConfirm(listId);
+            }
+        }]: [];
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
-            buttons: [{
-                text: 'Delete',
-                role: 'destructive',
-                icon: 'trash',
-                handler: () => {
-                    console.log('Delete clicked');
-                    this.presentAlertConfirm(listId);
-                }
-            }, {
+            buttons: [
+            ...conditionalDeleteMenu, 
+                {
                 text: 'Share',
                 icon: 'person-add',
                 handler: () => {
@@ -97,11 +85,33 @@ export class MainPage implements OnInit {
         await actionSheet.present();
     }
 
-    openList(id: string) {
-        this.router.navigateByUrl(`list/${id}`);
+    private async presentAlertConfirm(listId: string) {
+        const alert = await this.alertController.create({
+            header: 'Confirmation!',
+            message: 'Delete note <strong>liste Name Here</strong> ?',
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: (blah) => {
+                        console.log('Confirm Cancel: blah');
+                    }
+                }, {
+                    text: 'Delete',
+                    handler: () => {
+                        this.delete(listId);
+                    }
+                }
+            ]
+        });
+        await alert.present();
     }
 
-    private delete(id: string) {
-        this.listService.delete(id);
+
+    private delete(listId: string) {
+        this.listService.delete(listId)
+            .then(() => this.utilsService.presentToast('Deleted Sucessfully'))
+            .catch(this.utilsService.presentErrorToast);
     }
 }

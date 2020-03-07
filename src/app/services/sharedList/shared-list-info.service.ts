@@ -14,9 +14,9 @@ export class SharedListService {
     constructor(private db: AngularFirestore,
         private firebaseUtilsService: FirebaseUtilsService) { }
 
-    getAllUserSharedList(): Observable<TodoList[]> {
+    getAllUserList(): Observable<TodoList[]> {
         return this.firebaseUtilsService.getCurrentUser()
-            .pipe(switchMap(currentUser => this.getUserSharedTodoLists(currentUser.id)));
+            .pipe(switchMap(currentUser => this.getUserSharedTodoLists(currentUser.userId)));
     }
 
     private getUserSharedTodoLists(userId: string): Observable<TodoList[]> {

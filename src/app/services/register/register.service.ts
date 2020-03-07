@@ -11,21 +11,23 @@ import { UtilsService } from '../utils/utils';
 export class RegisterService {
 
   constructor(private afAuth: AngularFireAuth,
-    private userService: UserService,
-    private utilsService: UtilsService) { }
+    private userService: UserService) { }
 
-  signupUser(user: Partial<User>, password: string): Promise<void> {
-    return this.afAuth.auth.createUserWithEmailAndPassword(user.email, password)
-      .then((firebaseUser) => {
-        this.userService.add(
-          {
-            userId: firebaseUser.user.uid,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            userName: user.userName
-          }
-        ).catch(this.utilsService.presentErrorToast);
-      }).catch(this.utilsService.presentErrorToast);
+  async signupUser(user: Partial<User>, password: string): Promise<firebase.User> {
+    try {
+      const firebaseUser = await this.afAuth.auth.createUserWithEmailAndPassword(user.email, password);
+      this.userService.add(
+        {
+          userId: firebaseUser.user.uid,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          userName: user.userName
+        }
+      );
+      return firebaseUser.user;
+    } catch (err) {
+      console.error(err);
+    }
   }
 }

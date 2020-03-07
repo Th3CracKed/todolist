@@ -15,7 +15,7 @@
             <div *ngFor="let list of todoLists">
                 <ion-card class="ion-activatable">
                     <ion-item (click)="openList(list?.id)">
-                        <ion-icon name="document" slot="start"></ion-icon>
+                        <ion-icon [attr.name]="list.userId === currentUserId ? 'document' : 'people'" slot="start"></ion-icon>
                         <ion-label>{{ list?.title }}</ion-label>
                         <ion-button click-stop-propagation color="secondary" fill="clear" (click)="presentActionSheet(list?.id)">
                             <ion-icon slot="icon-only" name="settings"></ion-icon>
@@ -24,22 +24,6 @@
                     <ion-ripple-effect></ion-ripple-effect>
                 </ion-card>
             </div>
-
-
-<!--            shared LIST-->
-            <div *ngFor="let sharedList of sharedLists">
-                <ion-card class="ion-activatable">
-                    <ion-item (click)="openList(sharedList?.id)">
-                        <ion-icon name="people" slot="start"></ion-icon>
-                        <ion-label>{{ sharedList?.title }}</ion-label>
-                        <ion-button click-stop-propagation color="secondary" fill="clear" (click)="presentActionSheet(sharedList?.id)">
-                            <ion-icon slot="icon-only" name="settings"></ion-icon>
-                        </ion-button>
-                    </ion-item>
-                    <ion-ripple-effect></ion-ripple-effect>
-                </ion-card>
-            </div>
-<!--            END shared LIST-->
 
         </ion-content>
 

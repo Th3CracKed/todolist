@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TodoList, Member, CoreMember } from '../../models';
+import { TodoList, CoreMember } from '../../models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TodosListService } from 'src/app/services';
 import { ActivatedRoute } from '@angular/router';
@@ -50,10 +50,10 @@ export class ListSharingPage implements OnInit {
         this.userService.getUserByEmail(email)
             .subscribe(user => {
                 if(user){
-                    this.addUserToListCore(user.id, user.email);
+                    this.addUserToListCore(user.userId, user.email);
                 } else {
                     this.registerService.signupUser({ email: email }, 'defaultPassword') // TODO replace with Passwordless invitation
-                    .then(() => this.addUserToListCore(user.id, user.email))
+                    .then((user) => this.addUserToListCore(user.uid, user.email))
                     .catch(this.utilsService.presentErrorToast);
                 }
             }, this.utilsService.presentErrorToast);
