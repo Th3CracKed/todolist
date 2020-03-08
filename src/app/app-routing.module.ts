@@ -47,7 +47,11 @@ const routes: Routes = [
     loadChildren: () => import('./home/list-sharing/list-sharing.module').then( m => m.ListSharingPageModule),
     canLoad: [ListSharingGuard],
     canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
+  },  {
+    path: 'reset-password',
+    loadChildren: () => import('./auth/reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
   }
+
 
 ];
 @NgModule({
