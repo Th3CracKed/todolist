@@ -22,12 +22,20 @@ export class ResetPasswordPage implements OnInit {
     }
 
     reset() {
-        return 'hello';
+        //useless ?
+        const isNotValidMail = Validators.email(this.userLogin.get('email'));
+        if (isNotValidMail) {
+            //something ?
+        } else {
+            //something
+            const email = this.userLogin.get('email').value
+            this.resetPassword(email);
+        }
     }
 
 
     resetPassword(email: string): Promise<void> {
-      // this.router.navigate(['login']); //go back to login page ?
+        // this.router.navigate(['login']); //go back to login page ?
         return this.presentAlertConfirm(email);
     }
 
