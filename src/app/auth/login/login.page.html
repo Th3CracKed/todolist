@@ -5,66 +5,73 @@
 </ion-header>
 
 <ion-content>
-        <form (ngSubmit)="login()" [formGroup]="userLogin">
-            <ion-card>
-                <ion-card-header>
-                    <ion-card-title>Login</ion-card-title>
-                </ion-card-header>
+    <form (ngSubmit)="login()" [formGroup]="userLogin">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Login</ion-card-title>
+            </ion-card-header>
 
-                <ion-card-content>
-                    <ion-item>
-                        <ion-label position="stacked">Login
-                            <ion-text color="danger">*</ion-text>
-                        </ion-label>
-                        <ion-input required="true" type="text" name="login" formControlName="login"
-                                   placeholder="Type your email or username"></ion-input>
-                    </ion-item>
-                    <ion-item>
-                        <ion-label position="stacked">Password
-                            <ion-text color="danger">*</ion-text>
-                        </ion-label>
-                        <ion-input required="true" type="password" name="password" formControlName="password"
-                                   placeholder="Password"></ion-input>
-                    </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="stacked">Login
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input required="true" type="text" name="login" formControlName="login"
+                               placeholder="Type your email or username"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="stacked">Password
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input required="true" type="password" name="password" formControlName="password"
+                               placeholder="Password"></ion-input>
+                </ion-item>
+                <div class="ion-margin-vertical">
+                    <ion-button expand="block" type="submit" color="primary" [disabled]="!userLogin.valid">
+                        LOGIN
+                    </ion-button>
+                </div>
+
+                <section class="ion-text-center">
+                    <ion-grid>
+                        <ion-row flex-end>
+                            <ion-col col-6>
+                            </ion-col>
+                            <ion-col col-6>
+                                <ion-button  size="small" expand="block" color="dark" fill="clear" [routerLink]="'/reset-password'">
+                                    Reset password
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                        <header class="ion-text-center">- OR -</header>
+                        <ion-row>
+                            <ion-col col-6>
+                                <ion-button (click)="loginGoogle()" color="danger" fill="outline" expand="block">
+                                    Google
+                                    <ion-icon slot="start" name="logo-google"></ion-icon>
+                                </ion-button>
+                            </ion-col>
+                            <ion-col col-6>
+                                <ion-button (click)="loginFacebook()" fill="outline" expand="block">Facebook
+                                    <ion-icon slot="start" name="logo-facebook"></ion-icon>
+                                </ion-button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-grid>
+                </section>
+                <section>
+                    <p class="ion-text-center">Or create an account:</p>
                     <div class="ion-margin-vertical">
-                        <ion-button expand="block" type="submit" color="primary" [disabled]="!userLogin.valid">
-                            LOGIN
+                        <ion-button expand="block" fill="outline" color="medium"
+                                    [routerLink]="'/register'">
+                            Register
                         </ion-button>
                     </div>
-                    <section>
-                        <button class="ion-text-center" (click)="resetPassword('a8d@hotmail.fr')">Reset password</button>
-                    </section>
-                    <section class="ion-text-center">
-                        <header class="ion-text-center">- OR -</header>
-                        <ion-grid>
-                            <ion-row>
-                                <ion-col col-6>
-                                    <ion-button (click)="loginGoogle()" color="danger" fill="outline" expand="block">
-                                        Google
-                                        <ion-icon slot="start" name="logo-google"></ion-icon>
-                                    </ion-button>
-                                </ion-col>
-                                <ion-col col-6>
-                                    <ion-button (click)="loginFacebook()" fill="outline" expand="block">Facebook
-                                        <ion-icon slot="start" name="logo-facebook"></ion-icon>
-                                    </ion-button>
-                                </ion-col>
-                            </ion-row>
-                        </ion-grid>
-                    </section>
-                    <section>
-                        <p class="ion-text-center">Or create an account:</p>
-                        <div class="ion-margin-vertical">
-                            <ion-button expand="block" fill="outline" color="medium"
-                                        [routerLink]="'/register'">
-                                Register
-                            </ion-button>
-                        </div>
-                    </section>
-                </ion-card-content>
-                <div *ngIf="isLoading" class="ion-text-center">
-                    <ion-spinner></ion-spinner>
-                </div>
-            </ion-card>
-        </form>
+                </section>
+            </ion-card-content>
+            <div *ngIf="isLoading" class="ion-text-center">
+                <ion-spinner></ion-spinner>
+            </div>
+        </ion-card>
+    </form>
 </ion-content>
