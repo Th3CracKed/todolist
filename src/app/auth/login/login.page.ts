@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { auth } from 'firebase/app';
-import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user/user.service';
-import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
-import { UtilsService } from 'src/app/services/utils/utils';
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators, AbstractControl} from '@angular/forms';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {auth} from 'firebase/app';
+import {Router} from '@angular/router';
+import {UserService} from 'src/app/services/user/user.service';
+import {FirebaseUtilsService} from 'src/app/services/utils/firebase-utils.service';
+import {UtilsService} from 'src/app/services/utils/utils';
+import {AlertController} from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -20,10 +21,10 @@ export class LoginPage implements OnInit {
     isLoading = false;
 
     constructor(private afAuth: AngularFireAuth,
-        private userService: UserService,
-        private utilsService: UtilsService,
-        private firebaseUtilsService: FirebaseUtilsService,
-        private router: Router) {
+                private userService: UserService,
+                private utilsService: UtilsService,
+                private firebaseUtilsService: FirebaseUtilsService,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -76,9 +77,6 @@ export class LoginPage implements OnInit {
         alert('Facebook');
     }
 
-    resetPassword(email: string): Promise<void> {
-        return this.afAuth.auth.sendPasswordResetEmail(email);
-    }
 
     logout() {
         this.afAuth.auth.signOut();

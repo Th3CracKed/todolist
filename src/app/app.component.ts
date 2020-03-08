@@ -12,7 +12,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-    hideOnRoute = ['login', 'register', 'help'];
+    hideOnRoute = ['login', 'register', 'help', 'reset-password', 'set-new-password'];
 
     constructor(
         private afAuth: AngularFireAuth,
