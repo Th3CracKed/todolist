@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Router } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { User } from 'src/app/models';
-import { UtilsService } from '../utils/utils';
+import * as R from 'ramda';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +18,9 @@ export class RegisterService {
       this.userService.add(firebaseUser.user.uid,
         {
           email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          userName: user.userName
+          firstName: R.pathOr('', ['firstName'], user),
+          lastName: R.pathOr('', ['lastName'], user),
+          userName: R.pathOr('', ['userName'], user)
         }
       );
       return firebaseUser.user;

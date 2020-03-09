@@ -31,8 +31,8 @@ export class MainPage implements OnInit {
             .subscribe(user => {
                 this.currentUserId = user.id;
                 this.sharedListService.getAllUserList()
-                    .subscribe(todoLists => this.todoLists = todoLists,
-                        this.utilsService.presentErrorToast);
+                    .subscribe(todoLists => this.todoLists = todoLists
+                    ,err => console.error(err));
             });
     }
 
@@ -115,6 +115,6 @@ export class MainPage implements OnInit {
     private delete(listId: string) {
         this.listService.delete(listId)
             .then(() => this.utilsService.presentToast('Deleted Sucessfully'))
-            .catch(this.utilsService.presentErrorToast);
+            .catch(err => this.utilsService.presentErrorToast(err));
     }
 }

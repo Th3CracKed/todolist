@@ -45,7 +45,7 @@ export class ListSharingPage implements OnInit {
         this.todoListService.getOne(listId)
             .subscribe(
                 todoList => this.todoList = todoList,
-                this.utilsService.presentErrorToast
+                err => this.utilsService.presentErrorToast(err)
             );
 
     }
@@ -59,9 +59,9 @@ export class ListSharingPage implements OnInit {
                 } else {
                     this.registerService.signupUser({ email: email }, 'defaultPassword') // TODO replace with Passwordless invitation
                         .then((user) => this.addUserToListCore(user.uid, user.email))
-                        .catch(this.utilsService.presentErrorToast);
+                        .catch(err => this.utilsService.presentErrorToast(err));
                 }
-            }, this.utilsService.presentErrorToast);
+            }, err => this.utilsService.presentErrorToast(err));
     }
 
     private async addUserToListCore(userId: string, email: string) {

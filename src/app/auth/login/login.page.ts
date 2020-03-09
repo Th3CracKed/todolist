@@ -35,7 +35,7 @@ export class LoginPage implements OnInit {
         if (isNotValidMail) {
             this.userService.getUserByUserName(this.userLogin.get('login').value)
                 .subscribe(user => this.loginCore(user.email, this.userLogin.get('password').value),
-                    this.utilsService.presentErrorToast);
+                    err => this.utilsService.presentErrorToast(err));
         } else {
             this.loginCore(this.userLogin.get('login').value, this.userLogin.get('password').value);
         }
@@ -63,10 +63,10 @@ export class LoginPage implements OnInit {
             .subscribe((user) => {
                 if (!user) {
                     this.userService.add(credentials.user.uid, { email: credentials.user.email })
-                        .catch(this.utilsService.presentErrorToast);
+                        .catch(err => this.utilsService.presentErrorToast(err));
                 }
                 this.router.navigateByUrl('');
-            });
+            }, err => this.utilsService.presentErrorToast(err));
     }
 
     loginFacebook() {
