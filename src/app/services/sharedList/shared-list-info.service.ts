@@ -16,7 +16,7 @@ export class SharedListService {
 
     getAllUserList(): Observable<TodoList[]> {
         return this.firebaseUtilsService.getCurrentUser()
-            .pipe(flatMap(currentUser => this.getUserSharedTodoLists(currentUser.userId)));
+            .pipe(flatMap(currentUser => this.getUserSharedTodoLists(currentUser.id)));
     }
 
     private getUserSharedTodoLists(userId: string): Observable<TodoList[]> {

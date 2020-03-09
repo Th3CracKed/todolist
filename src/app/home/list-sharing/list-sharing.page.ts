@@ -37,7 +37,7 @@ export class ListSharingPage implements OnInit {
             const listId = params['id'];
             this.getAuthorizedUsers(listId);
             this.firebaseUtilsService.getCurrentUser()
-                .subscribe(user => this.currentUserId = user.userId);
+                .subscribe(user => this.currentUserId = user.id);
         }, (err: string) => this.utilsService.presentErrorToast(err));
     }
 
@@ -55,7 +55,7 @@ export class ListSharingPage implements OnInit {
         this.userService.getUserByEmail(email)
             .subscribe(user => {
                 if (user) {
-                    this.addUserToListCore(user.userId, user.email);
+                    this.addUserToListCore(user.id, user.email);
                 } else {
                     this.registerService.signupUser({ email: email }, 'defaultPassword') // TODO replace with Passwordless invitation
                         .then((user) => this.addUserToListCore(user.uid, user.email))

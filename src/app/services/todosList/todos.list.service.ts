@@ -16,7 +16,7 @@ export class TodosListService {
 
     getAllUserList(): Observable<TodoList[]> {
         return this.firebaseUtilsService.getCurrentUser()
-            .pipe(flatMap(currentUser => this.getTodoLists(currentUser.userId)));
+            .pipe(flatMap(currentUser => this.getTodoLists(currentUser.id)));
     }
 
     private getTodoLists(userId: string): Observable<TodoList[]> {
@@ -39,9 +39,9 @@ export class TodosListService {
             .pipe(flatMap(currentUser => {
                 const todoList: TodoList = {
                     title: title,
-                    userId: currentUser.userId,
+                    userId: currentUser.id,
                     members: {
-                        [currentUser.userId]: {
+                        [currentUser.id]: {
                             email: currentUser.email,
                             canEdit: true
                         }

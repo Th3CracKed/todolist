@@ -32,8 +32,8 @@ export class UserService {
     );
   }
 
-  add(user: User) {
-    return this.db.collection<User>('/users').add(user);
+  add(customDocumentId: string, user: User) {
+    return this.db.collection<User>('/users').doc(customDocumentId).set(user);
   }
 
   update(id: string, newUser: Partial<User>) {

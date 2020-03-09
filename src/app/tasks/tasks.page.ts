@@ -30,7 +30,7 @@ export class TasksPage implements OnInit {
     ngOnInit() {
         this.firebaseUtilsService.getCurrentUser()
             .subscribe(user => {
-                this.currentUserId = user.userId;
+                this.currentUserId = user.id;
                 this.getTodoList();
                 this.getTasks();
             }, console.error)

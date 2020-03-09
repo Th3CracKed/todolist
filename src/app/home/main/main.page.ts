@@ -26,10 +26,10 @@ export class MainPage implements OnInit {
         private firebaseUtilsService: FirebaseUtilsService) {
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.firebaseUtilsService.getCurrentUser()
             .subscribe(user => {
-                this.currentUserId = user.userId;
+                this.currentUserId = user.id;
                 this.sharedListService.getAllUserList()
                     .subscribe(todoLists => this.todoLists = todoLists,
                         this.utilsService.presentErrorToast);

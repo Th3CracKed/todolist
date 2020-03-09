@@ -16,9 +16,8 @@ export class RegisterService {
   async signupUser(user: Partial<User>, password: string): Promise<firebase.User> {
     try {
       const firebaseUser = await this.afAuth.auth.createUserWithEmailAndPassword(user.email, password);
-      this.userService.add(
+      this.userService.add(firebaseUser.user.uid,
         {
-          userId: firebaseUser.user.uid,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
