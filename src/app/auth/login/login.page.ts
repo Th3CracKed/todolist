@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
 import { UtilsService } from 'src/app/services/utils/utils';
-import { AlertController } from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -48,14 +47,14 @@ export class LoginPage implements OnInit {
                 this.userLogin.reset();
                 this.router.navigate(['']);
             })
-            .catch(this.utilsService.presentErrorToast);
+            .catch(err => this.utilsService.presentErrorToast(err));
     }
 
     loginGoogle() {
         this.isLoading = true;
         this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
             .then(credentials => this.createUserIfNew(credentials))
-            .catch(this.utilsService.presentToast);
+            .catch(err => this.utilsService.presentToast(err));
     }
 
     createUserIfNew(credentials: auth.UserCredential) {
