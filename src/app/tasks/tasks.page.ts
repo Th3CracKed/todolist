@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TasksService, TodosListService, FirebaseUtilsService } from '../services';
 import { Task, TodoList } from '../models';
-import { Observable } from 'rxjs';
-
 
 @Component({
     selector: 'app-tasks',
@@ -30,10 +28,10 @@ export class TasksPage implements OnInit {
     ngOnInit() {
         this.firebaseUtilsService.getCurrentUser()
             .subscribe(user => {
-                this.currentUserId = user.userId;
+                this.currentUserId = user.id;
                 this.getTodoList();
                 this.getTasks();
-            }, console.error)
+            }, err => console.error(err))
     }
 
     private getTodoList() {
@@ -41,7 +39,7 @@ export class TasksPage implements OnInit {
             .subscribe(todoList => {
                 this.todoList = todoList;
                 this.checkIfHasEditPermission();
-            }, console.error);
+            }, err => console.error(err));
     }
 
     private checkIfHasEditPermission() {
@@ -53,7 +51,7 @@ export class TasksPage implements OnInit {
             .subscribe((tasks) => {
                 this.setRemainingCounter(tasks);
                 this.tasks = tasks;
-            }, console.error);
+            }, err => console.error(err));
     }
 
     private setRemainingCounter(data: Task[]) {

@@ -19,7 +19,7 @@ export class ListSharingGuard implements CanLoad {
         flatMap(user => this.todosListService.getOne(listId)
           .pipe(
             take(1),
-            map(todoList => user.userId === todoList.userId)
+            map(todoList => user.id === todoList.userId)
           ))
       );
   }

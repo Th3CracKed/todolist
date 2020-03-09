@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { DocumentChangeAction, AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../../models';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { first, map, take, flatMap } from 'rxjs/operators';
+import { first, map, flatMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import * as R from 'ramda';
 
 
 @Injectable({
@@ -38,24 +39,21 @@ export class FirebaseUtilsService {
             flatMap(firebaseUser => {
                 const userId = firebaseUser.uid;
                 const email = firebaseUser.email;
-                return this.db.collection<User>(`users`, ref => ref.where('userId', '==', userId).limit(1))
-                    .snapshotChanges().pipe(
-                        take(1),
-                        map(infos => infos[0]),
-                        map(this.includeId),
+                return this.db.doc<User>(`users/${userId}`)
+                    .valueChanges().pipe(
                         map(storedUserInfo => {
                             if (storedUserInfo) {
                                 this.currentUser = {
-                                    id: storedUserInfo.id,
-                                    userId: userId,
+                                    id: userId,
                                     email: email,
-                                    firstName: storedUserInfo.firstName,
-                                    lastName: storedUserInfo.lastName,
-                                    userName: storedUserInfo.userName
+                                    firstName: R.path(['firstName'], storedUserInfo),
+                                    lastName: R.path(['lastName'], storedUserInfo),
+                                    userName: R.path(['userName'], storedUserInfo)
                                 }
                                 return this.currentUser;
+                            } else {
+                                return undefined;
                             }
-                            return undefined;
                         })
                     );
             })
