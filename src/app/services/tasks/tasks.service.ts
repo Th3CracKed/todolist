@@ -12,11 +12,11 @@ export class TasksService {
     private todos$: AngularFirestoreCollection<Task>;
 
     constructor(private db: AngularFirestore) {
-        this.todos$ = this.db.collection<Task>('/todoList');
+        this.todos$ = this.db.collection<Task>('/tasks');
     }
 
     getAll(listId: string, withId: boolean = false): Observable<Task[]> {
-        const filteredTodos$ = this.db.collection<Task>('/todoList', ref => ref.where('listId', '==', listId));
+        const filteredTodos$ = this.db.collection<Task>('/tasks', ref => ref.where('listId', '==', listId));
         return withId ? filteredTodos$.snapshotChanges()
             .pipe(map(todoWithMetaData => {
                 return todoWithMetaData.map(todoListWithMetaData => {
@@ -29,18 +29,18 @@ export class TasksService {
     }
 
     getOne(id: string): Observable<Task> {
-        return this.db.doc<Task>(`/todoList/${id}`).valueChanges();
+        return this.db.doc<Task>(`/tasks/${id}`).valueChanges();
     }
 
-    add(todo: Task) {
-        return this.todos$.add(todo);
+    add(task: Task) {
+        return this.todos$.add(task);
     }
 
-    update(id: string, newTodo: Partial<Task>) {
-        return this.db.doc<Task>(`/todoList/${id}`).update(newTodo);
+    update(id: string, newTask: Partial<Task>) {
+        return this.db.doc<Task>(`/tasks/${id}`).update(newTask);
     }
 
     delete(id: string) {
-        return this.db.doc<Task>(`/todoList/${id}`).delete();
+        return this.db.doc<Task>(`/tasks/${id}`).delete();
     }
 }

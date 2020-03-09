@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TodoList } from '../../models';
+import { TodoList, Task } from '../../models';
 import { Observable } from 'rxjs';
 import { map, flatMap } from 'rxjs/operators'
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -55,7 +55,11 @@ export class TodosListService {
         return this.db.doc<TodoList>(`/todoLists/${id}`).update(newTodoList);
     }
 
-    delete(id: string) {
-        return this.db.doc<TodoList>(`/todoLists/${id}`).delete();
+    async delete(id: string) {
+        await this.db.doc<TodoList>(`/todoLists/${id}`).delete();
+        // TODO better if done in cloud functions check https://firebase.google.com/docs/firestore/manage-data/delete-data#collections
+        // https://firebase.google.com/docs/firestore/solutions/delete-collections#cloud_function
+        return this.db.collection<Task>('/tasks', ref => ref.where('listId', '==', id)).snapshotChanges()
+            .forEach(TasksRefs => TasksRefs.forEach(task => task.payload.doc.ref.delete()));
     }
 }

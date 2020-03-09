@@ -30,12 +30,12 @@
             <ion-text>TODO</ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let task of tasks">
-            <ion-item *ngIf="task.isDone==false || !task.isDone">
+            <ion-item *ngIf="!task?.isDone">
                 <ion-label>{{task.name}}</ion-label>
-                <ion-checkbox *ngIf="canEdit" slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone"></ion-checkbox>
+                <ion-checkbox *ngIf="todoList?.userId === currentUserId || canEdit" slot="start" (ionChange)="toogleIsDone(task)" [(ngModel)]="task.isDone"></ion-checkbox>
             </ion-item>
 
-            <ion-item-options *ngIf="canEdit" side="end">
+            <ion-item-options *ngIf="todoList?.userId === currentUserId || canEdit" side="end">
                 <ion-item-option (click)="deleteTask(task?.id)" color="danger" expandable>
                     Delete
                 </ion-item-option>
