@@ -9,10 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class TasksService {
 
-    private todos$: AngularFirestoreCollection<Task>;
-
     constructor(private db: AngularFirestore) {
-        this.todos$ = this.db.collection<Task>('/tasks');
     }
 
     getAll(listId: string, withId: boolean = false): Observable<Task[]> {
@@ -33,7 +30,7 @@ export class TasksService {
     }
 
     add(task: Task) {
-        return this.todos$.add(task);
+        return this.db.collection<Task>('/tasks').add(task);
     }
 
     update(id: string, newTask: Partial<Task>) {

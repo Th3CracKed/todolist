@@ -47,6 +47,7 @@ export class ListSharingPage implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.onDestroy$.next();
         this.onDestroy$.complete();
     }
 

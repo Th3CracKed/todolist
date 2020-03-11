@@ -39,6 +39,7 @@ export class TasksPage implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.onDestroy$.next();
         this.onDestroy$.complete();
     }
 

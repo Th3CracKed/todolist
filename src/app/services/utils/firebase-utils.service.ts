@@ -33,6 +33,10 @@ export class FirebaseUtilsService {
         return this.currentUser ? of(this.currentUser) : this.fetchUser();
     }
 
+    unSetCurrentUser = () => {
+        this.currentUser = null;
+    }
+
     private fetchUser = (): Observable<User> => {
         return this.afAuth.user.pipe(
             first(),
