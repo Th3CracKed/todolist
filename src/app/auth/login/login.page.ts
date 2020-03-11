@@ -67,10 +67,17 @@ export class LoginPage implements OnInit, OnDestroy {
             .subscribe((user) => {
                 if (!user) {
                     this.userService.add(credentials.user.uid, { email: credentials.user.email })
-                        .catch(err => this.utilsService.presentErrorToast(err));
+                        .catch(err => {
+                            this.isLoading = false;
+                            this.utilsService.presentErrorToast(err)
+                        });
                 }
+                this.isLoading = false;
                 this.router.navigateByUrl('');
-            }, err => this.utilsService.presentErrorToast(err));
+            }, err => {
+                this.isLoading = false;
+                this.utilsService.presentErrorToast(err)
+            });
     }
 
     ngOnDestroy() {
