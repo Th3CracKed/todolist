@@ -50,9 +50,7 @@ export class FirebaseUtilsService {
                                 this.currentUser = {
                                     id: userId,
                                     email: email,
-                                    firstName: R.path(['firstName'], storedUserInfo),
-                                    lastName: R.path(['lastName'], storedUserInfo),
-                                    userName: R.path(['userName'], storedUserInfo)
+                                    ...storedUserInfo
                                 }
                                 return this.currentUser;
                             } else {

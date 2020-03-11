@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { auth } from 'firebase/app';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
 import { UtilsService } from 'src/app/services/utils/utils';
 import { takeUntil, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { auth } from 'firebase'
+import 'firebase/auth'
+import { AuthService } from 'src/app/services/auth/auth.service';
+import * as R from 'ramda';
 
 @Component({
     selector: 'app-login',
@@ -22,7 +24,7 @@ export class LoginPage implements OnInit, OnDestroy {
     isLoading = false;
     private onDestroy$ = new Subject<void>();
 
-    constructor(private afAuth: AngularFireAuth,
+    constructor(private authService: AuthService,
         private userService: UserService,
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
@@ -45,8 +47,7 @@ export class LoginPage implements OnInit, OnDestroy {
     }
 
     private loginCore(email: string, password: string) {
-        this.afAuth.auth
-            .signInWithEmailAndPassword(email, password)
+        this.authService.login(email, password)
             .then(() => {
                 this.userLogin.reset();
                 this.router.navigate(['']);
@@ -54,20 +55,35 @@ export class LoginPage implements OnInit, OnDestroy {
             .catch(err => this.utilsService.presentErrorToast(err));
     }
 
-    loginGoogle() {
+    async loginGoogle() {
         this.isLoading = true;
-        this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-            .then(credentials => this.createUserIfNew(credentials))
-            .catch(err => this.utilsService.presentToast(err));
+        try {
+            const credentials = await this.authService.loginGoogle();
+            this.createUserIfNew(credentials);
+        } catch (err) {
+            this.utilsService.presentToast(err);
+        }
     }
 
-    createUserIfNew(credentials: auth.UserCredential) {
+    private createUserIfNew(credentials: auth.UserCredential) {
         this.firebaseUtilsService.getCurrentUser()
             .pipe(takeUntil(this.onDestroy$), take(1))
             .subscribe((user) => {
                 if (!user) {
-                    this.userService.add(credentials.user.uid, { email: credentials.user.email })
-                        .catch(err => {
+                    this.userService
+                        .add(credentials.user.uid,
+                            {
+                                email: credentials.user.email,
+                                firstName: R.pathOr('', ['additionalUserInfo', 'profile', 'given_name'], credentials),
+                                lastName: R.pathOr('', ['additionalUserInfo', 'profile', 'family_name'], credentials),
+                                userName: R.pathOr('', ['additionalUserInfo', 'username'], credentials),
+                                picture: R.pathOr('', ['additionalUserInfo', 'profile','picture'], credentials)
+                                
+                            })
+                        .then(() => {
+                            this.isLoading = false;
+                            this.router.navigateByUrl('');
+                        }).catch(err => {
                             this.isLoading = false;
                             this.utilsService.presentErrorToast(err)
                         });
@@ -87,10 +103,5 @@ export class LoginPage implements OnInit, OnDestroy {
 
     loginFacebook() {
         alert('Facebook');
-    }
-
-
-    logout() {
-        this.afAuth.auth.signOut();
     }
 }

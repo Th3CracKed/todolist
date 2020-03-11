@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
-import {Platform, NavController, MenuController} from '@ionic/angular';
-import {SplashScreen} from '@ionic-native/splash-screen/ngx';
-import {StatusBar} from '@ionic-native/status-bar/ngx';
-import {Router, NavigationEnd} from '@angular/router';
-import {AngularFireAuth} from '@angular/fire/auth';
+import { Platform, NavController, MenuController } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Router, NavigationEnd } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { FirebaseUtilsService } from './services';
 
 @Component({
@@ -26,7 +26,7 @@ export class AppComponent {
         private menuCtrl: MenuController
     ) {
         this.initializeApp();
-        
+
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 this.menuCtrl.enable(this.canDisplay(), 'AppSideMenu');

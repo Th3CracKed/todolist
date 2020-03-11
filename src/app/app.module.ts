@@ -10,6 +10,7 @@ import { firebaseConfig } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { CoreModule } from './core.module';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import { CoreModule } from './core.module';
     AngularFireAuthModule,
     CoreModule
   ],
+  providers: [GooglePlus],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
