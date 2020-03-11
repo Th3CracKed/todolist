@@ -5,6 +5,7 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Router} from '@angular/router';
 import {AngularFireAuth} from '@angular/fire/auth';
+import { FirebaseUtilsService } from './services';
 
 @Component({
     selector: 'app-root',
@@ -20,7 +21,8 @@ export class AppComponent {
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
         private router: Router,
-        public navCtrl: NavController
+        private navCtrl: NavController,
+        private firebaseUtilsService: FirebaseUtilsService
     ) {
         this.initializeApp();
     }
@@ -34,7 +36,8 @@ export class AppComponent {
 
     logout() {
         this.afAuth.auth.signOut();
-        this.navCtrl.navigateRoot('login');
+        this.firebaseUtilsService.unSetCurrentUser();
+        this.navCtrl.navigateRoot(['login']);
     }
 
     canDisplay() {

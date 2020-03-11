@@ -33,16 +33,22 @@ export class MainPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.onDestroy$))
             .subscribe(user => {
                 this.currentUserId = user.id;
-                this.sharedListService.getAllUserList()
-                    .pipe(takeUntil(this.onDestroy$))
-                    .subscribe(todoLists => this.todoLists = todoLists
-                        , err => console.error(err));
-            });
+                this.getAllUsers();
+            }, err => console.error(err));
+    }
+
+    private getAllUsers() {
+        this.sharedListService.getAllUserList()
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe(todoLists => this.todoLists = todoLists
+                , err => console.error(err));
     }
 
     ngOnDestroy() {
+        this.onDestroy$.next();
         this.onDestroy$.complete();
     }
+
 
     openList(id: string) {
         this.router.navigateByUrl(`list/${id}`);
