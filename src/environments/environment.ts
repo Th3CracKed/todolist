@@ -3,7 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  googleWebClientId: '201259008916-6t19tnn8a88kmeeage0vprvn4t6vbto8.apps.googleusercontent.com'
 };
 
 export const firebaseConfig = {

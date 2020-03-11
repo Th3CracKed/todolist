@@ -1,13 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { auth } from 'firebase/app';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
 import { UtilsService } from 'src/app/services/utils/utils';
 import { takeUntil, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { Platform } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
+import { auth } from 'firebase'
+import 'firebase/auth'
 
 @Component({
     selector: 'app-login',
@@ -25,6 +29,8 @@ export class LoginPage implements OnInit, OnDestroy {
     constructor(private afAuth: AngularFireAuth,
         private userService: UserService,
         private utilsService: UtilsService,
+        private gplus: GooglePlus,
+        private platform: Platform,
         private firebaseUtilsService: FirebaseUtilsService,
         private router: Router) {
     }
@@ -54,11 +60,30 @@ export class LoginPage implements OnInit, OnDestroy {
             .catch(err => this.utilsService.presentErrorToast(err));
     }
 
-    loginGoogle() {
+    async loginGoogle() {
         this.isLoading = true;
-        this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-            .then(credentials => this.createUserIfNew(credentials))
-            .catch(err => this.utilsService.presentToast(err));
+        try {
+            let credentials;
+            if (!this.platform.is('cordova')) {
+                credentials = await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
+            } else {
+                credentials = await this.nativeLogin();
+            }
+            this.createUserIfNew(credentials);
+        } catch (err) {
+            console.error(err);
+            this.utilsService.presentToast(err);
+        }
+    }
+
+    private async nativeLogin() {
+        const user = await this.gplus.login({
+            webClientId: environment.googleWebClientId,
+            offline: true,
+            scopes: 'profile email'
+        });
+        console.log(user.idToken);
+        return this.afAuth.auth.signInWithCredential(auth.GoogleAuthProvider.credential(user.idToken));
     }
 
     createUserIfNew(credentials: auth.UserCredential) {
@@ -67,7 +92,10 @@ export class LoginPage implements OnInit, OnDestroy {
             .subscribe((user) => {
                 if (!user) {
                     this.userService.add(credentials.user.uid, { email: credentials.user.email })
-                        .catch(err => {
+                        .then(() => {
+                            this.isLoading = false;
+                            this.router.navigateByUrl('');
+                        }).catch(err => {
                             this.isLoading = false;
                             this.utilsService.presentErrorToast(err)
                         });
@@ -87,10 +115,5 @@ export class LoginPage implements OnInit, OnDestroy {
 
     loginFacebook() {
         alert('Facebook');
-    }
-
-
-    logout() {
-        this.afAuth.auth.signOut();
     }
 }
