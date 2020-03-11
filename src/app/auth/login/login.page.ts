@@ -1,17 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
 import { UtilsService } from 'src/app/services/utils/utils';
 import { takeUntil, take } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { Platform } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
 import { auth } from 'firebase'
 import 'firebase/auth'
+import { AuthService } from 'src/app/services/auth/auth.service';
+import * as R from 'ramda';
 
 @Component({
     selector: 'app-login',
@@ -26,11 +24,9 @@ export class LoginPage implements OnInit, OnDestroy {
     isLoading = false;
     private onDestroy$ = new Subject<void>();
 
-    constructor(private afAuth: AngularFireAuth,
+    constructor(private authService: AuthService,
         private userService: UserService,
         private utilsService: UtilsService,
-        private gplus: GooglePlus,
-        private platform: Platform,
         private firebaseUtilsService: FirebaseUtilsService,
         private router: Router) {
     }
@@ -51,8 +47,7 @@ export class LoginPage implements OnInit, OnDestroy {
     }
 
     private loginCore(email: string, password: string) {
-        this.afAuth.auth
-            .signInWithEmailAndPassword(email, password)
+        this.authService.login(email, password)
             .then(() => {
                 this.userLogin.reset();
                 this.router.navigate(['']);
@@ -63,35 +58,28 @@ export class LoginPage implements OnInit, OnDestroy {
     async loginGoogle() {
         this.isLoading = true;
         try {
-            let credentials;
-            if (!this.platform.is('cordova')) {
-                credentials = await this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
-            } else {
-                credentials = await this.nativeLogin();
-            }
+            const credentials = await this.authService.loginGoogle();
             this.createUserIfNew(credentials);
         } catch (err) {
-            console.error(err);
             this.utilsService.presentToast(err);
         }
     }
 
-    private async nativeLogin() {
-        const user = await this.gplus.login({
-            webClientId: environment.googleWebClientId,
-            offline: true,
-            scopes: 'profile email'
-        });
-        console.log(user.idToken);
-        return this.afAuth.auth.signInWithCredential(auth.GoogleAuthProvider.credential(user.idToken));
-    }
-
-    createUserIfNew(credentials: auth.UserCredential) {
+    private createUserIfNew(credentials: auth.UserCredential) {
         this.firebaseUtilsService.getCurrentUser()
             .pipe(takeUntil(this.onDestroy$), take(1))
             .subscribe((user) => {
                 if (!user) {
-                    this.userService.add(credentials.user.uid, { email: credentials.user.email })
+                    this.userService
+                        .add(credentials.user.uid,
+                            {
+                                email: credentials.user.email,
+                                firstName: R.pathOr('', ['additionalUserInfo', 'profile', 'given_name'], credentials),
+                                lastName: R.pathOr('', ['additionalUserInfo', 'profile', 'family_name'], credentials),
+                                userName: R.pathOr('', ['additionalUserInfo', 'username'], credentials),
+                                picture: R.pathOr('', ['additionalUserInfo', 'profile','picture'], credentials)
+                                
+                            })
                         .then(() => {
                             this.isLoading = false;
                             this.router.navigateByUrl('');
