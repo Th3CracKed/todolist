@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TodoList, CoreMember } from '../../models';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TodosListService, FirebaseUtilsService } from 'src/app/services';
@@ -7,16 +7,20 @@ import { SharedListService } from 'src/app/services/sharedList/shared-list-info.
 import { UtilsService } from 'src/app/services/utils/utils';
 import { UserService } from 'src/app/services/user/user.service';
 import { RegisterService } from 'src/app/services/register/register.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-list-sharing',
     templateUrl: './list-sharing.page.html',
     styleUrls: ['./list-sharing.page.scss'],
 })
-export class ListSharingPage implements OnInit {
+export class ListSharingPage implements OnInit, OnDestroy {
 
     todoList: TodoList;
     currentUserId: string;
+
+    private onDestroy$ = new Subject<void>();
     constructor(
         private route: ActivatedRoute,
         private todoListService: TodosListService,
@@ -36,13 +40,20 @@ export class ListSharingPage implements OnInit {
         this.route.params.subscribe(async params => {
             const listId = params['id'];
             this.getAuthorizedUsers(listId);
-            this.firebaseUtilsService.getCurrentUser()
-                .subscribe(user => this.currentUserId = user.id);
+            this.firebaseUtilsService.getCurrentUser().pipe(
+                takeUntil(this.onDestroy$),
+            ).subscribe(user => this.currentUserId = user.id);
         }, (err: string) => this.utilsService.presentErrorToast(err));
     }
 
+    ngOnDestroy() {
+        this.onDestroy$.complete();
+    }
+
     private getAuthorizedUsers(listId: string) {
-        this.todoListService.getOne(listId)
+        this.todoListService.getOne(listId).pipe(
+            takeUntil(this.onDestroy$),
+        )
             .subscribe(
                 todoList => this.todoList = todoList,
                 err => this.utilsService.presentErrorToast(err)
@@ -53,6 +64,9 @@ export class ListSharingPage implements OnInit {
     addUserToList() {
         const email: string = this.addSharedUser.get('email').value;
         this.userService.getUserByEmail(email)
+        .pipe(
+            takeUntil(this.onDestroy$),
+        )
             .subscribe(user => {
                 if (user) {
                     this.addUserToListCore(user.id, user.email);

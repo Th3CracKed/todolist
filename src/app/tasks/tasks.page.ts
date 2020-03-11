@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TasksService, TodosListService, FirebaseUtilsService } from '../services';
 import { Task, TodoList } from '../models';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-tasks',
     templateUrl: './tasks.page.html',
     styleUrls: ['./tasks.page.scss'],
 })
-export class TasksPage implements OnInit {
+export class TasksPage implements OnInit, OnDestroy {
 
     todoList: TodoList;
     tasks: Task[];
@@ -17,6 +19,7 @@ export class TasksPage implements OnInit {
     private id: string;
     currentUserId: string;
     canEdit = false;
+    private onDestroy$ = new Subject<void>();
 
     constructor(private route: ActivatedRoute,
         private todoListService: TodosListService,
@@ -27,6 +30,7 @@ export class TasksPage implements OnInit {
 
     ngOnInit() {
         this.firebaseUtilsService.getCurrentUser()
+            .pipe(takeUntil(this.onDestroy$))
             .subscribe(user => {
                 this.currentUserId = user.id;
                 this.getTodoList();
@@ -34,8 +38,13 @@ export class TasksPage implements OnInit {
             }, err => console.error(err))
     }
 
+    ngOnDestroy() {
+        this.onDestroy$.complete();
+    }
+
     private getTodoList() {
         this.todoListService.getOne(this.id)
+            .pipe(takeUntil(this.onDestroy$))
             .subscribe(todoList => {
                 this.todoList = todoList;
                 this.checkIfHasEditPermission();
@@ -48,6 +57,7 @@ export class TasksPage implements OnInit {
 
     private getTasks() {
         this.tasksService.getAll(this.id, true)
+            .pipe(takeUntil(this.onDestroy$))
             .subscribe((tasks) => {
                 this.setRemainingCounter(tasks);
                 this.tasks = tasks;

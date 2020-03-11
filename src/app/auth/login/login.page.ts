@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
@@ -6,18 +6,21 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
 import { UtilsService } from 'src/app/services/utils/utils';
+import { takeUntil, take } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.page.html',
     styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage implements OnInit, OnDestroy {
     userLogin = new FormGroup({
         login: new FormControl('', [Validators.required, Validators.minLength(3)]),
         password: new FormControl('', [Validators.required, Validators.minLength(3)])
     });
     isLoading = false;
+    private onDestroy$ = new Subject<void>();
 
     constructor(private afAuth: AngularFireAuth,
         private userService: UserService,
@@ -33,6 +36,7 @@ export class LoginPage implements OnInit {
         const isNotValidMail = Validators.email(this.userLogin.get('login'));
         if (isNotValidMail) {
             this.userService.getUserByUserName(this.userLogin.get('login').value)
+                .pipe(takeUntil(this.onDestroy$), take(1))
                 .subscribe(user => this.loginCore(user.email, this.userLogin.get('password').value),
                     err => this.utilsService.presentErrorToast(err));
         } else {
@@ -59,6 +63,7 @@ export class LoginPage implements OnInit {
 
     createUserIfNew(credentials: auth.UserCredential) {
         this.firebaseUtilsService.getCurrentUser()
+            .pipe(takeUntil(this.onDestroy$), take(1))
             .subscribe((user) => {
                 if (!user) {
                     this.userService.add(credentials.user.uid, { email: credentials.user.email })
@@ -66,6 +71,10 @@ export class LoginPage implements OnInit {
                 }
                 this.router.navigateByUrl('');
             }, err => this.utilsService.presentErrorToast(err));
+    }
+
+    ngOnDestroy() {
+        this.onDestroy$.complete();
     }
 
     loginFacebook() {

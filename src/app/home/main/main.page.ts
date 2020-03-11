@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
 import { TodoList } from '../../models';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { UtilsService } from 'src/app/services/utils/utils';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main',
     templateUrl: './main.page.html',
     styleUrls: ['./main.page.scss'],
 })
-export class MainPage implements OnInit {
+export class MainPage implements OnInit, OnDestroy {
 
     todoLists: TodoList[];
     todoListsShared$: Observable<TodoList[]>;
     currentUserId: string;
+    private onDestroy$ = new Subject<void>();
 
     constructor(private actionSheetController: ActionSheetController,
         private alertController: AlertController,
@@ -28,12 +30,18 @@ export class MainPage implements OnInit {
 
     ngOnInit() {
         this.firebaseUtilsService.getCurrentUser()
+            .pipe(takeUntil(this.onDestroy$))
             .subscribe(user => {
                 this.currentUserId = user.id;
                 this.sharedListService.getAllUserList()
+                    .pipe(takeUntil(this.onDestroy$))
                     .subscribe(todoLists => this.todoLists = todoLists
-                    ,err => console.error(err));
+                        , err => console.error(err));
             });
+    }
+
+    ngOnDestroy() {
+        this.onDestroy$.complete();
     }
 
     openList(id: string) {
@@ -50,40 +58,40 @@ export class MainPage implements OnInit {
                 console.log('Delete clicked');
                 this.presentAlertConfirm(list.id);
             }
-        }]: [];
-        const conditionalSharingMenu = this.currentUserId === list.userId? [   {
+        }] : [];
+        const conditionalSharingMenu = this.currentUserId === list.userId ? [{
             text: 'Share',
             icon: 'person-add',
             handler: () => {
                 this.router.navigateByUrl(`list/${list.id}/share`);
             }
-        }]: [];
+        }] : [];
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [
-            ...conditionalDeleteMenu, 
-            ...conditionalSharingMenu, 
-            {
-                text: 'Pinned',
-                icon: 'pin',
-                handler: () => {
-                    console.log('Pinned task');
+                ...conditionalDeleteMenu,
+                ...conditionalSharingMenu,
+                {
+                    text: 'Pinned',
+                    icon: 'pin',
+                    handler: () => {
+                        console.log('Pinned task');
+                    }
+                },
+                {
+                    text: 'Rename',
+                    icon: 'create',
+                    handler: () => {
+                        console.log('Edit list name');
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    icon: 'close',
+                    role: 'cancel',
+                    handler: () => undefined
                 }
-            },
-             {
-                text: 'Rename',
-                icon: 'create',
-                handler: () => {
-                    console.log('Edit list name');
-                }
-            }, 
-            {
-                text: 'Cancel',
-                icon: 'close',
-                role: 'cancel',
-                handler: () => undefined
-            }
-        ]
+            ]
         });
         await actionSheet.present();
     }
