@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FirebaseUtilsService } from 'src/app/services';
 import { User } from 'src/app/models';
 import { UtilsService } from 'src/app/services/utils/utils';
 import * as R from 'ramda';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-profil',
   templateUrl: './profil.page.html',
   styleUrls: ['./profil.page.scss'],
 })
-export class ProfilPage implements OnInit {
+export class ProfilPage implements OnInit, OnDestroy {
 
   profilForm = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -20,6 +22,7 @@ export class ProfilPage implements OnInit {
   });
 
   currentUser: User;
+  private onDestroy$ = new Subject<void>();
 
   constructor(private userService: UserService,
     private firebaseUtilsService: FirebaseUtilsService,
@@ -27,6 +30,7 @@ export class ProfilPage implements OnInit {
 
   ngOnInit() {
     this.firebaseUtilsService.getCurrentUser()
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe(currentUser => {
         this.profilForm.setValue({
           firstName: R.pathOr<string>('', ['firstName'], currentUser),
@@ -35,6 +39,10 @@ export class ProfilPage implements OnInit {
         });
         this.currentUser = currentUser;
       });
+  }
+
+  ngOnDestroy() {
+    this.onDestroy$.complete();
   }
 
   updateProfil() {

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 
-import {Platform} from '@ionic/angular';
+import {Platform, NavController} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {Router} from '@angular/router';
@@ -19,7 +19,8 @@ export class AppComponent {
         private platform: Platform,
         private splashScreen: SplashScreen,
         private statusBar: StatusBar,
-        private router: Router
+        private router: Router,
+        public navCtrl: NavController
     ) {
         this.initializeApp();
     }
@@ -33,7 +34,7 @@ export class AppComponent {
 
     logout() {
         this.afAuth.auth.signOut();
-        this.router.navigate(['login']);
+        this.navCtrl.navigateRoot('login');
     }
 
     canDisplay() {

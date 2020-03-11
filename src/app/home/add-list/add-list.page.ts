@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TodosListService } from '../../services';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils/utils';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -10,11 +12,12 @@ import { UtilsService } from 'src/app/services/utils/utils';
     templateUrl: './add-list.page.html',
     styleUrls: ['./add-list.page.scss'],
 })
-export class AddlistPage implements OnInit {
+export class AddlistPage implements OnInit, OnDestroy {
 
     addListForm = new FormGroup({
         title: new FormControl('', [Validators.required, Validators.minLength(1)])
     });
+    private onDestroy$ = new Subject<void>();
 
     constructor(private todosListService: TodosListService,
         private router: Router,
@@ -24,8 +27,16 @@ export class AddlistPage implements OnInit {
     ngOnInit() {
     }
 
+    
+    ngOnDestroy() {
+        this.onDestroy$.complete();
+    }
+
     addList() {
         this.todosListService.add(this.addListForm.get('title').value)
+            .pipe(
+                takeUntil(this.onDestroy$),
+            )
             .subscribe(list => {
                 this.addListForm.reset();
                 this.utils.presentToast('List Created Successfully', 1000);
