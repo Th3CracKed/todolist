@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 
-import {Platform, NavController} from '@ionic/angular';
+import {Platform, NavController, MenuController} from '@ionic/angular';
 import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {StatusBar} from '@ionic-native/status-bar/ngx';
-import {Router} from '@angular/router';
+import {Router, NavigationEnd} from '@angular/router';
 import {AngularFireAuth} from '@angular/fire/auth';
 import { FirebaseUtilsService } from './services';
 
@@ -22,9 +22,16 @@ export class AppComponent {
         private statusBar: StatusBar,
         private router: Router,
         private navCtrl: NavController,
-        private firebaseUtilsService: FirebaseUtilsService
+        private firebaseUtilsService: FirebaseUtilsService,
+        private menuCtrl: MenuController
     ) {
         this.initializeApp();
+        
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.menuCtrl.enable(this.canDisplay(), 'AppSideMenu');
+            }
+        });
     }
 
     initializeApp() {
@@ -41,8 +48,9 @@ export class AppComponent {
     }
 
     canDisplay() {
-        const routeName = this.router.url;
-        const routeName2 = routeName.substring(1);
-        return !(this.hideOnRoute.indexOf(routeName2) > -1);
+        const fullPath = this.router.url;
+        const currentRoute = fullPath.substring(1);
+        const canDisplay = !(this.hideOnRoute.indexOf(currentRoute) > -1);
+        return canDisplay;
     }
 }
