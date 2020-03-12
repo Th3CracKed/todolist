@@ -19,7 +19,8 @@ export class AuthService {
     private gplus: GooglePlus,
     private platform: Platform,
     private firebaseUtilsService: FirebaseUtilsService,
-    private navCtrl: NavController) { }
+    private navCtrl: NavController,
+    private router: Router) { }
 
   login(email: string, password: string) {
     return this.afAuth.auth
@@ -63,6 +64,7 @@ export class AuthService {
 
         // Signin user and remove the email localStorage
         const _result = await this.afAuth.auth.signInWithEmailLink(email, url);
+        this.router.navigate(['']);
         window.localStorage.removeItem('emailForSignIn');
       }
     } catch (err) {
