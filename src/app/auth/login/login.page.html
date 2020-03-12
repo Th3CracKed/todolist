@@ -14,14 +14,14 @@
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
                     <ion-input required="true" type="text" name="login" formControlName="login"
-                               placeholder="Type your email or username"></ion-input>
+                        placeholder="Type your email or username"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label position="stacked">Password
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
                     <ion-input required="true" type="password" name="password" formControlName="password"
-                               placeholder="Password"></ion-input>
+                        placeholder="Password"></ion-input>
                 </ion-item>
                 <div class="ion-margin-vertical">
                     <ion-button expand="block" type="submit" color="primary" [disabled]="!userLogin.valid">
@@ -31,11 +31,20 @@
 
                 <section class="ion-text-center">
                     <ion-grid>
-                        <ion-row flex-end>
+                        <ion-row>
                             <ion-col col-6>
                             </ion-col>
                             <ion-col col-6>
-                                <ion-button  size="small" expand="block" color="dark" fill="clear" [routerLink]="'/reset-password'">
+                                <ion-button size="small" expand="block" color="dark" fill="clear"
+                                    [disabled]="!userLogin.get('login').valid || emailSent" (click)="sendEmailLink()">
+                                    Passwordless login
+                                </ion-button>
+                            </ion-col>
+                            <ion-col col-6>
+                            </ion-col>
+                            <ion-col col-6>
+                                <ion-button size="small" expand="block" color="dark" fill="clear"
+                                    [routerLink]="'/reset-password'">
                                     Reset password
                                 </ion-button>
                             </ion-col>
@@ -59,8 +68,7 @@
                 <section>
                     <p class="ion-text-center">Or create an account:</p>
                     <div class="ion-margin-vertical">
-                        <ion-button expand="block" fill="outline" color="medium"
-                                    [routerLink]="'/register'">
+                        <ion-button expand="block" fill="outline" color="medium" [routerLink]="'/register'">
                             Register
                         </ion-button>
                     </div>
