@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -10,6 +10,8 @@ import { firebaseConfig } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { CoreModule } from './core.module';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +25,7 @@ import { CoreModule } from './core.module';
     AngularFireAuthModule,
     CoreModule
   ],
+  providers: [GooglePlus, FirebaseDynamicLinks],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

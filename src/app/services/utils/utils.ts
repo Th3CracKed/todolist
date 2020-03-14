@@ -18,13 +18,14 @@ export class UtilsService {
         toast.present();
     }
 
-    async presentErrorToast(msg: string, durationMs: number = 3000) {
+    async presentErrorToast(msg: any, durationMs: number = 3000) {
         const toast = await this.toastController.create({
             message: msg,
             duration: durationMs,
             cssClass: "warning"
         });
         toast.present();
+        console.error(msg);
     }
 
 }
