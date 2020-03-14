@@ -10,6 +10,7 @@ import { auth } from 'firebase'
 import 'firebase/auth'
 import { AuthService } from 'src/app/services/auth/auth.service';
 import * as R from 'ramda';
+import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
 
 @Component({
     selector: 'app-login',
@@ -30,11 +31,18 @@ export class LoginPage implements OnInit, OnDestroy {
         private userService: UserService,
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
+        private firebaseDynamicLinks: FirebaseDynamicLinks,
         private router: Router) {
     }
 
     ngOnInit() {
         this.authService.confirmSignIn(this.router.url);
+        this.firebaseDynamicLinks.onDynamicLink()
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe((res: any) => {
+                console.log(res);
+                this.authService.confirmSignIn(this.router.url);
+            }, (error: any) => console.log(error));
     }
 
     login() {
