@@ -27,7 +27,7 @@
 <ion-content *ngIf="tasks && tasks.length > 0">
     <ion-list>
         <ion-list-header>
-            <ion-text>TODO</ion-text>
+            <ion-text>Remaining tasks</ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let task of tasks">
             <ion-item *ngIf="!task?.isDone">
@@ -45,7 +45,7 @@
 
     <ion-list>
         <ion-list-header>
-            <ion-text>DONE</ion-text>
+            <ion-text>Tasks done</ion-text>
             <ion-text class="ion-margin-end"><b>{{doneCounter}}</b></ion-text>
         </ion-list-header>
         <ion-item-sliding *ngFor="let task of tasks">
