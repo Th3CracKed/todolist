@@ -19,7 +19,8 @@ export class AuthService {
     private gplus: GooglePlus,
     private platform: Platform,
     private firebaseUtilsService: FirebaseUtilsService,
-    private navCtrl: NavController) { }
+    private navCtrl: NavController,
+    private router: Router) { }
 
   login(email: string, password: string) {
     return this.afAuth.auth
@@ -40,8 +41,35 @@ export class AuthService {
       offline: true,
       scopes: 'profile email'
     });
-    console.log(user.idToken);
     return this.afAuth.auth.signInWithCredential(auth.GoogleAuthProvider.credential(user.idToken));
+  }
+
+  sendEmailLink(email: string) {
+      return this.afAuth.auth.sendSignInLinkToEmail(
+        email,
+        environment.actionCodeSettings
+      );
+  }
+
+  async confirmSignIn(url: string) {
+    try {
+      if (this.afAuth.auth.isSignInWithEmailLink(url)) {
+        let email = window.localStorage.getItem('emailForSignIn');
+
+        // If missing email, prompt user for it
+        if (!email) {
+          email = window.prompt('Please provide your email for confirmation'); // TODO improve this with ionic modal
+          window.localStorage.setItem('emailForSignIn', email);
+        }
+
+        // Signin user and remove the email localStorage
+        const _result = await this.afAuth.auth.signInWithEmailLink(email, url);
+        this.router.navigate(['']);
+        window.localStorage.removeItem('emailForSignIn');
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 
   logout() {

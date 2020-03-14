@@ -10,6 +10,7 @@ import { auth } from 'firebase'
 import 'firebase/auth'
 import { AuthService } from 'src/app/services/auth/auth.service';
 import * as R from 'ramda';
+import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
 
 @Component({
     selector: 'app-login',
@@ -22,16 +23,26 @@ export class LoginPage implements OnInit, OnDestroy {
         password: new FormControl('', [Validators.required, Validators.minLength(3)])
     });
     isLoading = false;
+    emailSent = false;
+
     private onDestroy$ = new Subject<void>();
 
     constructor(private authService: AuthService,
         private userService: UserService,
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
+        private firebaseDynamicLinks: FirebaseDynamicLinks,
         private router: Router) {
     }
 
     ngOnInit() {
+        this.authService.confirmSignIn(this.router.url);
+        this.firebaseDynamicLinks.onDynamicLink()
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe((res: any) => {
+                console.log(res);
+                this.authService.confirmSignIn(this.router.url);
+            }, (error: any) => console.log(error));
     }
 
     login() {
@@ -77,8 +88,8 @@ export class LoginPage implements OnInit, OnDestroy {
                                 firstName: R.pathOr('', ['additionalUserInfo', 'profile', 'given_name'], credentials),
                                 lastName: R.pathOr('', ['additionalUserInfo', 'profile', 'family_name'], credentials),
                                 userName: R.pathOr('', ['additionalUserInfo', 'username'], credentials),
-                                picture: R.pathOr('', ['additionalUserInfo', 'profile','picture'], credentials)
-                                
+                                picture: R.pathOr('', ['additionalUserInfo', 'profile', 'picture'], credentials)
+
                             })
                         .then(() => {
                             this.isLoading = false;
@@ -94,6 +105,20 @@ export class LoginPage implements OnInit, OnDestroy {
                 this.isLoading = false;
                 this.utilsService.presentErrorToast(err)
             });
+    }
+
+    async sendEmailLink() {
+        const email = this.userLogin.get('login').value;
+        if (email) {
+            try {
+                await this.authService.sendEmailLink(email);
+                window.localStorage.setItem('emailForSignIn', email);
+                this.emailSent = true;
+                this.utilsService.presentToast('Email sent');
+            } catch (err) {
+                this.utilsService.presentErrorToast(err.message);
+            }
+        }
     }
 
     ngOnDestroy() {

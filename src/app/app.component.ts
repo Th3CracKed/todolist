@@ -29,7 +29,7 @@ export class AppComponent {
 
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                this.menuCtrl.enable(this.canDisplay(), 'AppSideMenu');
+                this.menuCtrl.enable(this.canDisplay(), 'sideMenu');
             }
         });
     }
