@@ -92,7 +92,9 @@
         "PAGE_LINK_DOMAIN": "todolistuga.page.link",
         "FIREBASE_ANALYTICS_VERSION": "17.2.+",
         "FIREBASE_DYNAMIC_LINKS_VERSION": "19.0.+"
-      }
+      },
+      "cordova-plugin-androidx": {},
+      "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
       "android"
