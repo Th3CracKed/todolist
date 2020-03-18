@@ -20,6 +20,7 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
+    "@ionic-native/camera": "^5.22.0",
     "@ionic-native/core": "^5.22.0",
     "@ionic-native/firebase-dynamic-links": "^5.22.0",
     "@ionic-native/google-plus": "^5.22.0-beta-1",
@@ -94,7 +95,8 @@
         "FIREBASE_DYNAMIC_LINKS_VERSION": "19.0.+"
       },
       "cordova-plugin-androidx": {},
-      "cordova-plugin-androidx-adapter": {}
+      "cordova-plugin-androidx-adapter": {},
+      "cordova-plugin-camera": {}
     },
     "platforms": [
       "android"

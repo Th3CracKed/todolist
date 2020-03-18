@@ -5,12 +5,14 @@ import { IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AngularFireAuthGuard } from '@angular/fire/auth-guard';
+import { Camera } from '@ionic-native/camera/ngx';
 
 @NgModule({
   providers: [
     StatusBar,
     SplashScreen,
     AngularFireAuthGuard,
+    Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ]
 })

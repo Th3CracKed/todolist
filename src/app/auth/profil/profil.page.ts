@@ -7,6 +7,7 @@ import { UtilsService } from 'src/app/services/utils/utils';
 import * as R from 'ramda';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 @Component({
   selector: 'app-profil',
@@ -25,6 +26,7 @@ export class ProfilPage implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
 
   constructor(private userService: UserService,
+    private camera: Camera,
     private firebaseUtilsService: FirebaseUtilsService,
     private utilsService: UtilsService) { }
 
@@ -59,4 +61,33 @@ export class ProfilPage implements OnInit, OnDestroy {
     }
   }
 
+  captureImage() {
+    const options: CameraOptions = {
+      quality: 100,
+      targetHeight: 128,
+      targetWidth: 128,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    this.camera.getPicture(options).then((imageData) => {
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+      console.log(base64Image);
+      this.currentUser.picture = base64Image;
+      this.updateProfilPicture();
+    }, (err) => {
+      this.utilsService.presentErrorToast(`Error occured, ${err}`)
+    });
+  }
+  
+  private updateProfilPicture() {
+    if (this.currentUser) {
+      const picture: Partial<User> = {
+        picture: this.currentUser.picture || undefined
+      };
+      this.userService.update(this.currentUser.id, picture)
+        .then(_ => this.utilsService.presentToast('Profil Picture Updated Successfully'))
+        .catch(err => this.utilsService.presentErrorToast(`Profil Failed ${err}`));
+    }
+  }
 }
