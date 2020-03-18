@@ -45,8 +45,8 @@
                         <ion-col class="ion-float-end">
                             <ion-button class="ion-float-right" fill="outline" color="secondary" type="submit"
                                 [disabled]="!profilForm.valid || !currentUser">Edit profil</ion-button>
-                            <ion-button class="ion-float-right" fill="outline" color="secondary" type="submit"
-                                (click)="captureImage()">Add picture
+                            <ion-button type="button" class="ion-float-right" fill="outline"
+                                color="secondary" (click)="presentActionSheet()">Edit picture
                             </ion-button>
                         </ion-col>
                     </ion-row>

@@ -8,7 +8,7 @@ import * as R from 'ramda';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-
+import { ActionSheetController } from '@ionic/angular';
 @Component({
   selector: 'app-profil',
   templateUrl: './profil.page.html',
@@ -26,6 +26,7 @@ export class ProfilPage implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
 
   constructor(private userService: UserService,
+    private actionSheetController: ActionSheetController,
     private camera: Camera,
     private firebaseUtilsService: FirebaseUtilsService,
     private utilsService: UtilsService) { }
@@ -61,7 +62,36 @@ export class ProfilPage implements OnInit, OnDestroy {
     }
   }
 
-  captureImage() {
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Actions',
+      buttons: [
+        {
+          text: 'Take picture',
+          icon: 'camera',
+          handler: () => {
+            this.captureImage();
+          }
+        },
+        {
+          text: 'Choose Existing picture',
+          icon: 'image',
+          handler: () => {
+            console.log('chooseExistingImage()');
+          }
+        },
+        {
+          text: 'Cancel',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => undefined
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
+
+  private captureImage() {
     const options: CameraOptions = {
       quality: 100,
       targetHeight: 128,
@@ -70,16 +100,18 @@ export class ProfilPage implements OnInit, OnDestroy {
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
-    this.camera.getPicture(options).then((imageData) => {
-      let base64Image = 'data:image/jpeg;base64,' + imageData;
-      console.log(base64Image);
-      this.currentUser.picture = base64Image;
-      this.updateProfilPicture();
-    }, (err) => {
-      this.utilsService.presentErrorToast(`Error occured, ${err}`)
-    });
+    this.camera.getPicture(options)
+      .then((imageData) => {
+        if (imageData) {
+          const base64Image = 'data:image/jpeg;base64,' + imageData;
+          this.currentUser.picture = base64Image;
+          this.updateProfilPicture();
+        }
+      }, (err) => {
+        this.utilsService.presentErrorToast(`Error occured, ${err}`);
+      });
   }
-  
+
   private updateProfilPicture() {
     if (this.currentUser) {
       const picture: Partial<User> = {
