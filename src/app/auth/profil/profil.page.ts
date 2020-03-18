@@ -9,6 +9,11 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { ActionSheetController } from '@ionic/angular';
+import { ImagePicker, OutputType } from '@ionic-native/image-picker/ngx';
+import { Base64 } from '@ionic-native/base64/ngx';
+import { ImageResizer } from '@ionic-native/image-resizer/ngx';
+import { DomSanitizer } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-profil',
   templateUrl: './profil.page.html',
@@ -26,6 +31,10 @@ export class ProfilPage implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
 
   constructor(private userService: UserService,
+    private imagePicker: ImagePicker,
+    private base64: Base64,
+    private imageResizer: ImageResizer,
+    public domSanitizer: DomSanitizer,
     private actionSheetController: ActionSheetController,
     private camera: Camera,
     private firebaseUtilsService: FirebaseUtilsService,
@@ -77,7 +86,7 @@ export class ProfilPage implements OnInit, OnDestroy {
           text: 'Choose Existing picture',
           icon: 'image',
           handler: () => {
-            console.log('chooseExistingImage()');
+            this.chooseExistingImage();
           }
         },
         {
@@ -110,6 +119,31 @@ export class ProfilPage implements OnInit, OnDestroy {
       }, (err) => {
         this.utilsService.presentErrorToast(`Error occured, ${err}`);
       });
+  }
+
+  private async chooseExistingImage() {
+    try {
+      const imageData = await this.imagePicker.getPictures({
+        maximumImagesCount: 1,
+        outputType: OutputType.DATA_URL
+      });
+      if (imageData && imageData.length) {
+        const filePath = await this.imageResizer
+          .resize({
+            uri: imageData[0],
+            folderName: 'Protonet',
+            quality: 100,
+            width: 96,
+            height: 86
+          });
+        const base64File = await this.base64.encodeFile(filePath);
+        console.log(base64File);
+        this.currentUser.picture = base64File;
+        this.updateProfilPicture();
+      }
+    } catch (err) {
+      this.utilsService.presentErrorToast(`Error occured, ${err}`);
+    }
   }
 
   private updateProfilPicture() {
