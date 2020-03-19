@@ -7,6 +7,12 @@ import { UtilsService } from 'src/app/services/utils/utils';
 import * as R from 'ramda';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { ActionSheetController } from '@ionic/angular';
+import { ImagePicker, OutputType } from '@ionic-native/image-picker/ngx';
+import { Base64 } from '@ionic-native/base64/ngx';
+import { ImageResizer } from '@ionic-native/image-resizer/ngx';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profil',
@@ -25,6 +31,12 @@ export class ProfilPage implements OnInit, OnDestroy {
   private onDestroy$ = new Subject<void>();
 
   constructor(private userService: UserService,
+    private imagePicker: ImagePicker,
+    private base64: Base64,
+    private imageResizer: ImageResizer,
+    public domSanitizer: DomSanitizer,
+    private actionSheetController: ActionSheetController,
+    private camera: Camera,
     private firebaseUtilsService: FirebaseUtilsService,
     private utilsService: UtilsService) { }
 
@@ -59,4 +71,96 @@ export class ProfilPage implements OnInit, OnDestroy {
     }
   }
 
+  async presentActionSheet() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Actions',
+      buttons: [
+        {
+          text: 'Take picture',
+          icon: 'camera',
+          handler: () => {
+            this.captureImage();
+          }
+        },
+        {
+          text: 'Choose Existing picture',
+          icon: 'image',
+          handler: () => {
+            this.chooseExistingImage();
+          }
+        },
+        {
+          text: 'Cancel',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => undefined
+        }
+      ]
+    });
+    await actionSheet.present();
+  }
+
+  private captureImage() {
+    const options: CameraOptions = {
+      quality: 100,
+      targetHeight: 96,
+      targetWidth: 96,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+    this.camera.getPicture(options)
+      .then((imageData) => {
+        if (imageData) {
+          const base64Image = 'data:image/jpeg;base64,' + imageData;
+          this.currentUser.picture = base64Image;
+          this.updateProfilPicture();
+        }
+      }, (err) => {
+        this.utilsService.presentErrorToast(`Error occured, ${err}`);
+      });
+  }
+
+  private async chooseExistingImage() {
+    const hasReadPermission = await this.imagePicker.hasReadPermission();
+    hasReadPermission ? await this.getPictures() : (async () => {
+      const hasReadPermission = await this.imagePicker.requestReadPermission();
+      hasReadPermission ? this.getPictures() : undefined;
+    })();
+  }
+
+  private async getPictures() {
+    try {
+      const imageData = await this.imagePicker.getPictures({
+        maximumImagesCount: 1,
+        outputType: OutputType.FILE_URL
+      });
+      if (Array.isArray(imageData) && imageData.length) {
+        const filePath = await this.imageResizer
+          .resize({
+            uri: imageData[0],
+            folderName: 'todoList_tmp',
+            quality: 100,
+            width: 96,
+            height: 96
+          });
+        const base64File = await this.base64.encodeFile(filePath);
+        this.currentUser.picture = base64File;
+        this.updateProfilPicture();
+      }
+    } catch (err) {
+      this.utilsService.presentErrorToast(`Error occured, ${err}`);
+    }
+  }
+
+  private updateProfilPicture() {
+    if (this.currentUser) {
+      const picture: Partial<User> = {
+        picture: this.currentUser.picture || undefined
+      };
+      this.userService.update(this.currentUser.id, picture)
+        .then(_ => this.utilsService.presentToast('Profil Picture Updated Successfully'))
+        .catch(err => this.utilsService.presentErrorToast(`Profil Failed ${err}`));
+    }
+  }
 }
