@@ -88,7 +88,7 @@ export class MainPage implements OnInit, OnDestroy {
                     text: 'Rename',
                     icon: 'create',
                     handler: () => {
-                        console.log('Edit list name');
+                        this.router.navigateByUrl(`list/${list.id}/edit-list`);
                     }
                 },
                 {

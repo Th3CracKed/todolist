@@ -51,7 +51,11 @@ const routes: Routes = [
     {
         path: 'reset-password',
         loadChildren: () => import('./auth/reset-password/reset-password.module').then(m => m.ResetPasswordPageModule)
-    }
+    },
+  {
+    path: 'list/:id/edit-list',
+    loadChildren: () => import('./home/edit-list/edit-list.module').then( m => m.EditListPageModule)
+  }
 
 
 ];
