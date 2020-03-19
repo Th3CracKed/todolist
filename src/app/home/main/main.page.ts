@@ -56,7 +56,7 @@ export class MainPage implements OnInit, OnDestroy {
 
     // When user click on settings
     async presentActionSheet(list: TodoList) {
-        const conditionalDeleteMenu = this.currentUserId === list.userId ? [{
+        const conditionalDeleteMenu = this.isOwner(list) ? [{
             text: 'Delete',
             role: 'destructive',
             icon: 'trash',
@@ -65,13 +65,22 @@ export class MainPage implements OnInit, OnDestroy {
                 this.presentAlertConfirm(list.id);
             }
         }] : [];
-        const conditionalSharingMenu = this.currentUserId === list.userId ? [{
+        const conditionalSharingMenu = this.isOwner(list) ? [{
             text: 'Share',
             icon: 'person-add',
             handler: () => {
                 this.router.navigateByUrl(`list/${list.id}/share`);
             }
         }] : [];
+
+        const conditionalRenameMenu = this.isOwner(list) ? [
+            {
+                text: 'Rename',
+                icon: 'create',
+                handler: () => {
+                    this.router.navigateByUrl(`list/${list.id}/edit`);
+                }
+            }] : [];
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [
@@ -84,13 +93,8 @@ export class MainPage implements OnInit, OnDestroy {
                         console.log('Pinned task');
                     }
                 },
-                {
-                    text: 'Rename',
-                    icon: 'create',
-                    handler: () => {
-                        console.log('Edit list name');
-                    }
-                },
+                ...conditionalRenameMenu
+                ,
                 {
                     text: 'Cancel',
                     icon: 'close',
@@ -100,6 +104,10 @@ export class MainPage implements OnInit, OnDestroy {
             ]
         });
         await actionSheet.present();
+    }
+
+    private isOwner(list: TodoList) {
+        return this.currentUserId === list.userId;
     }
 
     private async presentAlertConfirm(listId: string) {

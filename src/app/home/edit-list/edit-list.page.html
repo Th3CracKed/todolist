@@ -1,0 +1,36 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>Edit List name</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form (ngSubmit)="editList()" [formGroup]="editListForm">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Edit List name</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+                <ion-item>
+                    <ion-label position="stacked">New List Name
+                        <ion-text color="danger">*</ion-text>
+                    </ion-label>
+                    <ion-input required type="text" name="title" formControlName="title"
+                               placeholder="Shopping list, work tasks" value="{{todoList?.title}}"></ion-input>
+                </ion-item>
+                <ion-text *ngIf="!editListForm.valid" color="danger">Title is required</ion-text>
+                <div class="ion-margin-vertical">
+                    <ion-button expand="block" fill="blank" color="secondary" (click)="resetForm()">clear</ion-button>
+                    <ion-button expand="block" type="submit" color="primary" [disabled]="!editListForm.valid">
+                        rename list
+                    </ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+    </form>
+</ion-content>
