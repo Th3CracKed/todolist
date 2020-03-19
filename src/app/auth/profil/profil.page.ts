@@ -103,8 +103,8 @@ export class ProfilPage implements OnInit, OnDestroy {
   private captureImage() {
     const options: CameraOptions = {
       quality: 100,
-      targetHeight: 128,
-      targetWidth: 128,
+      targetHeight: 96,
+      targetWidth: 96,
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
@@ -122,22 +122,29 @@ export class ProfilPage implements OnInit, OnDestroy {
   }
 
   private async chooseExistingImage() {
+    const hasReadPermission = await this.imagePicker.hasReadPermission();
+    hasReadPermission ? await this.getPictures() : (async () => {
+      const hasReadPermission = await this.imagePicker.requestReadPermission();
+      hasReadPermission ? this.getPictures() : undefined;
+    })();
+  }
+
+  private async getPictures() {
     try {
       const imageData = await this.imagePicker.getPictures({
         maximumImagesCount: 1,
-        outputType: OutputType.DATA_URL
+        outputType: OutputType.FILE_URL
       });
-      if (imageData && imageData.length) {
+      if (Array.isArray(imageData) && imageData.length) {
         const filePath = await this.imageResizer
           .resize({
             uri: imageData[0],
-            folderName: 'Protonet',
+            folderName: 'todoList_tmp',
             quality: 100,
             width: 96,
-            height: 86
+            height: 96
           });
         const base64File = await this.base64.encodeFile(filePath);
-        console.log(base64File);
         this.currentUser.picture = base64File;
         this.updateProfilPicture();
       }
