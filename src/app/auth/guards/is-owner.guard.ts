@@ -7,7 +7,7 @@ import { flatMap, map, take } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ListSharingGuard implements CanLoad {
+export class IsOwnerGuard implements CanLoad {
 
   constructor(private firebaseUtilsService: FirebaseUtilsService, private todosListService: TodosListService) { }
 

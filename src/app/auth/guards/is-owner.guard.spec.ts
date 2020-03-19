@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ListSharingGuard } from './list-sharing.guard';
+import { IsOwnerGuard } from './is-owner.guard';
 
 describe('ListSharingGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ListSharingGuard]
+      providers: [IsOwnerGuard]
     });
   });
 
-  it('should ...', inject([ListSharingGuard], (guard: ListSharingGuard) => {
+  it('should ...', inject([IsOwnerGuard], (guard: IsOwnerGuard) => {
     expect(guard).toBeTruthy();
   }));
 });
