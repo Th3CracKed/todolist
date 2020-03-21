@@ -66,7 +66,7 @@ export class LoginPage implements OnInit, OnDestroy {
     }
 
     private loginCore(email: string, password: string) {
-        this.authService.login(email, password)
+        this.authService.login(email, password, true)
             .then(() => {
                 this.userLogin.reset();
                 this.router.navigate(['']);
