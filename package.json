@@ -104,11 +104,9 @@
         "PLAY_SERVICES_VERSION": "15.0.1"
       },
       "cordova-plugin-firebase-dynamiclinks": {
-        "APP_DOMAIN": "https://todolist-uga.firebaseio.com",
-        "APP_PATH": "C:/Program Files/Git/",
+        "APP_DOMAIN": "todolist-uga.firebaseio.com",
         "PAGE_LINK_DOMAIN": "todolistuga.page.link",
-        "FIREBASE_ANALYTICS_VERSION": "17.2.+",
-        "FIREBASE_DYNAMIC_LINKS_VERSION": "19.0.+"
+        "APP_PATH": "/login"
       },
       "cordova-plugin-androidx": {},
       "cordova-plugin-androidx-adapter": {},

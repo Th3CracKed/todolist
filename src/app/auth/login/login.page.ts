@@ -11,6 +11,7 @@ import 'firebase/auth'
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
 import { Provider } from 'src/app/models';
+import { Platform } from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -32,17 +33,24 @@ export class LoginPage implements OnInit, OnDestroy {
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
         private firebaseDynamicLinks: FirebaseDynamicLinks,
+        private platform: Platform,
         private router: Router) {
     }
 
     ngOnInit() {
-        this.authService.confirmSignIn(this.router.url);
-        this.firebaseDynamicLinks.onDynamicLink()
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe((res: any) => {
-                console.log(res);
-                this.authService.confirmSignIn(this.router.url);
-            }, (error: any) => console.log(error));
+        this.checkIfCurrentLinkContainsPasswordlessToken();
+    }
+
+    private checkIfCurrentLinkContainsPasswordlessToken() {
+        if (this.platform.is('cordova')) {
+            this.firebaseDynamicLinks.onDynamicLink()
+                .pipe(takeUntil(this.onDestroy$))
+                .subscribe((res: any) => {
+                    this.authService.confirmSignIn(res.deepLink);
+                }, (error: any) => console.log(error));
+        } else {
+            this.authService.confirmSignIn(this.router.url);
+        }
     }
 
     login() {
