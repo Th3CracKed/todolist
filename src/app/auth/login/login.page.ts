@@ -9,8 +9,8 @@ import { Subject } from 'rxjs';
 import { auth } from 'firebase'
 import 'firebase/auth'
 import { AuthService } from 'src/app/services/auth/auth.service';
-import * as R from 'ramda';
 import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
+import { Provider } from 'src/app/models';
 
 @Component({
     selector: 'app-login',
@@ -70,26 +70,33 @@ export class LoginPage implements OnInit, OnDestroy {
         this.isLoading = true;
         try {
             const credentials = await this.authService.loginGoogle();
-            this.createUserIfNew(credentials);
+            this.createUserIfNew(credentials, Provider.Google);
         } catch (err) {
             this.utilsService.presentToast(err);
         }
     }
 
-    private createUserIfNew(credentials: auth.UserCredential) {
+    async loginFacebook() {
+        this.isLoading = true;
+        try {
+            const credentials = await this.authService.loginFacebook();
+            this.createUserIfNew(credentials, Provider.Facebook);
+        } catch (err) {
+            this.utilsService.presentToast(err);
+        }
+    }
+
+    private createUserIfNew(credentials: auth.UserCredential, provider: Provider) {
         this.firebaseUtilsService.getCurrentUser()
             .pipe(takeUntil(this.onDestroy$), take(1))
             .subscribe((user) => {
                 if (!user) {
+                    const extractedUserInfo = this.authService.extractUserInfo(credentials, provider);
                     this.userService
                         .add(credentials.user.uid,
                             {
                                 email: credentials.user.email,
-                                firstName: R.pathOr('', ['additionalUserInfo', 'profile', 'given_name'], credentials),
-                                lastName: R.pathOr('', ['additionalUserInfo', 'profile', 'family_name'], credentials),
-                                userName: R.pathOr('', ['additionalUserInfo', 'username'], credentials),
-                                picture: R.pathOr('', ['additionalUserInfo', 'profile', 'picture'], credentials)
-
+                                ...extractedUserInfo
                             })
                         .then(() => {
                             this.isLoading = false;
@@ -126,7 +133,4 @@ export class LoginPage implements OnInit, OnDestroy {
         this.onDestroy$.complete();
     }
 
-    loginFacebook() {
-        alert('Facebook');
-    }
 }
