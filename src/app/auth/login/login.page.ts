@@ -21,7 +21,8 @@ import { Platform } from '@ionic/angular';
 export class LoginPage implements OnInit, OnDestroy {
     userLogin = new FormGroup({
         login: new FormControl('', [Validators.required, Validators.minLength(3)]),
-        password: new FormControl('', [Validators.required, Validators.minLength(3)])
+        password: new FormControl('', [Validators.required, Validators.minLength(3)]),
+        remember: new FormControl(true)
     });
     isLoading = false;
     emailSent = false;
@@ -58,17 +59,18 @@ export class LoginPage implements OnInit, OnDestroy {
         if (isNotValidMail) {
             this.userService.getUserByUserName(this.userLogin.get('login').value)
                 .pipe(takeUntil(this.onDestroy$), take(1))
-                .subscribe(user => this.loginCore(user.email, this.userLogin.get('password').value),
+                .subscribe(user => this.loginCore(user.email, this.userLogin.get('password').value, this.userLogin.get('remember').value),
                     err => this.utilsService.presentErrorToast(err));
         } else {
-            this.loginCore(this.userLogin.get('login').value, this.userLogin.get('password').value);
+            this.loginCore(this.userLogin.get('login').value, this.userLogin.get('password').value, this.userLogin.get('remember').value);
         }
     }
 
-    private loginCore(email: string, password: string) {
-        this.authService.login(email, password, true)
+    private loginCore(email: string, password: string, remember: boolean) {
+        this.authService.login(email, password, remember)
             .then(() => {
-                this.userLogin.reset();
+                window.localStorage.setItem('first_login', 'set');
+                this.userLogin.reset({ remember: { value: true } });
                 this.router.navigate(['']);
             })
             .catch(err => this.utilsService.presentErrorToast(err));
@@ -78,6 +80,7 @@ export class LoginPage implements OnInit, OnDestroy {
         this.isLoading = true;
         try {
             const credentials = await this.authService.loginGoogle();
+            window.localStorage.setItem('first_login', 'set');
             this.createUserIfNew(credentials, Provider.Google);
         } catch (err) {
             this.utilsService.presentToast(err);
@@ -88,6 +91,7 @@ export class LoginPage implements OnInit, OnDestroy {
         this.isLoading = true;
         try {
             const credentials = await this.authService.loginFacebook();
+            window.localStorage.setItem('first_login', 'set');
             this.createUserIfNew(credentials, Provider.Facebook);
         } catch (err) {
             this.utilsService.presentToast(err);

@@ -23,6 +23,10 @@
                     <ion-input required="true" type="password" name="password" formControlName="password"
                         placeholder="Password"></ion-input>
                 </ion-item>
+                <ion-item>
+                    <ion-label>Remember Me</ion-label>
+                    <ion-checkbox color="primary" checked slot="start" formControlName="remember"></ion-checkbox>
+                </ion-item>
                 <div class="ion-margin-vertical">
                     <ion-button expand="block" type="submit" color="primary" [disabled]="!userLogin.valid">
                         LOGIN

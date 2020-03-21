@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 import { AngularFireAuthGuard, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
 import { IsOwnerGuard } from './auth/guards/is-owner.guard';
+import { AuthFingerprintGuard } from './auth/guards/auth-fingerprint.guard';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectAuthorizedToHome = () => redirectLoggedInTo(['']);
@@ -11,7 +12,7 @@ const routes: Routes = [
     {
         path: '',
         loadChildren: () => import('./home/main/main.module').then(m => m.MainPageModule),
-        canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectUnauthorizedToLogin }
+        canActivate: [AuthFingerprintGuard]
     },
     {
         path: 'help',
