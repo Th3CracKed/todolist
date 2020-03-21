@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { IsOwnerGuard } from './is-owner.guard';
 
-describe('ListSharingGuard', () => {
+describe('IsOwnerGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [IsOwnerGuard]

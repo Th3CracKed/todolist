@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import * as R from 'ramda';
 import { Provider } from 'src/app/models';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,10 @@ export class AuthService {
     private fb: Facebook,
     private router: Router) { }
 
-  login(email: string, password: string) {
-    return this.afAuth.auth
+  async login(email: string, password: string, remember: boolean = false) {
+    const auth = this.afAuth.auth;
+    remember ? await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL) : await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    return auth
       .signInWithEmailAndPassword(email, password)
   }
 
