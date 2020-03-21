@@ -9,6 +9,9 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { ImageResizer } from '@ionic-native/image-resizer/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
+import { Facebook } from '@ionic-native/facebook/ngx';
 
 @NgModule({
   providers: [
@@ -19,6 +22,9 @@ import { ImageResizer } from '@ionic-native/image-resizer/ngx';
     ImagePicker,
     Base64,
     ImageResizer,
+    GooglePlus,
+    FirebaseDynamicLinks,
+    Facebook,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ]
 })

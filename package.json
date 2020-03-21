@@ -27,6 +27,7 @@
     "@ionic-native/base64": "^5.22.0",
     "@ionic-native/camera": "^5.22.0",
     "@ionic-native/core": "^5.22.0",
+    "@ionic-native/facebook": "^5.22.0",
     "@ionic-native/firebase-dynamic-links": "^5.22.0",
     "@ionic-native/google-plus": "^5.22.0-beta-1",
     "@ionic-native/image-picker": "^5.22.0",
@@ -39,6 +40,7 @@
     "cordova-plugin-androidx": "^1.0.2",
     "cordova-plugin-androidx-adapter": "^1.1.0",
     "cordova-plugin-camera": "^4.1.0",
+    "cordova-plugin-facebook4": "^6.4.0",
     "cordova-plugin-firebase-dynamiclinks": "^4.0.3",
     "cordova-plugin-googleplus": "^8.4.0",
     "cordova-plugin-telerik-imagepicker": "git+https://github.com/Telerik-Verified-Plugins/ImagePicker.git",
@@ -117,7 +119,13 @@
       "cordova-plugin-telerik-imagepicker": {
         "ANDROID_SUPPORT_V7_VERSION": "27.+"
       },
-      "info.protonet.imageresizer": {}
+      "info.protonet.imageresizer": {},
+      "cordova-plugin-facebook4": {
+        "APP_ID": "2518428781705193",
+        "APP_NAME": "todolist",
+        "FACEBOOK_HYBRID_APP_EVENTS": "false",
+        "FACEBOOK_ANDROID_SDK_VERSION": "5.13.0"
+      }
     },
     "platforms": [
       "android"
