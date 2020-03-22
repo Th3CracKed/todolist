@@ -9,8 +9,9 @@ import { Subject } from 'rxjs';
 import { auth } from 'firebase'
 import 'firebase/auth'
 import { AuthService } from 'src/app/services/auth/auth.service';
-import * as R from 'ramda';
 import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
+import { Provider } from 'src/app/models';
+import { Platform } from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -20,7 +21,8 @@ import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
 export class LoginPage implements OnInit, OnDestroy {
     userLogin = new FormGroup({
         login: new FormControl('', [Validators.required, Validators.minLength(3)]),
-        password: new FormControl('', [Validators.required, Validators.minLength(3)])
+        password: new FormControl('', [Validators.required, Validators.minLength(3)]),
+        remember: new FormControl(true)
     });
     isLoading = false;
     emailSent = false;
@@ -32,17 +34,24 @@ export class LoginPage implements OnInit, OnDestroy {
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
         private firebaseDynamicLinks: FirebaseDynamicLinks,
+        private platform: Platform,
         private router: Router) {
     }
 
     ngOnInit() {
-        this.authService.confirmSignIn(this.router.url);
-        this.firebaseDynamicLinks.onDynamicLink()
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe((res: any) => {
-                console.log(res);
-                this.authService.confirmSignIn(this.router.url);
-            }, (error: any) => console.log(error));
+        this.checkIfCurrentLinkContainsPasswordlessToken();
+    }
+
+    private checkIfCurrentLinkContainsPasswordlessToken() {
+        if (this.platform.is('cordova')) {
+            this.firebaseDynamicLinks.onDynamicLink()
+                .pipe(takeUntil(this.onDestroy$))
+                .subscribe((res: any) => {
+                    this.authService.confirmSignIn(res.deepLink);
+                }, (error: any) => console.log(error));
+        } else {
+            this.authService.confirmSignIn(this.router.url);
+        }
     }
 
     login() {
@@ -50,17 +59,18 @@ export class LoginPage implements OnInit, OnDestroy {
         if (isNotValidMail) {
             this.userService.getUserByUserName(this.userLogin.get('login').value)
                 .pipe(takeUntil(this.onDestroy$), take(1))
-                .subscribe(user => this.loginCore(user.email, this.userLogin.get('password').value),
+                .subscribe(user => this.loginCore(user.email, this.userLogin.get('password').value, this.userLogin.get('remember').value),
                     err => this.utilsService.presentErrorToast(err));
         } else {
-            this.loginCore(this.userLogin.get('login').value, this.userLogin.get('password').value);
+            this.loginCore(this.userLogin.get('login').value, this.userLogin.get('password').value, this.userLogin.get('remember').value);
         }
     }
 
-    private loginCore(email: string, password: string) {
-        this.authService.login(email, password)
+    private loginCore(email: string, password: string, remember: boolean) {
+        this.authService.login(email, password, remember)
             .then(() => {
-                this.userLogin.reset();
+                window.localStorage.setItem('first_login', 'set');
+                this.userLogin.reset({ remember: { value: true } });
                 this.router.navigate(['']);
             })
             .catch(err => this.utilsService.presentErrorToast(err));
@@ -70,26 +80,35 @@ export class LoginPage implements OnInit, OnDestroy {
         this.isLoading = true;
         try {
             const credentials = await this.authService.loginGoogle();
-            this.createUserIfNew(credentials);
+            window.localStorage.setItem('first_login', 'set');
+            this.createUserIfNew(credentials, Provider.Google);
         } catch (err) {
             this.utilsService.presentToast(err);
         }
     }
 
-    private createUserIfNew(credentials: auth.UserCredential) {
+    async loginFacebook() {
+        this.isLoading = true;
+        try {
+            const credentials = await this.authService.loginFacebook();
+            window.localStorage.setItem('first_login', 'set');
+            this.createUserIfNew(credentials, Provider.Facebook);
+        } catch (err) {
+            this.utilsService.presentToast(err);
+        }
+    }
+
+    private createUserIfNew(credentials: auth.UserCredential, provider: Provider) {
         this.firebaseUtilsService.getCurrentUser()
             .pipe(takeUntil(this.onDestroy$), take(1))
             .subscribe((user) => {
                 if (!user) {
+                    const extractedUserInfo = this.authService.extractUserInfo(credentials, provider);
                     this.userService
                         .add(credentials.user.uid,
                             {
                                 email: credentials.user.email,
-                                firstName: R.pathOr('', ['additionalUserInfo', 'profile', 'given_name'], credentials),
-                                lastName: R.pathOr('', ['additionalUserInfo', 'profile', 'family_name'], credentials),
-                                userName: R.pathOr('', ['additionalUserInfo', 'username'], credentials),
-                                picture: R.pathOr('', ['additionalUserInfo', 'profile', 'picture'], credentials)
-
+                                ...extractedUserInfo
                             })
                         .then(() => {
                             this.isLoading = false;
@@ -126,7 +145,4 @@ export class LoginPage implements OnInit, OnDestroy {
         this.onDestroy$.complete();
     }
 
-    loginFacebook() {
-        alert('Facebook');
-    }
 }

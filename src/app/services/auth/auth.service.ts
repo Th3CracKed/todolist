@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { UserService } from '../user/user.service';
-import { UtilsService } from '../utils/utils';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Platform, NavController } from '@ionic/angular';
 import { FirebaseUtilsService } from '..';
@@ -9,6 +7,10 @@ import { Router } from '@angular/router';
 import { auth } from 'firebase'
 import 'firebase/auth'
 import { environment } from 'src/environments/environment';
+import { Facebook } from '@ionic-native/facebook/ngx';
+import * as R from 'ramda';
+import { Provider } from 'src/app/models';
+import * as firebase from 'firebase';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +22,13 @@ export class AuthService {
     private platform: Platform,
     private firebaseUtilsService: FirebaseUtilsService,
     private navCtrl: NavController,
+    private fb: Facebook,
     private router: Router) { }
 
-  login(email: string, password: string) {
-    return this.afAuth.auth
+  async login(email: string, password: string, remember: boolean = false) {
+    const auth = this.afAuth.auth;
+    remember ? await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL) : await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    return auth
       .signInWithEmailAndPassword(email, password)
   }
 
@@ -31,11 +36,11 @@ export class AuthService {
     if (!this.platform.is('cordova')) {
       return this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider())
     } else {
-      return this.nativeLogin();
+      return this.nativeGoogleLogin();
     }
   }
 
-  private async nativeLogin() {
+  private async nativeGoogleLogin() {
     const user = await this.gplus.login({
       webClientId: environment.googleWebClientId,
       offline: true,
@@ -44,11 +49,50 @@ export class AuthService {
     return this.afAuth.auth.signInWithCredential(auth.GoogleAuthProvider.credential(user.idToken));
   }
 
+  async loginFacebook() {
+    if (!this.platform.is('cordova')) {
+      return this.afAuth.auth.signInWithPopup(new auth.FacebookAuthProvider())
+    } else {
+      const response = await this.fb.login(['public_profile', 'email']);
+      const facebookCredential = auth.FacebookAuthProvider
+        .credential(response.authResponse.accessToken);
+      return this.afAuth.auth.signInWithCredential(facebookCredential)
+    }
+  }
+
+  extractUserInfo(credentials: auth.UserCredential, provider: Provider) {
+    switch (provider) {
+      case Provider.Google:
+        return this.extractUserGoogle(credentials);
+      case Provider.Facebook:
+        return this.extractUserFacebook(credentials);
+      default:
+        console.error('Unable to extract inforamtions');
+        break;
+    }
+  }
+
+  private extractUserGoogle(credentials: auth.UserCredential) {
+    return {
+      firstName: R.pathOr('', ['additionalUserInfo', 'profile', 'given_name'], credentials),
+      lastName: R.pathOr('', ['additionalUserInfo', 'profile', 'family_name'], credentials),
+      userName: R.pathOr('', ['additionalUserInfo', 'username'], credentials),
+      picture: R.pathOr('', ['additionalUserInfo', 'profile', 'picture'], credentials)
+    }
+  }
+
+  private extractUserFacebook(credentials: auth.UserCredential) {
+    return {
+      firstName: R.pathOr('', ['additionalUserInfo', 'profile', 'first_name'], credentials),
+      lastName: R.pathOr('', ['additionalUserInfo', 'profile', 'last_name'], credentials)
+    }
+  }
+
   sendEmailLink(email: string) {
-      return this.afAuth.auth.sendSignInLinkToEmail(
-        email,
-        environment.actionCodeSettings
-      );
+    return this.afAuth.auth.sendSignInLinkToEmail(
+      email,
+      environment.actionCodeSettings
+    );
   }
 
   async confirmSignIn(url: string) {

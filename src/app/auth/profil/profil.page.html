@@ -12,44 +12,47 @@
 
     <ion-card>
 
-
         <ion-card-content>
             <form (ngSubmit)="updateProfil()" [formGroup]="profilForm">
-            <ion-grid>
-                <ion-row>
-                    <ion-col size="2">
-                        <div class="ion-text-uppercase">
-                            <ion-avatar>
-                                <img class="ion-margin-vertical"
-                                     [src]="currentUser.picture || 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y'"/>
-                            </ion-avatar>
-                        </div>
-                    </ion-col>
-                    <ion-col size="10">
-                        <div>
-                            <ion-item>
-                                <ion-label position="stacked">Firstname</ion-label>
-                                <ion-input  required formControlName="firstName"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label position="stacked">Lastname</ion-label>
-                                <ion-input  required formControlName="lastName"></ion-input>
-                            </ion-item>
-                            <ion-item>
-                                <ion-label position="stacked">UserName</ion-label>
-                                <ion-input  required formControlName="userName"></ion-input>
-                            </ion-item>
-                        </div>
-                    </ion-col>
-                </ion-row>
-                <ion-row>
-                    <ion-col class="ion-float-end">
-                        <ion-button class="ion-float-right" fill="outline" color="secondary" type="submit"  [disabled]="!profilForm.valid || !currentUser">Edit profil</ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="2">
+                            <div class="ion-text-uppercase">
+                                <ion-avatar>
+                                    <img class="ion-margin-vertical"
+                                        [src]="domSanitizer.bypassSecurityTrustResourceUrl(currentUser?.picture) || 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y'" />
+                                </ion-avatar>
+                            </div>
+                        </ion-col>
+                        <ion-col size="10">
+                            <div>
+                                <ion-item>
+                                    <ion-label position="stacked">Firstname</ion-label>
+                                    <ion-input required formControlName="firstName"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-label position="stacked">Lastname</ion-label>
+                                    <ion-input required formControlName="lastName"></ion-input>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-label position="stacked">UserName</ion-label>
+                                    <ion-input required formControlName="userName"></ion-input>
+                                </ion-item>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col class="ion-float-end">
+                            <ion-button class="ion-float-right" fill="outline" color="secondary" type="submit"
+                                [disabled]="!profilForm.valid || !currentUser">Edit profil</ion-button>
+                            <ion-button type="button" class="ion-float-right" fill="outline"
+                                color="secondary" (click)="presentActionSheet()">Edit picture
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
 
-        </form>
+            </form>
         </ion-card-content>
     </ion-card>
 
