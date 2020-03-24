@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
-import { TodoList } from '../../models';
-import { Observable, Subject } from 'rxjs';
-import { UtilsService } from 'src/app/services/utils/utils';
-import { takeUntil } from 'rxjs/operators';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActionSheetController, AlertController} from '@ionic/angular';
+import {Router} from '@angular/router';
+import {TodosListService, SharedListService, FirebaseUtilsService} from '../../services';
+import {TodoList} from '../../models';
+import {Observable, Subject} from 'rxjs';
+import {UtilsService} from 'src/app/services/utils/utils';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-main',
@@ -20,12 +20,13 @@ export class MainPage implements OnInit, OnDestroy {
     private onDestroy$ = new Subject<void>();
 
     constructor(private actionSheetController: ActionSheetController,
-        private alertController: AlertController,
-        private router: Router,
-        private listService: TodosListService,
-        private sharedListService: SharedListService,
-        private utilsService: UtilsService,
-        private firebaseUtilsService: FirebaseUtilsService) {
+                private alertController: AlertController,
+                private router: Router,
+                private listService: TodosListService,
+                private sharedListService: SharedListService,
+                private utilsService: UtilsService,
+                private firebaseUtilsService: FirebaseUtilsService,
+                private todoListService: TodosListService) {
     }
 
     ngOnInit() {
@@ -111,9 +112,24 @@ export class MainPage implements OnInit, OnDestroy {
     }
 
     private async presentAlertConfirm(listId: string) {
+        let currentTODO: TodoList;
+        this.todoListService.getOne(listId).pipe(
+            takeUntil(this.onDestroy$),
+        ).subscribe(
+            todoList => {
+                currentTODO = todoList;
+                this.showAlertNow(currentTODO, listId);
+            },
+            err => this.utilsService.presentErrorToast(err)
+        );
+
+
+    }
+
+    private async showAlertNow(currentTODO: TodoList, listId: string) {
         const alert = await this.alertController.create({
             header: 'Confirmation!',
-            message: 'Delete note <strong>liste Name Here</strong> ?',
+            message: 'Delete note <strong>' + currentTODO.title + '</strong> ?',
             buttons: [
                 {
                     text: 'Cancel',
@@ -132,7 +148,6 @@ export class MainPage implements OnInit, OnDestroy {
         });
         await alert.present();
     }
-
 
     private delete(listId: string) {
         this.listService.delete(listId)
