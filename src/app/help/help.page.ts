@@ -25,6 +25,11 @@ export class HelpPage implements OnInit {
             image: 'profil_picture',
             title: 'Personnalisez votre profil',
             desc: 'Ajoutez une photo à votre profil avec la camera.'
+        },
+        {
+            image: 'finger_tuto2',
+            title: 'Reconnexion rapide',
+            desc: 'Si vous fermez l\'application et votre empreinte est configurée, vous pouvez vous réauthentifier en un clic.'
         }];
 
     constructor() {
