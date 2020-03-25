@@ -160,13 +160,11 @@ export class MainPage implements OnInit, OnDestroy {
                     role: 'cancel',
                     cssClass: 'secondary',
                     handler: () => {
-                        console.log('Cancel');
+                        console.log('Cancel color');
                     }
                 }, {
                     text: 'Ok',
                     handler: (data) => {
-                        console.log('Ok ssss');
-                        console.log(data);
                         this.pinList(list, data);
                     }
                 }
