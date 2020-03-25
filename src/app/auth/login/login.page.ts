@@ -1,17 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user/user.service';
-import { FirebaseUtilsService } from 'src/app/services/utils/firebase-utils.service';
-import { UtilsService } from 'src/app/services/utils/utils';
-import { takeUntil, take } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { auth } from 'firebase'
-import 'firebase/auth'
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
-import { Provider } from 'src/app/models';
-import { Platform } from '@ionic/angular';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+import {UserService} from 'src/app/services/user/user.service';
+import {FirebaseUtilsService} from 'src/app/services/utils/firebase-utils.service';
+import {UtilsService} from 'src/app/services/utils/utils';
+import {takeUntil, take} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {auth} from 'firebase';
+import 'firebase/auth';
+import {AuthService} from 'src/app/services/auth/auth.service';
+import {FirebaseDynamicLinks} from '@ionic-native/firebase-dynamic-links/ngx';
+import {Provider} from 'src/app/models';
+import {Platform} from '@ionic/angular';
 
 @Component({
     selector: 'app-login',
@@ -28,14 +28,15 @@ export class LoginPage implements OnInit, OnDestroy {
     emailSent = false;
 
     private onDestroy$ = new Subject<void>();
+    private NETWORK_ERROR: 7;
 
     constructor(private authService: AuthService,
-        private userService: UserService,
-        private utilsService: UtilsService,
-        private firebaseUtilsService: FirebaseUtilsService,
-        private firebaseDynamicLinks: FirebaseDynamicLinks,
-        private platform: Platform,
-        private router: Router) {
+                private userService: UserService,
+                private utilsService: UtilsService,
+                private firebaseUtilsService: FirebaseUtilsService,
+                private firebaseDynamicLinks: FirebaseDynamicLinks,
+                private platform: Platform,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -70,7 +71,7 @@ export class LoginPage implements OnInit, OnDestroy {
         this.authService.login(email, password, remember)
             .then(() => {
                 window.localStorage.setItem('first_login', 'set');
-                this.userLogin.reset({ remember: { value: true } });
+                this.userLogin.reset({remember: {value: true}});
                 this.router.navigate(['']);
             })
             .catch(err => this.utilsService.presentErrorToast(err));
@@ -83,7 +84,15 @@ export class LoginPage implements OnInit, OnDestroy {
             window.localStorage.setItem('first_login', 'set');
             this.createUserIfNew(credentials, Provider.Google);
         } catch (err) {
-            this.utilsService.presentToast(err);
+            let errorMSG = '';
+            switch (err) {
+                case this.NETWORK_ERROR:
+                    errorMSG = 'Check your internet connexion.'
+                    break;
+                default:
+                    errorMSG = err;
+            }
+            this.utilsService.presentToast(errorMSG);
         }
     }
 
@@ -114,15 +123,15 @@ export class LoginPage implements OnInit, OnDestroy {
                             this.isLoading = false;
                             this.router.navigateByUrl('');
                         }).catch(err => {
-                            this.isLoading = false;
-                            this.utilsService.presentErrorToast(err)
-                        });
+                        this.isLoading = false;
+                        this.utilsService.presentErrorToast(err);
+                    });
                 }
                 this.isLoading = false;
                 this.router.navigateByUrl('');
             }, err => {
                 this.isLoading = false;
-                this.utilsService.presentErrorToast(err)
+                this.utilsService.presentErrorToast(err);
             });
     }
 
