@@ -13,7 +13,7 @@ const routes: Routes = [
     {
         path: '',
         loadChildren: () => import('./home/main/main.module').then(m => m.MainPageModule),
-        canActivate: [AuthFingerprintGuard, FirstLaunchGuard]
+        canActivate: [FirstLaunchGuard, AuthFingerprintGuard]
     },
     {
         path: 'help',
