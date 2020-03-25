@@ -14,7 +14,7 @@
 
             <div *ngFor="let list of todoLists">
                 <ion-card class="ion-activatable">
-                    <ion-item (click)="openList(list?.id)">
+                    <ion-item (click)="openList(list?.id)" [attr.color]="list.isPinned ? 'primary' : ''">
                         <ion-icon [attr.name]="list.userId === currentUserId ? 'document' : 'people'" slot="start"></ion-icon>
                         <ion-label>{{ list?.title }}</ion-label>
                         <ion-button click-stop-propagation color="secondary" fill="clear" (click)="presentActionSheet(list)">

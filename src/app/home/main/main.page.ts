@@ -82,6 +82,7 @@ export class MainPage implements OnInit, OnDestroy {
                     this.router.navigateByUrl(`list/${list.id}/edit`);
                 }
             }] : [];
+
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [
@@ -91,7 +92,8 @@ export class MainPage implements OnInit, OnDestroy {
                     text: 'Pinned',
                     icon: 'pin',
                     handler: () => {
-                        console.log('Pinned task');
+                        console.log('Pin task');
+                        this.pinList(list);
                     }
                 },
                 ...conditionalRenameMenu
@@ -111,6 +113,27 @@ export class MainPage implements OnInit, OnDestroy {
         return this.currentUserId === list.userId;
     }
 
+
+    private pinList(currentList: TodoList) {
+
+        const pinnedValue = !currentList.isPinned;
+
+        const newtodoList: TodoList = {
+            id: currentList.id || undefined,
+            userId: currentList.userId || undefined,
+            title: currentList.title || undefined,
+            isPinned: pinnedValue
+        };
+
+        this.todoListService.update(newtodoList.id, newtodoList).then(list => {
+            if (pinnedValue) {
+                this.utilsService.presentToast('List is pinned Successfully', 1000);
+            } else {
+                this.utilsService.presentToast('List was unpinned Successfully', 1000);
+            }
+        }).catch(err => this.utilsService.presentErrorToast(err));
+    }
+
     private async presentAlertConfirm(listId: string) {
         let currentTODO: TodoList;
         this.todoListService.getOne(listId).pipe(
@@ -122,8 +145,6 @@ export class MainPage implements OnInit, OnDestroy {
             },
             err => this.utilsService.presentErrorToast(err)
         );
-
-
     }
 
     private async showAlertNow(currentTODO: TodoList, listId: string) {
