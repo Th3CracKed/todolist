@@ -36,12 +36,6 @@ export class HelpPage implements OnInit {
     constructor(private router: Router) {
     }
 
-    ngOnInit() {
-        // const firstLaunch = window.localStorage.getItem('isFirstLaunch');
-        // if (firstLaunch === 'false') {
-        //     this.router.navigate(['/login']);
-        // }
-        // window.localStorage.setItem('isFirstLaunch', 'false');
-    }
+    ngOnInit() {}
 
 }

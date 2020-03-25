@@ -13,7 +13,7 @@ const routes: Routes = [
     {
         path: '',
         loadChildren: () => import('./home/main/main.module').then(m => m.MainPageModule),
-        canActivate: [FirstLaunchGuard, AuthFingerprintGuard]
+        canActivate: [AuthFingerprintGuard]
     },
     {
         path: 'help',
@@ -32,7 +32,7 @@ const routes: Routes = [
     {
         path: 'login',
         loadChildren: () => import('./auth/login/login.module').then(m => m.LoginPageModule),
-        canActivate: [AngularFireAuthGuard], data: { authGuardPipe: redirectAuthorizedToHome }
+        canActivate: [AngularFireAuthGuard, FirstLaunchGuard], data: { authGuardPipe: redirectAuthorizedToHome }
     },
     {
         path: 'profil',
