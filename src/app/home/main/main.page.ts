@@ -1,11 +1,11 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActionSheetController, AlertController} from '@ionic/angular';
-import {Router} from '@angular/router';
-import {TodosListService, SharedListService, FirebaseUtilsService} from '../../services';
-import {TodoList} from '../../models';
-import {Observable, Subject} from 'rxjs';
-import {UtilsService} from 'src/app/services/utils/utils';
-import {takeUntil} from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
+import { TodoList } from '../../models';
+import { Observable, Subject } from 'rxjs';
+import { UtilsService } from 'src/app/services/utils/utils';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-main',
@@ -20,13 +20,13 @@ export class MainPage implements OnInit, OnDestroy {
     private onDestroy$ = new Subject<void>();
 
     constructor(private actionSheetController: ActionSheetController,
-                private alertController: AlertController,
-                private router: Router,
-                private listService: TodosListService,
-                private sharedListService: SharedListService,
-                private utilsService: UtilsService,
-                private firebaseUtilsService: FirebaseUtilsService,
-                private todoListService: TodosListService) {
+        private alertController: AlertController,
+        private router: Router,
+        private listService: TodosListService,
+        private sharedListService: SharedListService,
+        private utilsService: UtilsService,
+        private firebaseUtilsService: FirebaseUtilsService,
+        private todoListService: TodosListService) {
     }
 
     ngOnInit() {
@@ -57,46 +57,38 @@ export class MainPage implements OnInit, OnDestroy {
 
     // When user click on settings
     async presentActionSheet(list: TodoList) {
-        const conditionalDeleteMenu = this.isOwner(list) ? [{
-            text: 'Delete',
-            role: 'destructive',
-            icon: 'trash',
-            handler: () => {
-                console.log('Delete clicked');
-                this.presentAlertConfirm(list.id);
-            }
-        }] : [];
-        const conditionalSharingMenu = this.isOwner(list) ? [{
-            text: 'Share',
-            icon: 'person-add',
-            handler: () => {
-                this.router.navigateByUrl(`list/${list.id}/share`);
-            }
-        }] : [];
-
-        const conditionalRenameMenu = this.isOwner(list) ? [
-            {
-                text: 'Rename',
-                icon: 'create',
-                handler: () => {
-                    this.router.navigateByUrl(`list/${list.id}/edit`);
-                }
-            }] : [];
-
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [
-                ...conditionalDeleteMenu,
-                ...conditionalSharingMenu,
                 {
-                    text: 'Pinned',
+                    text: 'Delete',
+                    role: 'destructive',
+                    icon: 'trash',
+                    handler: () => {
+                        this.presentAlertConfirm(list.id);
+                    }
+                },
+                {
+                    text: 'Share',
+                    icon: 'person-add',
+                    handler: () => {
+                        this.router.navigateByUrl(`list/${list.id}/share`);
+                    }
+                },
+                {
+                    text: list.isPinned ? 'unPin' : 'Pin',
                     icon: 'pin',
                     handler: () => {
-                        console.log('Pin task');
                         this.pinList(list);
                     }
                 },
-                ...conditionalRenameMenu
+                {
+                    text: 'Rename',
+                    icon: 'create',
+                    handler: () => {
+                        this.router.navigateByUrl(`list/${list.id}/edit`);
+                    }
+                }
                 ,
                 {
                     text: 'Cancel',
@@ -109,7 +101,7 @@ export class MainPage implements OnInit, OnDestroy {
         await actionSheet.present();
     }
 
-    private isOwner(list: TodoList) {
+    isOwner(list: TodoList) {
         return this.currentUserId === list.userId;
     }
 
@@ -129,7 +121,7 @@ export class MainPage implements OnInit, OnDestroy {
             if (pinnedValue) {
                 this.utilsService.presentToast('List is pinned Successfully', 1000);
             } else {
-                this.utilsService.presentToast('List was unpinned Successfully', 1000);
+                this.utilsService.presentToast('List is unpinned Successfully', 1000);
             }
         }).catch(err => this.utilsService.presentErrorToast(err));
     }
