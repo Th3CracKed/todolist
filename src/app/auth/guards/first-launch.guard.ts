@@ -16,12 +16,12 @@ export class FirstLaunchGuard implements CanActivate {
     canActivate(): boolean {
         try {
             const firstLaunch = window.localStorage.getItem('isFirstLaunch');
-            if (firstLaunch !== 'false') {
+            if (!firstLaunch) {
                 // show help page if first launch
-                window.localStorage.setItem('isFirstLaunch', 'false');
+                window.localStorage.setItem('isFirstLaunch', 'set');
                 this.router.navigate(['/help']);
-                return true;
             }
+            return true;
         } catch {
             return true;
         }
