@@ -14,9 +14,9 @@
 
             <div *ngFor="let list of todoLists">
                 <ion-card class="ion-activatable">
-                    <ion-item (click)="openList(list?.id)" [attr.color]="list.isPinned ? 'primary' : ''">
+                    <ion-item (click)="openList(list?.id)" [attr.color]="list.color">
                         <ion-icon
-                            [attr.name]="list.userId === currentUserId ? list.isPinned ? 'pin' : 'document' : 'people'"
+                            [attr.name]="list.userId === currentUserId ? 'document' : 'people'"
                             slot="start"></ion-icon>
                         <ion-label>{{ list?.title }}</ion-label>
                         <ion-button *ngIf="isOwner(list)" click-stop-propagation color="secondary" fill="clear"
@@ -29,7 +29,6 @@
             </div>
 
         </ion-content>
-
 
         <ion-footer>
             <ion-toolbar>

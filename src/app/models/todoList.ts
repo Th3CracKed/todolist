@@ -2,7 +2,7 @@ export interface TodoList {
     id?: string;
     title: string;
     userId: string;
-    isPinned?: boolean;
+    color?: string;
     members?: Member;
 }
 

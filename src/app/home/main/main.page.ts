@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
-import { TodoList } from '../../models';
-import { Observable, Subject } from 'rxjs';
-import { UtilsService } from 'src/app/services/utils/utils';
-import { takeUntil } from 'rxjs/operators';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActionSheetController, AlertController} from '@ionic/angular';
+import {Router} from '@angular/router';
+import {TodosListService, SharedListService, FirebaseUtilsService} from '../../services';
+import {TodoList} from '../../models';
+import {Observable, Subject} from 'rxjs';
+import {UtilsService} from 'src/app/services/utils/utils';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'app-main',
@@ -17,16 +17,17 @@ export class MainPage implements OnInit, OnDestroy {
     todoLists: TodoList[];
     todoListsShared$: Observable<TodoList[]>;
     currentUserId: string;
+    hideColor: boolean;
     private onDestroy$ = new Subject<void>();
 
     constructor(private actionSheetController: ActionSheetController,
-        private alertController: AlertController,
-        private router: Router,
-        private listService: TodosListService,
-        private sharedListService: SharedListService,
-        private utilsService: UtilsService,
-        private firebaseUtilsService: FirebaseUtilsService,
-        private todoListService: TodosListService) {
+                private alertController: AlertController,
+                private router: Router,
+                private listService: TodosListService,
+                private sharedListService: SharedListService,
+                private utilsService: UtilsService,
+                private firebaseUtilsService: FirebaseUtilsService,
+                private todoListService: TodosListService) {
     }
 
     ngOnInit() {
@@ -76,10 +77,10 @@ export class MainPage implements OnInit, OnDestroy {
                     }
                 },
                 {
-                    text: list.isPinned ? 'unPin' : 'Pin',
-                    icon: 'pin',
+                    text: 'Change color',
+                    icon: 'color-fill',
                     handler: () => {
-                        this.pinList(list);
+                        this.presentAlertRadio(list);
                     }
                 },
                 {
@@ -105,24 +106,90 @@ export class MainPage implements OnInit, OnDestroy {
         return this.currentUserId === list.userId;
     }
 
+    async presentAlertRadio(list: TodoList) {
+        const alert = await this.alertController.create({
+            header: 'Select color',
+            inputs: [
+                {
+                    name: 'radio1',
+                    type: 'radio',
+                    label: 'Blue',
+                    value: 'primary',
+                    checked: true
+                },
+                {
+                    name: 'radio3',
+                    type: 'radio',
+                    label: 'Purple',
+                    value: 'tertiary'
+                },
+                {
+                    name: 'radio4',
+                    type: 'radio',
+                    label: 'Green',
+                    value: 'success'
+                },
+                {
+                    name: 'radio5',
+                    type: 'radio',
+                    label: 'Orange',
+                    value: 'warning'
+                },
+                {
+                    name: 'radio5',
+                    type: 'radio',
+                    label: 'Dark',
+                    value: 'dark'
+                },
+                {
+                    name: 'radio5',
+                    type: 'radio',
+                    label: 'Gray',
+                    value: 'medium'
+                },
+                {
+                    name: 'radio6',
+                    type: 'radio',
+                    label: 'Light',
+                    value: 'light'
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: () => {
+                        console.log('Cancel');
+                    }
+                }, {
+                    text: 'Ok',
+                    handler: (data) => {
+                        console.log('Ok ssss');
+                        console.log(data);
+                        this.pinList(list, data);
+                    }
+                }
+            ]
+        });
 
-    private pinList(currentList: TodoList) {
+        await alert.present();
+    }
 
-        const pinnedValue = !currentList.isPinned;
+
+    private pinList(currentList: TodoList, colorValue: string) {
+
+        const newColor = colorValue;
 
         const newtodoList: TodoList = {
             id: currentList.id || undefined,
             userId: currentList.userId || undefined,
             title: currentList.title || undefined,
-            isPinned: pinnedValue
+            color: newColor
         };
 
         this.todoListService.update(newtodoList.id, newtodoList).then(list => {
-            if (pinnedValue) {
-                this.utilsService.presentToast('List is pinned Successfully', 1000);
-            } else {
-                this.utilsService.presentToast('List is unpinned Successfully', 1000);
-            }
+            this.utilsService.presentToast('Color changed successfully!', 1000);
         }).catch(err => this.utilsService.presentErrorToast(err));
     }
 
