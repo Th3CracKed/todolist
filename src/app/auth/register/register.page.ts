@@ -17,8 +17,7 @@ export class RegisterPage implements OnInit {
     firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     userName: new FormControl('', [Validators.required, Validators.minLength(3)], [this.authService.asyncUniqueUsernameValidation()]),
-    email: new FormControl('', [Validators.required, Validators.email,
-    Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    email: new FormControl('', [Validators.required, Validators.email], [this.authService.asyncUniqueEmailValidation()]),
     passwords: new FormGroup({
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       passwordConfirm: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -32,6 +31,10 @@ export class RegisterPage implements OnInit {
 
 
   ngOnInit() {
+    this.addUserForm.valueChanges
+      .subscribe(v => {
+        console.log(this.addUserForm.controls.email);
+      });
   }
 
   signupUser() {

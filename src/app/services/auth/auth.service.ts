@@ -11,7 +11,7 @@ import { Facebook } from '@ionic-native/facebook/ngx';
 import * as R from 'ramda';
 import { Provider } from 'src/app/models';
 import * as firebase from 'firebase';
-import { AbstractControl, ValidationErrors,  AsyncValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { map, debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
@@ -121,37 +121,34 @@ export class AuthService {
     }
   }
 
+  asyncUniqueEmailValidation = (): AsyncValidatorFn => {
+    return this.asyncUniqueEntityValidation(this.userService.getUserByEmail);
+  };
+
   asyncUniqueUsernameValidation = (): AsyncValidatorFn => {
+    return this.asyncUniqueEntityValidation(this.userService.getUserByUserName);
+  }
+
+  private asyncUniqueEntityValidation = (getEntityFromDb: (formValue: string) => Observable<any>): AsyncValidatorFn => {
     const subject = new BehaviorSubject<string>('');
     const debouncedInput$: Observable<ValidationErrors> = subject.asObservable()
       .pipe(
         distinctUntilChanged(),
         debounceTime(1000),
         take(1),
-        switchMap(userName => {
-          if (userName) {
-            return this.checkUniqUserName(userName);
+        switchMap(formValue => {
+          if (formValue) {
+            return getEntityFromDb(formValue).pipe(map(user => user ? { exists: true } : null));
           }
           return of(null);
         })
       );
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      let userName: string = control.value;
-      userName = userName ? userName.trim() : userName;
-      subject.next(userName);
+      let value: string = control.value;
+      value = value ? value.trim() : value;
+      subject.next(value);
       return debouncedInput$;
     };
-  }
-
-  private checkUniqUserName(userName: string): Observable<ValidationErrors> {
-    return this.userService.getUserByUserName(userName)
-      .pipe(
-        map(user => {
-          if (user) {
-            return { exists: true };
-          }
-          return null;
-        }));
   }
 
   logout() {
