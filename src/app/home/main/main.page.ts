@@ -136,22 +136,28 @@ export class MainPage implements OnInit, OnDestroy {
                     value: 'warning'
                 },
                 {
-                    name: 'radio5',
+                    name: 'radio6',
                     type: 'radio',
                     label: 'Dark',
                     value: 'dark'
                 },
                 {
-                    name: 'radio5',
+                    name: 'radio7',
                     type: 'radio',
                     label: 'Gray',
                     value: 'medium'
                 },
                 {
-                    name: 'radio6',
+                    name: 'radio8',
                     type: 'radio',
                     label: 'Light',
                     value: 'light'
+                },
+                {
+                    name: 'radio9',
+                    type: 'radio',
+                    label: 'Red',
+                    value: 'danger'
                 }
             ],
             buttons: [
