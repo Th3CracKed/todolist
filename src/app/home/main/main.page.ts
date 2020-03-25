@@ -118,12 +118,6 @@ export class MainPage implements OnInit, OnDestroy {
                     checked: true
                 },
                 {
-                    name: 'radio2',
-                    type: 'radio',
-                    label: 'Cyan',
-                    value: 'secondary'
-                },
-                {
                     name: 'radio3',
                     type: 'radio',
                     label: 'Purple',
