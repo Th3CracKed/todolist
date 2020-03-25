@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-help',
@@ -10,7 +11,7 @@ export class HelpPage implements OnInit {
         image: 'survey',
         title: 'Bienvenue sur TODO APP',
         desc: 'Ce gestionnaire de tâches est parfait pour améliorer votre productivité.'
-        },
+    },
         {
             image: 'delete_tuto2',
             title: 'Supprimez une tâche',
@@ -32,10 +33,15 @@ export class HelpPage implements OnInit {
             desc: 'Si vous fermez l\'application et votre empreinte est configurée, vous pouvez vous réauthentifier en un clic.'
         }];
 
-    constructor() {
+    constructor(private router: Router) {
     }
 
     ngOnInit() {
+        const firstLaunch = window.localStorage.getItem('isFirstLaunch');
+        if (firstLaunch === 'false') {
+            this.router.navigate(['/login']);
+        }
+        window.localStorage.setItem('isFirstLaunch', 'false');
     }
 
 }
