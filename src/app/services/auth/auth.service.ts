@@ -11,6 +11,10 @@ import { Facebook } from '@ionic-native/facebook/ngx';
 import * as R from 'ramda';
 import { Provider } from 'src/app/models';
 import * as firebase from 'firebase';
+import { AbstractControl, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { UserService } from '../user/user.service';
+import { map, debounceTime, distinctUntilChanged, switchMap, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +24,7 @@ export class AuthService {
   constructor(private afAuth: AngularFireAuth,
     private gplus: GooglePlus,
     private platform: Platform,
+    private userService: UserService,
     private firebaseUtilsService: FirebaseUtilsService,
     private navCtrl: NavController,
     private fb: Facebook,
@@ -114,6 +119,36 @@ export class AuthService {
     } catch (err) {
       console.error(err.message);
     }
+  }
+
+  asyncUniqueEmailValidation = (): AsyncValidatorFn => {
+    return this.asyncUniqueEntityValidation(this.userService.getUserByEmail);
+  };
+
+  asyncUniqueUsernameValidation = (): AsyncValidatorFn => {
+    return this.asyncUniqueEntityValidation(this.userService.getUserByUserName);
+  }
+
+  private asyncUniqueEntityValidation = (getEntityFromDb: (formValue: string) => Observable<any>): AsyncValidatorFn => {
+    const subject = new BehaviorSubject<string>('');
+    const debouncedInput$: Observable<ValidationErrors> = subject.asObservable()
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(1000),
+        take(1),
+        switchMap(formValue => {
+          if (formValue) {
+            return getEntityFromDb(formValue).pipe(map(user => user ? { exists: true } : null));
+          }
+          return of(null);
+        })
+      );
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      let value: string = control.value;
+      value = value ? value.trim() : value;
+      subject.next(value);
+      return debouncedInput$;
+    };
   }
 
   logout() {

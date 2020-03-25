@@ -4,6 +4,7 @@ import { User } from 'src/app/models';
 import { Router } from '@angular/router';
 import { RegisterService } from 'src/app/services/register/register.service';
 import { UtilsService } from 'src/app/services/utils/utils';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -15,9 +16,8 @@ export class RegisterPage implements OnInit {
   addUserForm = new FormGroup({
     firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
     lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    userName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    email: new FormControl('', [Validators.required, Validators.email,
-    Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    userName: new FormControl('', [Validators.required, Validators.minLength(3)], [this.authService.asyncUniqueUsernameValidation()]),
+    email: new FormControl('', [Validators.required, Validators.email], [this.authService.asyncUniqueEmailValidation()]),
     passwords: new FormGroup({
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       passwordConfirm: new FormControl('', [Validators.required, Validators.minLength(6)])
@@ -26,10 +26,15 @@ export class RegisterPage implements OnInit {
 
   constructor(private router: Router,
     private registerService: RegisterService,
-    private utilsService: UtilsService) { }
+    private utilsService: UtilsService,
+    private authService: AuthService) { }
 
 
   ngOnInit() {
+    this.addUserForm.valueChanges
+      .subscribe(v => {
+        console.log(this.addUserForm.controls.email);
+      });
   }
 
   signupUser() {

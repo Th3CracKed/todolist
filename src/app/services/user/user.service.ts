@@ -13,13 +13,13 @@ export class UserService {
   constructor(private db: AngularFirestore,
     private firebaseUtilsService: FirebaseUtilsService) { }
 
-  getUserByEmail(email: string) {
+  getUserByEmail = (email: string) => {
     const user$ = this.db.collection<User>(`/users`, ref => ref.where('email', '==', email)).snapshotChanges();
     return this.getOneUserAndIncludeDocumentId(user$);
   }
 
   
-  getUserByUserName(userName: string) {
+  getUserByUserName = (userName: string) => {
     const user$ = this.db.collection<User>(`/users`, ref => ref.where('userName', '==', userName)).snapshotChanges();
     return this.getOneUserAndIncludeDocumentId(user$);
   }

@@ -20,41 +20,46 @@
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
                     <ion-input required type="text" name="firstName" placeholder="Firstname"
-                               formControlName="firstName"></ion-input>
+                        formControlName="firstName"></ion-input>
                 </ion-item>
-                <ion-text
-                        *ngIf="addUserForm.get('firstName').invalid && ( addUserForm.get('firstName').touched)"
-                        color="danger">Firstname is required (at least 3 characters)
+                <ion-text *ngIf="addUserForm.get('firstName').invalid && ( addUserForm.get('firstName').touched)"
+                    color="danger">Firstname is required (at least 3 characters)
                 </ion-text>
                 <ion-item>
                     <ion-label position="stacked">Lastname
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input required type="text" name="lastName" placeholder="Lastname"
-                               formControlName="lastName"></ion-input>
+                    <ion-input required type="text" name="lastName" placeholder="Lastname" formControlName="lastName">
+                    </ion-input>
                 </ion-item>
                 <ion-text *ngIf="addUserForm.get('lastName').invalid && ( addUserForm.get('lastName').touched)"
-                          color="danger">Lastname is required (at least 3 characters)
+                    color="danger">Lastname is required (at least 3 characters)
                 </ion-text>
                 <ion-item>
                     <ion-label position="stacked">Username
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input required type="text" name="userName" placeholder="username"
-                               formControlName="userName"></ion-input>
+                    <ion-input required type="text" name="userName" placeholder="username" formControlName="userName">
+                    </ion-input>
                 </ion-item>
                 <ion-text *ngIf="addUserForm.get('userName').invalid && ( addUserForm.get('userName').touched)"
-                          color="danger">Username is required (at least 3 characters)
+                    color="danger">
+                    <div *ngIf="addUserForm?.controls?.userName?.errors?.minlength">Username is required (at least 3
+                        characters)</div>
+                    <div *ngIf="addUserForm?.controls?.userName?.errors?.exists">Username already choosed, please
+                        choosed another one</div>
                 </ion-text>
                 <ion-item>
                     <ion-label position="stacked">Email
                         <ion-text color="danger">*</ion-text>
                     </ion-label>
-                    <ion-input required type="text" name="email" placeholder="Email"
-                               formControlName="email"></ion-input>
+                    <ion-input required type="text" name="email" placeholder="Email" formControlName="email">
+                    </ion-input>
                 </ion-item>
                 <ion-text *ngIf="addUserForm.get('email').invalid && ( addUserForm.get('email').touched)"
-                          color="danger">Valid email is required
+                    color="danger">
+                    <div *ngIf="addUserForm?.controls?.email?.errors?.email">Valid email is required</div>
+                    <div *ngIf="addUserForm?.controls?.email?.errors?.exists">Email already exists, <a routerLink="/login">login?</a></div>
                 </ion-text>
 
                 <div formGroupName="passwords" appCheckPassword>
@@ -63,12 +68,11 @@
                             <ion-text color="danger">*</ion-text>
                         </ion-label>
                         <ion-input required type="password" name="password" placeholder="Password"
-                                   formControlName="password"
-                                   name="password"></ion-input>
+                            formControlName="password" name="password"></ion-input>
                     </ion-item>
                     <ion-text
-                            *ngIf="addUserForm.get('passwords.password').invalid  && ( addUserForm.get('passwords.password').touched)"
-                            color="danger">Password is required  (at least 6 characters)
+                        *ngIf="addUserForm.get('passwords.password').invalid  && ( addUserForm.get('passwords.password').touched)"
+                        color="danger">Password is required (at least 6 characters)
                     </ion-text>
 
                     <ion-item>
@@ -76,19 +80,18 @@
                             <ion-text color="danger">*</ion-text>
                         </ion-label>
                         <ion-input required type="password" name="passwordConfirm" placeholder="Confirm"
-                                   formControlName="passwordConfirm"
-                                   name="passwordConfirm"></ion-input>
+                            formControlName="passwordConfirm" name="passwordConfirm"></ion-input>
                     </ion-item>
 
                     <ion-text
-                            *ngIf="addUserForm.get('passwords.passwordConfirm').invalid && (addUserForm.get('passwords.password').dirty || addUserForm.get('passwords.password').touched)"
-                            color="danger">
+                        *ngIf="addUserForm.get('passwords.passwordConfirm').invalid && (addUserForm.get('passwords.password').dirty || addUserForm.get('passwords.password').touched)"
+                        color="danger">
                         Please confirm your password.
                     </ion-text>
 
                     <ion-text
-                            *ngIf="addUserForm.get('passwords').errors?.passwordCheck && (addUserForm.get('passwords.passwordConfirm').dirty || addUserForm.get('passwords.passwordConfirm').touched)"
-                            color="danger">
+                        *ngIf="addUserForm.get('passwords').errors?.passwordCheck && (addUserForm.get('passwords.passwordConfirm').dirty || addUserForm.get('passwords.passwordConfirm').touched)"
+                        color="danger">
                         Passwords do not match.
                     </ion-text>
                 </div>
