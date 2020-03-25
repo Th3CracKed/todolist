@@ -37,11 +37,11 @@ export class HelpPage implements OnInit {
     }
 
     ngOnInit() {
-        const firstLaunch = window.localStorage.getItem('isFirstLaunch');
-        if (firstLaunch === 'false') {
-            this.router.navigate(['/login']);
-        }
-        window.localStorage.setItem('isFirstLaunch', 'false');
+        // const firstLaunch = window.localStorage.getItem('isFirstLaunch');
+        // if (firstLaunch === 'false') {
+        //     this.router.navigate(['/login']);
+        // }
+        // window.localStorage.setItem('isFirstLaunch', 'false');
     }
 
 }
