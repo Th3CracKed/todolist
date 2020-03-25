@@ -9,6 +9,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { RegisterService } from 'src/app/services/register/register.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
     selector: 'app-list-sharing',
@@ -26,6 +27,7 @@ export class ListSharingPage implements OnInit, OnDestroy {
         private todoListService: TodosListService,
         private userService: UserService,
         private registerService: RegisterService,
+        private authService: AuthService,
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
         private sharedListInfoService: SharedListService) {
@@ -65,15 +67,19 @@ export class ListSharingPage implements OnInit, OnDestroy {
     addUserToList() {
         const email: string = this.addSharedUser.get('email').value;
         this.userService.getUserByEmail(email)
-        .pipe(
-            takeUntil(this.onDestroy$),
-        )
+            .pipe(
+                takeUntil(this.onDestroy$),
+            )
             .subscribe(user => {
                 if (user) {
                     this.addUserToListCore(user.id, user.email);
                 } else {
-                    this.registerService.signupUser({ email: email }, 'defaultPassword') // TODO replace with Passwordless invitation
-                        .then((user) => this.addUserToListCore(user.uid, user.email))
+                    const randomPassword = Array(15).fill(null).map(() => Math.random().toString(12).substr(2)).join('');
+                    this.registerService.signupUser({ email: email }, randomPassword)
+                        .then((user) => {
+                            this.addUserToListCore(user.uid, user.email);
+                            this.authService.sendEmailLink(email);
+                        })
                         .catch(err => this.utilsService.presentErrorToast(err));
                 }
             }, err => this.utilsService.presentErrorToast(err));
