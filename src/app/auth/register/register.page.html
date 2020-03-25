@@ -44,7 +44,9 @@
                                formControlName="userName"></ion-input>
                 </ion-item>
                 <ion-text *ngIf="addUserForm.get('userName').invalid && ( addUserForm.get('userName').touched)"
-                          color="danger">Username is required (at least 3 characters)
+                          color="danger">
+                          <div *ngIf="addUserForm?.controls?.userName?.errors?.minlength">Username is required (at least 3 characters)</div>
+                          <div *ngIf="addUserForm?.controls?.userName?.errors?.exists">Username already choosed, please choosed another one</div>
                 </ion-text>
                 <ion-item>
                     <ion-label position="stacked">Email
