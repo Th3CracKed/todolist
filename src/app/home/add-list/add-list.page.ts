@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils/utils';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class AddlistPage implements OnInit, OnDestroy {
 
     constructor(private todosListService: TodosListService,
         private router: Router,
+        private navCtrl: NavController,
         private utils: UtilsService) {
     }
 
@@ -41,6 +43,7 @@ export class AddlistPage implements OnInit, OnDestroy {
             .subscribe(list => {
                 this.addListForm.reset();
                 this.utils.presentToast('List Created Successfully', 1000);
+                this.navCtrl.pop();
                 this.router.navigate([`list/${list.id}`]);
             }, err => this.utils.presentErrorToast(err));
     }
