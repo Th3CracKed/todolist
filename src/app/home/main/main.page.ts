@@ -19,6 +19,7 @@ export class MainPage implements OnInit, OnDestroy {
     currentUserId: string;
     hideColor: boolean;
     private onDestroy$ = new Subject<void>();
+    filtredTodoLists: TodoList[];
 
     constructor(private actionSheetController: ActionSheetController,
                 private alertController: AlertController,
@@ -104,6 +105,11 @@ export class MainPage implements OnInit, OnDestroy {
 
     isOwner(list: TodoList) {
         return this.currentUserId === list.userId;
+    }
+
+    onSearchChange(event){
+        const prefix = event.detail.value.toLowerCase();
+        this.filtredTodoLists = this.todoLists.filter(todoList => todoList.title.toLowerCase().startsWith(prefix));
     }
 
     async presentAlertRadio(list: TodoList) {
