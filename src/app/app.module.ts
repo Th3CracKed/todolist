@@ -19,10 +19,11 @@ import { CoreModule } from './core.module';
     IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
     AngularFirestoreModule,
     AngularFireAuthModule,
     CoreModule
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
