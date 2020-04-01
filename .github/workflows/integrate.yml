@@ -1,0 +1,26 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+    - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Use coturiv/setup-ionic
+        uses: coturiv/setup-ionic@v1
+        with:
+          cordova-version: 9
+      - name: Install NPM Modules
+        run: |
+          npm install
+      - name: Build
+        run: |
+          npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI | exit 0
+          ionic build --prod --verbose

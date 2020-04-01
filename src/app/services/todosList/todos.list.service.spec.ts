@@ -5,7 +5,6 @@ import { QueryFn, AngularFirestoreCollection, DocumentChangeType, AngularFiresto
 import { of, Observable } from 'rxjs';
 import { User } from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Globals } from '../globals';
 
 describe('TodoService', () => {
   let angularFireAuthSpy;
@@ -47,8 +46,7 @@ describe('TodoService', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide:  AngularFireAuth, useValue: angularFireAuthSpy },
-        { provide: AngularFirestore, useValue: angularFirestoreSpy },
-        { provide: Globals, globals }
+        { provide: AngularFirestore, useValue: angularFirestoreSpy }
       ]
     });
   }));
