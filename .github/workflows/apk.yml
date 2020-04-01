@@ -1,0 +1,32 @@
+name: Build apk
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Use coturiv/setup-ionic
+        uses: coturiv/setup-ionic@v1
+        with:
+          cordova-version: 9
+      - name: Install NPM Modules
+        run: |
+          npm install
+      - name: Build
+        run: |
+          npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI | exit 0
+          ionic info
+          ionic cordova build android --prod --verbose | exit 0
+
+          ionic cordova platform add android@latest | exit 0
+          ionic cordova build android | exit 0
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app
+          path: /home/runner/work/Frontend_User/Frontend_User/platforms/ios/app/build/outputs/ipa/debug/app-debug.apk
