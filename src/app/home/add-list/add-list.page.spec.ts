@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddlistPage } from './add-list.page';
 import { AddlistPageModule } from './add-list.module';
-import { TodosListService, Globals } from 'src/app/services';
+import { TodosListService } from 'src/app/services';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AddlistPage', () => {
@@ -18,8 +18,7 @@ describe('AddlistPage', () => {
         RouterTestingModule
       ],
       providers: [
-        { provide: TodosListService, todosListService },
-        { provide: Globals, global: globals }
+        { provide: TodosListService, todosListService }
       ]
     }).compileComponents();
 
