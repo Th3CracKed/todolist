@@ -96,7 +96,7 @@ export class ProfilPage implements OnInit, OnDestroy {
                         if (this.platform.is('cordova')) {
                             this.chooseExistingImage();
                         } else {
-                            this.presentAlertProfil('Sorry', 'This option is not yet available on desktop.');
+                            // this.presentAlertProfil('Sorry', 'This option is not yet available on desktop.');
                             document.getElementById('loadProfilePicture').click();
                         }
                     }
