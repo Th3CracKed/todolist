@@ -1,9 +1,6 @@
-name: Build Web
+name: Build apk
 
-on:
-  push:
-    branches:
-    - develop
+on: [push]
 
 jobs:
   build:
@@ -23,4 +20,9 @@ jobs:
       - name: Build
         run: |
           npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI | exit 0
-          ionic build --prod --verbose
+          ionic cordova build android --verbose
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: app
+          path: /home/runner/work/todolist/todolist/platforms/android/app/build/outputs/apk/debug/app-debug.apk
