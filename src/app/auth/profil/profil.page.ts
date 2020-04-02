@@ -97,7 +97,7 @@ export class ProfilPage implements OnInit, OnDestroy {
                             this.chooseExistingImage();
                         } else {
                             this.presentAlertProfil('Sorry', 'This option is not yet available on desktop.');
-                            // document.getElementById('loadProfilePicture').click();
+                            document.getElementById('loadProfilePicture').click();
                         }
                     }
                 },
@@ -113,31 +113,26 @@ export class ProfilPage implements OnInit, OnDestroy {
     }
 
 
-    getBase64_2(file) {
+    handleFileInput(event) {
+        console.log('input change');
+        const file = event.dataTransfer ? event.dataTransfer.files[0] : event.target.files[0];
+
+        const pattern = /image-*/;
         const reader = new FileReader();
+
+        if (!file.type.match(pattern)) {
+            alert('invalid format');
+            return;
+        }
+
+        reader.onload = this._handleReaderLoaded.bind(this);
         reader.readAsDataURL(file);
-        reader.onload = () => {
-            return reader.result;
-        };
-        reader.onerror = (error) => {
-            return '';
-        };
-        return '';
     }
 
-    getBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
-
-
-    async handleFileInput(event) {
-        const file = event.target.files[0];
-        this.currentUser.picture = this.getBase64_2(file);
+    _handleReaderLoaded(e) {
+        console.log('_handleReaderLoaded');
+        const reader = e.target;
+        this.currentUser.picture = reader.result;
         this.updateProfilPicture();
     }
 
