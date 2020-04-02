@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { TasksService, TodosListService, FirebaseUtilsService } from '../services';
-import { Task, TodoList } from '../models';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {TasksService, TodosListService, FirebaseUtilsService} from '../services';
+import {Task, TodoList} from '../models';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {AlertController} from '@ionic/angular';
 
 @Component({
     selector: 'app-tasks',
@@ -22,9 +23,10 @@ export class TasksPage implements OnInit, OnDestroy {
     private onDestroy$ = new Subject<void>();
 
     constructor(private route: ActivatedRoute,
-        private todoListService: TodosListService,
-        private firebaseUtilsService: FirebaseUtilsService,
-        private tasksService: TasksService) {
+                private todoListService: TodosListService,
+                private firebaseUtilsService: FirebaseUtilsService,
+                private tasksService: TasksService,
+                public alertController: AlertController) {
         this.id = this.route.snapshot.paramMap.get('id');
     }
 
@@ -35,7 +37,7 @@ export class TasksPage implements OnInit, OnDestroy {
                 this.currentUserId = user.id;
                 this.getTodoList();
                 this.getTasks();
-            }, err => console.error(err))
+            }, err => console.error(err));
     }
 
     ngOnDestroy() {
@@ -71,17 +73,47 @@ export class TasksPage implements OnInit, OnDestroy {
     }
 
     addTask() {
-        this.tasksService.add({ name: this.newTaskName, listId: this.id })
-            .then(() => this.newTaskName = '')
-            .catch(() => this.newTaskName = '');
+        if (this.newTaskName.length === 0 || this.newTaskName === undefined || !this.newTaskName.replace(/\s/g, '').length) {
+            this.presentAlert('Empty field', 'Sorry you can\'t create empty tasks');
+        } else {
+            this.tasksService.add({name: this.newTaskName, listId: this.id})
+                .then(() => this.newTaskName = '')
+                .catch(() => this.newTaskName = '');
+        }
     }
 
+    async presentAlert(alertTitle: string, text: string) {
+        const alert = await this.alertController.create({
+            header: alertTitle,
+            message: text,
+            buttons: ['OK']
+        });
+
+        await alert.present();
+    }
+
+
     toogleIsDone(task: Task) {
-        this.tasksService.update(task.id, { isDone: task.isDone });
+        this.tasksService.update(task.id, {isDone: task.isDone});
     }
 
     deleteTask(taskId: string) {
         this.tasksService.delete(taskId);
     }
 
+    eventHandler(event) {
+        if (event.key !== undefined) {
+            this.handlerKey(event.key);
+        } else if (event.keyIdentifier !== undefined) {
+            this.handlerKey(event.keyIdentifier);
+        } else if (event.keyCode !== undefined) {
+            this.handlerKey(event.keyCode);
+        }
+    }
+
+    handlerKey(key: number | string) {
+        if (key === 'Enter' || key === 13) {
+            this.addTask();
+        }
+    }
 }

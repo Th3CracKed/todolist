@@ -68,9 +68,9 @@
     <ion-toolbar>
 
         <ion-input class="ion-margin-horizontal addnewtask" [(ngModel)]="newTaskName" required clearInput
-                   placeholder="New task"></ion-input>
+                   placeholder="New task" (keypress)="eventHandler($event)"></ion-input>
         <ion-buttons class="ion-margin-horizontal" slot="primary">
-            <ion-button (click)="addTask()" color="primary" fill="clear">
+            <ion-button (click)="addTask()" color="primary" fill="clear" [disabled]="!newTaskName || newTaskName.length==0">
                 Add task
                 <ion-icon slot="end" name="add-circle"></ion-icon>
             </ion-button>
