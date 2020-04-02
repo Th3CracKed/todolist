@@ -1,11 +1,12 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActionSheetController, AlertController} from '@ionic/angular';
-import {Router} from '@angular/router';
-import {TodosListService, SharedListService, FirebaseUtilsService} from '../../services';
-import {TodoList} from '../../models';
-import {Observable, Subject} from 'rxjs';
-import {UtilsService} from 'src/app/services/utils/utils';
-import {takeUntil} from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
+import { TodoList } from '../../models';
+import { Observable, Subject } from 'rxjs';
+import { UtilsService } from 'src/app/services/utils/utils';
+import { takeUntil, tap } from 'rxjs/operators';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 
 @Component({
     selector: 'app-main',
@@ -22,13 +23,13 @@ export class MainPage implements OnInit, OnDestroy {
     filtredTodoLists: TodoList[];
 
     constructor(private actionSheetController: ActionSheetController,
-                private alertController: AlertController,
-                private router: Router,
-                private listService: TodosListService,
-                private sharedListService: SharedListService,
-                private utilsService: UtilsService,
-                private firebaseUtilsService: FirebaseUtilsService,
-                private todoListService: TodosListService) {
+        private alertController: AlertController,
+        private router: Router,
+        private listService: TodosListService,
+        private sharedListService: SharedListService,
+        private utilsService: UtilsService,
+        private firebaseUtilsService: FirebaseUtilsService,
+        private todoListService: TodosListService) {
     }
 
     ngOnInit() {
@@ -107,7 +108,7 @@ export class MainPage implements OnInit, OnDestroy {
         return this.currentUserId === list.userId;
     }
 
-    onSearchChange(event){
+    onSearchChange(event) {
         const prefix = event.detail.value.toLowerCase();
         this.filtredTodoLists = this.todoLists.filter(todoList => todoList.title.toLowerCase().startsWith(prefix));
     }

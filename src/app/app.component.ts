@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Platform, NavController, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -6,8 +6,11 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router, NavigationEnd } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FirebaseUtilsService } from './services';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { AngularFireMessaging } from '@angular/fire/messaging';
+import { UtilsService } from './services/utils/utils';
+import { MessagingService } from './services/messaging/messaging.service';
 
 @Component({
     selector: 'app-root',
@@ -26,10 +29,14 @@ export class AppComponent implements OnInit {
         private router: Router,
         private navCtrl: NavController,
         private firebaseUtilsService: FirebaseUtilsService,
-        private menuCtrl: MenuController
+        private utils: UtilsService,
+        private menuCtrl: MenuController,
+        private afMessaging: AngularFireMessaging,
+        private messagingService: MessagingService
     ) {
         this.initializeApp();
         this.conditionallyHideSideMenu();
+        this.setupNotifications();
     }
 
     ngOnInit() {
@@ -41,6 +48,15 @@ export class AppComponent implements OnInit {
         this.firebaseUtilsService.unSetCurrentUser();
         this.navCtrl.navigateRoot(['login']);
     }
+
+
+    // listen() {
+    //     this.afMessaging.messages.pipe(
+    //         tap(msg => {
+    //             const body: any = (<any>msg).notification.body;
+    //             this.utils.presentToast(body);
+    //         }));
+    // }
 
     private initializeApp() {
         this.platform.ready().then(() => {
@@ -64,5 +80,19 @@ export class AppComponent implements OnInit {
         const currentRoute = fullPath.substring(1);
         const canDisplay = !(this.hideOnRoute.indexOf(currentRoute) > -1);
         return canDisplay;
+    }
+
+    private setupNotifications() {
+        this.firebaseUtilsService.getCurrentUser()
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe(user => {
+                this.messagingService.requestPermission(user.id)
+                this.messagingService.receiveMessage();
+
+                this.messagingService.currentMessage
+                    .subscribe(msg => {
+                        console.log(msg);
+                    });
+            }, err => console.error(err));
     }
 }

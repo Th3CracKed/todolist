@@ -6,10 +6,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { firebaseConfig } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { CoreModule } from './core.module';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +22,8 @@ import { CoreModule } from './core.module';
     AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
-    AngularFirestoreModule,
+    AngularFireMessagingModule,
+    AngularFireDatabaseModule,
     AngularFireAuthModule,
     CoreModule
   ],
