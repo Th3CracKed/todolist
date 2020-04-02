@@ -1,4 +1,7 @@
-# todolist
+# Todolist
+![Build apk](https://github.com/Th3CracKed/todolist/workflows/Build%20apk/badge.svg)
+![Build](https://github.com/Th3CracKed/todolist/workflows/Build/badge.svg)
+
 - Run App on debug mode web
 ionic serve
 
