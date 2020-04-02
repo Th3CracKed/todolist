@@ -20,7 +20,7 @@
                             <div class="ion-text-uppercase">
                                 <ion-avatar class="image-center">
                                     <img class="ion-margin-vertical"
-                                        [src]="currentUser?.picture ? domSanitizer.bypassSecurityTrustResourceUrl(currentUser?.picture) : 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y'" />
+                                         [src]="currentUser?.picture ? domSanitizer.bypassSecurityTrustResourceUrl(currentUser?.picture) : 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y'"/>
                                 </ion-avatar>
                             </div>
                         </ion-col>
@@ -44,9 +44,10 @@
                     <ion-row>
                         <ion-col class="ion-float-end">
                             <ion-button class="ion-float-right" fill="outline" color="secondary" type="submit"
-                                [disabled]="!profilForm.valid || !currentUser">Edit profil</ion-button>
+                                        [disabled]="!profilForm.valid || !currentUser">Edit profil
+                            </ion-button>
                             <ion-button type="button" class="ion-float-right" fill="outline"
-                                color="secondary" (click)="presentActionSheet()">Edit picture
+                                        color="secondary" (click)="presentActionSheet()">Edit picture
                             </ion-button>
                         </ion-col>
                     </ion-row>
@@ -56,5 +57,5 @@
         </ion-card-content>
     </ion-card>
 
-
+    <input type="file" id="loadProfilePicture" (change)="handleFileInput($event)" style="display:none">
 </ion-content>
