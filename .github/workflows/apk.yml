@@ -20,8 +20,6 @@ jobs:
       - name: Build
         run: |
           npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI | exit 0
-          ionic info
-          ionic cordova platform add android@latest --verbose
           ionic cordova build android --verbose
       - name: Upload APK
         uses: actions/upload-artifact@v1
