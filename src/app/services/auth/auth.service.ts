@@ -107,7 +107,7 @@ export class AuthService {
 
         // If missing email, prompt user for it
         if (!email) {
-          email = window.prompt('Please provide your email for confirmation'); // TODO improve this with ionic modal
+          email = window.prompt('Please provide your email for confirmation');
           window.localStorage.setItem('emailForSignIn', email);
         }
 
