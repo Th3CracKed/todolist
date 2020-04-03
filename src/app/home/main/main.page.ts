@@ -67,7 +67,7 @@ export class MainPage implements OnInit, OnDestroy {
                     role: 'destructive',
                     icon: 'trash',
                     handler: () => {
-                        this.presentAlertConfirm(list.id);
+                        this.showAlertNow(list);
                     }
                 },
                 {
@@ -203,23 +203,10 @@ export class MainPage implements OnInit, OnDestroy {
         }).catch(err => this.utilsService.presentErrorToast(err));
     }
 
-    private async presentAlertConfirm(listId: string) {
-        let currentTODO: TodoList;
-        this.todoListService.getOne(listId).pipe(
-            takeUntil(this.onDestroy$),
-        ).subscribe(
-            todoList => {
-                currentTODO = todoList;
-                this.showAlertNow(currentTODO, listId);
-            },
-            err => this.utilsService.presentErrorToast(err)
-        );
-    }
-
-    private async showAlertNow(currentTODO: TodoList, listId: string) {
+    private async showAlertNow(todoList: TodoList) {
         const alert = await this.alertController.create({
             header: 'Confirmation!',
-            message: 'Delete note <strong>' + currentTODO.title + '</strong> ?',
+            message: 'Delete note <strong>' + todoList.title + '</strong> ?',
             buttons: [
                 {
                     text: 'Cancel',
@@ -231,7 +218,7 @@ export class MainPage implements OnInit, OnDestroy {
                 }, {
                     text: 'Delete',
                     handler: () => {
-                        this.delete(listId);
+                        this.delete(todoList.id);
                     }
                 }
             ]
