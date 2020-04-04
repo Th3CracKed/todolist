@@ -74,6 +74,7 @@ Features
   * Load picture from device gallery
   * Offline data access
   * Forms & errors handling
+  * Notifications (**Desktop only**)
 
 
 Installation
