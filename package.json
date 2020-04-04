@@ -29,6 +29,7 @@
     "@ionic-native/core": "^5.22.0",
     "@ionic-native/facebook": "^5.22.0",
     "@ionic-native/fingerprint-aio": "^5.22.0",
+    "@ionic-native/firebase": "^5.23.0",
     "@ionic-native/firebase-dynamic-links": "^5.22.0",
     "@ionic-native/google-plus": "^5.22.0-beta-1",
     "@ionic-native/image-picker": "^5.22.0",
@@ -43,6 +44,7 @@
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-facebook4": "^6.4.0",
     "cordova-plugin-fingerprint-aio": "^3.0.1",
+    "cordova-plugin-firebase": "^2.0.5",
     "cordova-plugin-firebase-dynamiclinks": "^4.0.3",
     "cordova-plugin-googleplus": "^8.4.0",
     "cordova-plugin-telerik-imagepicker": "git+https://github.com/Telerik-Verified-Plugins/ImagePicker.git",
@@ -128,7 +130,8 @@
         "FACEBOOK_HYBRID_APP_EVENTS": "false",
         "FACEBOOK_ANDROID_SDK_VERSION": "5.13.0"
       },
-      "cordova-plugin-fingerprint-aio": {}
+      "cordova-plugin-fingerprint-aio": {},
+      "cordova-plugin-firebase": {}
     },
     "platforms": [
       "android"

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
-import { TodoList } from '../../models';
+import { TodoList, User } from '../../models';
 import { Observable, Subject } from 'rxjs';
 import { UtilsService } from 'src/app/services/utils/utils';
 import { takeUntil } from 'rxjs/operators';
@@ -39,8 +39,8 @@ export class MainPage implements OnInit, OnDestroy {
             .subscribe(user => {
                 this.currentUserId = user.id;
                 this.getAllUsers();
+                this.setupNotification(user);
             }, err => console.error(err));
-        this.setupNotifications();
     }
 
     private getAllUsers() {
@@ -235,12 +235,8 @@ export class MainPage implements OnInit, OnDestroy {
             .catch(err => this.utilsService.presentErrorToast(err));
     }
 
-    private setupNotifications() {
-        this.firebaseUtilsService.getCurrentUser()
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(user => {
-                this.messagingService.requestPermission(user.id)
-                this.messagingService.receiveMessage();
-            }, err => console.error(err));
+    private setupNotification(user: User) {
+        this.messagingService.requestPermission(user.id)
+        this.messagingService.receiveMessage();
     }
 }
