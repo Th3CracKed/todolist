@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Platform, NavController, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -8,6 +8,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { FirebaseUtilsService } from './services';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { MessagingService } from './services/messaging/messaging.service';
+import { UtilsService } from './services/utils/utils';
+import * as R from 'ramda';
 
 @Component({
     selector: 'app-root',
@@ -26,10 +29,13 @@ export class AppComponent implements OnInit {
         private router: Router,
         private navCtrl: NavController,
         private firebaseUtilsService: FirebaseUtilsService,
-        private menuCtrl: MenuController
+        private menuCtrl: MenuController,
+        private utils: UtilsService,
+        private messagingService: MessagingService
     ) {
         this.initializeApp();
         this.conditionallyHideSideMenu();
+        this.showNotifications();
     }
 
     ngOnInit() {
@@ -64,5 +70,17 @@ export class AppComponent implements OnInit {
         const currentRoute = fullPath.substring(1);
         const canDisplay = !(this.hideOnRoute.indexOf(currentRoute) > -1);
         return canDisplay;
+    }
+
+    private showNotifications() {
+        this.messagingService.currentMessage
+            .pipe(takeUntil(this.onDestroy$))
+            .subscribe(msg => {
+                console.log(msg);
+                if (msg) {
+                    const body: any = R.path(['notification', 'body'], msg);
+                    this.utils.presentToast(body);
+                }
+            });
     }
 }
