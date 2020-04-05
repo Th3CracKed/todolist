@@ -67,10 +67,11 @@
 
                 <ion-item>
                     <ion-label>Theme</ion-label>
-                    <ion-select value="default" okText="Select" cancelText="Cancel">
-                        <ion-select-option value="white">White</ion-select-option>
-                        <ion-select-option value="green">Green</ion-select-option>
-                        <ion-select-option value="default">Holo squares</ion-select-option>
+                    <ion-select value="default" okText="Select" cancelText="Cancel" [(ngModel)]="selectedTheme"
+                                (ngModelChange)="changeTheme()">
+                        <ion-select-option value="white">Static White</ion-select-option>
+                        <ion-select-option value="green">Static Green</ion-select-option>
+                        <ion-select-option selected="default" value="default">Holo squares</ion-select-option>
                         <ion-select-option value="circles">Circles</ion-select-option>
                         <ion-select-option value="filled-squares">Filled squares</ion-select-option>
                     </ion-select>

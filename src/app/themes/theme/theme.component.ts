@@ -1,4 +1,7 @@
 import {Component, OnInit} from '@angular/core';
+import {takeUntil} from 'rxjs/operators';
+import {ThemeServiceService} from '../theme-service.service';
+import {Subject} from 'rxjs';
 
 @Component({
     selector: 'app-theme',
@@ -6,12 +9,22 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./theme.component.scss'],
 })
 export class ThemeComponent implements OnInit {
+    private theme: string;
+    private onDestroy$ = new Subject<void>();
 
-    constructor() {
+    constructor(private themeService: ThemeServiceService) {
     }
 
     ngOnInit() {
-        console.log('init background theme');
+        const themeName = window.localStorage.getItem('themeName');
+        if (themeName) {
+            this.theme = themeName;
+        }
+        this.themeService.currentTheme
+            .pipe(takeUntil(this.onDestroy$)).subscribe((theme) => this.set(theme));
     }
 
+    private set(theme: string) {
+        return this.theme = theme;
+    }
 }
