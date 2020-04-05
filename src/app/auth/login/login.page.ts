@@ -84,6 +84,7 @@ export class LoginPage implements OnInit, OnDestroy {
             window.localStorage.setItem('first_login', 'set');
             this.createUserIfNew(credentials, Provider.Google);
         } catch (err) {
+            this.isLoading = false;
             let errorMSG = '';
             switch (err) {
                 case this.NETWORK_ERROR:
@@ -103,6 +104,7 @@ export class LoginPage implements OnInit, OnDestroy {
             window.localStorage.setItem('first_login', 'set');
             this.createUserIfNew(credentials, Provider.Facebook);
         } catch (err) {
+            this.isLoading = false;
             this.utilsService.presentToast(err);
         }
     }
