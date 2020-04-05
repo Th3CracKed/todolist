@@ -12,7 +12,8 @@ import { ImageResizer } from '@ionic-native/image-resizer/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
-import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
+import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx'
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 
 @NgModule({
   providers: [
@@ -26,6 +27,7 @@ import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
     GooglePlus,
     FirebaseDynamicLinks,
     FingerprintAIO,
+    FirebaseX,
     Facebook,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ]

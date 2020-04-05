@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireMessaging } from '@angular/fire/messaging';
-import { take } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs'
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Platform } from '@ionic/angular';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,8 @@ export class MessagingService {
 
   constructor(
     private db: AngularFirestore,
-    private angularFireAuth: AngularFireAuth,
+    private platform: Platform,
+    private firebaseNative: FirebaseX,
     private angularFireMessaging: AngularFireMessaging) {
     this.angularFireMessaging.messaging.subscribe(
       (_messaging) => {
@@ -25,36 +26,44 @@ export class MessagingService {
   }
 
   /**
+   * request permission for notification from firebase cloud messaging
+   * 
+   * @param userId userId
+   */
+  async requestPermission(userId) {
+    if (this.platform.is('cordova')) {
+      const token = await this.firebaseNative.getToken();
+      this.updateToken(userId, token);
+    } else {
+      this.angularFireMessaging.requestToken.subscribe(
+        token => this.updateToken(userId, token),
+        err => console.error('Unable to get permission to notify.', err)
+      );
+    }
+  }
+
+  /**
    * update token in firebase database
    * 
    * @param userId userId as a key 
    * @param token token as a value
    */
-  updateToken(userId, token) {
-    // we can change this function to request our backend service
-    this.angularFireAuth.authState.pipe(take(1))
-      .subscribe(() => this.db.collection<{ value: string }>('/fcmTokens').doc(userId).set({ value: token })
-        , err => console.log(err))
-  }
-
-  /**
-   * request permission for notification from firebase cloud messaging
-   * 
-   * @param userId userId
-   */
-  requestPermission(userId) {
-    this.angularFireMessaging.requestToken.subscribe(
-      token => this.updateToken(userId, token),
-      err => console.error('Unable to get permission to notify.', err)
-    );
+  private updateToken(userId, token) {
+    return this.db.collection<{ value: string }>('/fcmTokens').doc(userId).set({ value: token });
   }
 
   /**
    * hook method when new notification received in foreground
    */
   receiveMessage() {
-    this.angularFireMessaging.messages
-      .subscribe(payload => this.currentMessage.next(payload)
-        , err => console.log(err))
+    if (this.platform.is('cordova')) {
+      this.firebaseNative.onMessageReceived()
+        .subscribe(payload => this.currentMessage.next(payload)
+          , err => console.log(err));
+    } else {
+      this.angularFireMessaging.messages
+        .subscribe(payload => this.currentMessage.next(payload)
+          , err => console.log(err));
+    }
   }
 }

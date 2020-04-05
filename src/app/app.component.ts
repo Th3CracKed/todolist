@@ -76,11 +76,10 @@ export class AppComponent implements OnInit {
         this.messagingService.currentMessage
             .pipe(takeUntil(this.onDestroy$))
             .subscribe(msg => {
-                console.log(msg);
                 if (msg) {
-                    const body: any = R.path(['notification', 'body'], msg);
-                    this.utils.presentToast(body);
+                    const body: string = this.platform.is('cordova') ? R.path(['body'], msg) : R.path(['notification', 'body'], msg);
+                    body ? this.utils.presentToast(body) : console.error('something go wrong, notification is empty');
                 }
-            });
+            }, err => console.error(err));
     }
 }
