@@ -6,7 +6,7 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class ThemeServiceService {
 
-    currentTheme = new BehaviorSubject('default');
+    currentTheme = new BehaviorSubject('background-default');
 
     constructor() {
     }
@@ -14,7 +14,9 @@ export class ThemeServiceService {
 
     changeTheme(SelectedThemeName: string) {
         // TODO change la valeur de localStorage avec setItem
-        window.localStorage.setItem('themeName', 'default');
-        this.currentTheme.next('background-' + SelectedThemeName);
+        window.localStorage.setItem('themeName', SelectedThemeName);
+        this.currentTheme.next(SelectedThemeName);
     }
+
+
 }
