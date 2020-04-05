@@ -13,6 +13,7 @@ import {ImagePicker, OutputType} from '@ionic-native/image-picker/ngx';
 import {Base64} from '@ionic-native/base64/ngx';
 import {ImageResizer} from '@ionic-native/image-resizer/ngx';
 import {DomSanitizer} from '@angular/platform-browser';
+import {ThemeServiceService} from '../../themes/theme-service.service';
 
 @Component({
     selector: 'app-profil',
@@ -29,6 +30,7 @@ export class ProfilPage implements OnInit, OnDestroy {
 
     currentUser: User;
     private onDestroy$ = new Subject<void>();
+    selectedTheme: string;
 
     constructor(private userService: UserService,
                 private imagePicker: ImagePicker,
@@ -40,7 +42,8 @@ export class ProfilPage implements OnInit, OnDestroy {
                 private firebaseUtilsService: FirebaseUtilsService,
                 private utilsService: UtilsService,
                 private platform: Platform,
-                public alertController: AlertController) {
+                public alertController: AlertController,
+                private themeService: ThemeServiceService) {
     }
 
     ngOnInit() {
@@ -209,5 +212,11 @@ export class ProfilPage implements OnInit, OnDestroy {
                 .then(_ => this.utilsService.presentToast('Profil Picture Updated Successfully'))
                 .catch(err => this.utilsService.presentErrorToast(`Profil Failed ${err}`));
         }
+    }
+
+    changeTheme() {
+        console.log(this.selectedTheme);
+        this.themeService.changeTheme(this.selectedTheme);
+
     }
 }

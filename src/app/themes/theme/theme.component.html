@@ -1,8 +1,8 @@
-<div class="background-white"></div>
-<div class="background-green"></div>
+<div class="background-white" *ngIf="theme==='background-white'"></div>
+<div class="background-green" *ngIf="theme==='background-green'"></div>
 
 
-<ul class="background-default">
+<ul class="background-default" *ngIf="theme==='background-default'">
   <li></li>
   <li></li>
   <li></li>
@@ -13,7 +13,7 @@
 
 
 
-<div class="background-circles">
+<div class="background-circles" *ngIf="theme==='background-circles'">
   <span></span>
   <span></span>
   <span></span>
@@ -37,7 +37,7 @@
 </div>
 
 
-<ul class="background-filled-squares">
+<ul class="background-filled-squares" *ngIf="theme==='background-filled-squares'">
   <li></li>
   <li></li>
   <li></li>
