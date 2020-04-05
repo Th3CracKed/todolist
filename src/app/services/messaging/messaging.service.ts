@@ -3,7 +3,7 @@ import { AngularFireMessaging } from '@angular/fire/messaging';
 import { BehaviorSubject } from 'rxjs'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Platform } from '@ionic/angular';
-import { Firebase } from '@ionic-native/firebase/ngx';
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class MessagingService {
   constructor(
     private db: AngularFirestore,
     private platform: Platform,
-    private firebaseNative: Firebase,
+    private firebaseNative: FirebaseX,
     private angularFireMessaging: AngularFireMessaging) {
     this.angularFireMessaging.messaging.subscribe(
       (_messaging) => {
@@ -57,7 +57,7 @@ export class MessagingService {
    */
   receiveMessage() {
     if (this.platform.is('cordova')) {
-      this.firebaseNative.onNotificationOpen()
+      this.firebaseNative.onMessageReceived()
         .subscribe(payload => this.currentMessage.next(payload)
           , err => console.log(err));
     } else {
