@@ -9,9 +9,8 @@
 
 <ion-content>
 
-
-    <ion-card>
-
+    <app-theme></app-theme>
+    <ion-card class="color-white">
         <ion-card-content>
             <form (ngSubmit)="updateProfil()" [formGroup]="profilForm">
                 <ion-grid>
@@ -57,5 +56,29 @@
         </ion-card-content>
     </ion-card>
 
+    <ion-card class="color-white">
+        <ion-card-content>
+            <ion-list>
+                <ion-list-header>
+                    <ion-label>
+                        Select app theme
+                    </ion-label>
+                </ion-list-header>
+
+                <ion-item>
+                    <ion-label>Theme</ion-label>
+                    <ion-select okText="Select" cancelText="Cancel" [(ngModel)]="selectedTheme"
+                                (ngModelChange)="changeTheme()">
+                        <ion-select-option value="white">Static White</ion-select-option>
+                        <ion-select-option value="green">Static Green</ion-select-option>
+                        <ion-select-option value="default">Holo squares</ion-select-option>
+                        <ion-select-option value="circles">Circles</ion-select-option>
+                        <ion-select-option value="filled-squares">Filled squares</ion-select-option>
+                    </ion-select>
+                </ion-item>
+
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
     <input type="file" id="loadProfilePicture" (change)="handleFileInput($event)" style="display:none">
 </ion-content>
