@@ -17,8 +17,6 @@ export class ThemeComponent implements OnInit {
 
     ngOnInit() {
         const themeName = window.localStorage.getItem('themeName');
-        console.log('=============================');
-        console.log(themeName);
         if (themeName) {
             this.themeService.changeTheme(themeName);
         }
