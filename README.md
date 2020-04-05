@@ -96,6 +96,8 @@ How to install the project on your local machine from the source code.
 For desktop:
 ```bash
     #TODO
+    git clone url
+    npm install -g ionic
     npm install
     ionic serve
 
@@ -104,8 +106,13 @@ For desktop:
 For android device:
 ```bash
     #TODO
-    cordova build
+    ionic build
+    ionic cap copy
+    ionic cap open android
     ...
+    
+    #debug mode
+    ionic cordova run android --device -l --debug
     android open
 ```
 
