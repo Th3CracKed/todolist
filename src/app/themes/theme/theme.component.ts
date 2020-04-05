@@ -17,8 +17,10 @@ export class ThemeComponent implements OnInit {
 
     ngOnInit() {
         const themeName = window.localStorage.getItem('themeName');
+        console.log('=============================');
+        console.log(themeName);
         if (themeName) {
-            this.theme = themeName;
+            this.themeService.changeTheme(themeName);
         }
         this.themeService.currentTheme
             .pipe(takeUntil(this.onDestroy$)).subscribe((theme) => this.set(theme));

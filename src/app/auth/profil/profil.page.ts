@@ -215,7 +215,6 @@ export class ProfilPage implements OnInit, OnDestroy {
     }
 
     changeTheme() {
-        console.log(this.selectedTheme);
         this.themeService.changeTheme(this.selectedTheme);
 
     }
