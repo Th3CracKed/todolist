@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Platform, NavController, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, NavigationCancel, NavigationError, NavigationStart } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FirebaseUtilsService } from './services';
 import { takeUntil } from 'rxjs/operators';
@@ -19,7 +19,7 @@ import * as R from 'ramda';
 })
 export class AppComponent implements OnInit, OnDestroy {
     hideOnRoute = ['login', 'register', 'help', 'reset-password'];
-
+    loading = false;
     private onDestroy$ = new Subject<void>();
     constructor(
         private afAuth: AngularFireAuth,
@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.initializeApp();
         this.conditionallyHideSideMenu();
         this.showNotifications();
+        this.loadingAnimation();
     }
 
     ngOnInit() {
@@ -87,4 +88,26 @@ export class AppComponent implements OnInit, OnDestroy {
                 }
             }, err => console.error(err));
     }
+
+    private loadingAnimation() {
+        this.router.events.subscribe(event => {
+            switch (true) {
+                case event instanceof NavigationStart: {
+                    this.loading = true;
+                    break;
+                }
+
+                case event instanceof NavigationEnd:
+                case event instanceof NavigationCancel:
+                case event instanceof NavigationError: {
+                    this.loading = false;
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        });
+    }
+
 }
