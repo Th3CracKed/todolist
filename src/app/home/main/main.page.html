@@ -1,5 +1,6 @@
 <ion-content>
     <div class="ion-page" main id="side-bar">
+
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -9,9 +10,8 @@
             </ion-toolbar>
         </ion-header>
         <ion-content class="ion-padding">
-
+            <app-theme></app-theme>
             <ion-searchbar (ionChange)="onSearchChange($event)" placeholder="Search for a task"></ion-searchbar>
-
             <div *ngFor="let list of filtredTodoLists || todoLists">
                 <ion-card class="ion-activatable">
                     <ion-item (click)="openList(list?.id)" [attr.color]="list.color">
