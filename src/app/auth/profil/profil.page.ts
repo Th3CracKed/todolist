@@ -30,7 +30,7 @@ export class ProfilPage implements OnInit, OnDestroy {
 
     currentUser: User;
     private onDestroy$ = new Subject<void>();
-    selectedTheme: string;
+    selectedTheme = 'default';
 
     constructor(private userService: UserService,
                 private imagePicker: ImagePicker,
@@ -47,6 +47,8 @@ export class ProfilPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.themeService.currentTheme
+            .pipe(takeUntil(this.onDestroy$)).subscribe((theme) => this.selectedTheme = theme);
         this.firebaseUtilsService.getCurrentUser()
             .pipe(takeUntil(this.onDestroy$))
             .subscribe(currentUser => {

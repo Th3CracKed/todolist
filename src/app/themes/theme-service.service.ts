@@ -18,5 +18,7 @@ export class ThemeServiceService {
         this.currentTheme.next(SelectedThemeName);
     }
 
-
+    getCurrentTheme() {
+        return this.currentTheme;
+    }
 }
