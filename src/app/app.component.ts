@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Platform, NavController, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -17,7 +17,7 @@ import * as R from 'ramda';
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
     hideOnRoute = ['login', 'register', 'help', 'reset-password'];
 
     private onDestroy$ = new Subject<void>();
@@ -46,6 +46,11 @@ export class AppComponent implements OnInit {
         this.afAuth.auth.signOut();
         this.firebaseUtilsService.unSetCurrentUser();
         this.navCtrl.navigateRoot(['login']);
+    }
+    
+    ngOnDestroy(): void {
+        this.onDestroy$.next();
+        this.onDestroy$.complete();
     }
 
     private initializeApp() {
