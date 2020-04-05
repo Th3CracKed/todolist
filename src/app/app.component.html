@@ -25,6 +25,6 @@
             </ion-list>
         </ion-content>
     </ion-menu>
-
+    <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
     <ion-router-outlet id="side-bar" main></ion-router-outlet>
 </ion-app>

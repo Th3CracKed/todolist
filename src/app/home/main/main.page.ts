@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
+import { Router, ActivatedRoute } from '@angular/router';
+import { TodosListService, FirebaseUtilsService, MessagingService } from '../../services';
 import { TodoList, User } from '../../models';
 import { Observable, Subject } from 'rxjs';
 import { UtilsService } from 'src/app/services/utils/utils';
 import { takeUntil } from 'rxjs/operators';
-import { MessagingService } from 'src/app/services/messaging/messaging.service';
 
 @Component({
     selector: 'app-main',
@@ -26,11 +25,11 @@ export class MainPage implements OnInit, OnDestroy {
         private alertController: AlertController,
         private router: Router,
         private listService: TodosListService,
-        private sharedListService: SharedListService,
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
+        private messagingService: MessagingService, 
         private todoListService: TodosListService,
-        private messagingService: MessagingService) {
+        private route: ActivatedRoute) {
     }
 
     ngOnInit() {
@@ -38,17 +37,12 @@ export class MainPage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.onDestroy$))
             .subscribe(user => {
                 this.currentUserId = user.id;
-                this.getAllUsers();
                 this.setupNotification(user);
             }, err => console.error(err));
+            
+        this.todoLists = this.route.snapshot.data.todoLists;
     }
 
-    private getAllUsers() {
-        this.sharedListService.getAllUserList()
-            .pipe(takeUntil(this.onDestroy$))
-            .subscribe(todoLists => this.todoLists = todoLists
-                , err => console.error(err));
-    }
 
     ngOnDestroy() {
         this.onDestroy$.next();
