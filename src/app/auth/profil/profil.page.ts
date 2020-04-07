@@ -14,6 +14,7 @@ import {Base64} from '@ionic-native/base64/ngx';
 import {ImageResizer} from '@ionic-native/image-resizer/ngx';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ThemeServiceService} from '../../themes/theme-service.service';
+import { Vibration } from '@ionic-native/vibration/ngx';
 
 @Component({
     selector: 'app-profil',
@@ -43,7 +44,8 @@ export class ProfilPage implements OnInit, OnDestroy {
                 private utilsService: UtilsService,
                 private platform: Platform,
                 public alertController: AlertController,
-                private themeService: ThemeServiceService) {
+                private themeService: ThemeServiceService,
+                private vibration: Vibration) {
     }
 
     ngOnInit() {
@@ -74,7 +76,10 @@ export class ProfilPage implements OnInit, OnDestroy {
                 userName: this.profilForm.get('userName').value || undefined
             };
             this.userService.update(this.currentUser.id, user)
-                .then(_ => this.utilsService.presentToast('Profil Updated Successfully'))
+                .then(_ => {
+                  this.vibration.vibrate(1000);
+                  this.utilsService.presentToast('Profil Updated Successfully'); 
+                })
                 .catch(err => this.utilsService.presentErrorToast(`Profil Failed ${err}`));
         }
     }

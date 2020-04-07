@@ -14,6 +14,7 @@ import { FirebaseDynamicLinks } from '@ionic-native/firebase-dynamic-links/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { Vibration } from '@ionic-native/vibration/ngx';
 
 @NgModule({
   providers: [
@@ -29,6 +30,7 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
     FingerprintAIO,
     FirebaseX,
     Facebook,
+    Vibration,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ]
 })
