@@ -16,6 +16,7 @@ import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx'
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { Vibration } from '@ionic-native/vibration/ngx';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 @NgModule({
   providers: [
@@ -33,6 +34,7 @@ import { NativeStorage } from '@ionic-native/native-storage/ngx';
     Facebook,
     Vibration,
     NativeStorage,
+    TextToSpeech,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ]
 })

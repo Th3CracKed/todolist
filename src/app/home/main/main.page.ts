@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { TodosListService, SharedListService, FirebaseUtilsService } from '../../services';
+import { TodosListService, SharedListService, FirebaseUtilsService, TasksService } from '../../services';
 import { TodoList, User } from '../../models';
 import { Observable, Subject } from 'rxjs';
 import { UtilsService } from 'src/app/services/utils/utils';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap, take, switchMap, catchError } from 'rxjs/operators';
 import { MessagingService } from 'src/app/services/messaging/messaging.service';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 
 @Component({
     selector: 'app-main',
@@ -30,7 +31,10 @@ export class MainPage implements OnInit, OnDestroy {
         private utilsService: UtilsService,
         private firebaseUtilsService: FirebaseUtilsService,
         private todoListService: TodosListService,
-        private messagingService: MessagingService) {
+        private messagingService: MessagingService,
+        private textToSpeech: TextToSpeech,
+        private tasksService: TasksService,
+        private platform: Platform, ) {
     }
 
     ngOnInit() {
@@ -62,9 +66,17 @@ export class MainPage implements OnInit, OnDestroy {
 
     // When user click on settings
     async presentActionSheet(list: TodoList) {
+        const textToSpeechOption = this.platform.is('cordova') ? [{
+            text: 'Read task',
+            icon: 'volume-high',
+            handler: () => {
+                this.readListTasks(list.id);
+            }
+        }] : [];
         const actionSheet = await this.actionSheetController.create({
             header: 'Actions',
             buttons: [
+                ...textToSpeechOption,
                 {
                     text: 'Delete',
                     role: 'destructive',
@@ -189,6 +201,22 @@ export class MainPage implements OnInit, OnDestroy {
         await alert.present();
     }
 
+    private readListTasks(ListId: string) {
+        this.tasksService.getAll(ListId, true)
+            .pipe(
+                takeUntil(this.onDestroy$),
+                take(1))
+            .subscribe(tasks => {
+                const funcs: (() => Promise<string>)[] = [];
+                tasks.forEach(task => {
+                    funcs.push(() => new Promise((resolve) => {
+                        resolve(this.textToSpeech.speak(task.name));
+                    }));
+                });
+                this.utilsService.chainAllTasksInSeries(funcs);
+                return tasks;
+            }, err => console.log(err));
+    }
 
     private pinList(currentList: TodoList, colorValue: string) {
 
