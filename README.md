@@ -105,10 +105,8 @@ For desktop:
 
 For android device:
 ```bash
-    #TODO
     ionic build
-    ionic cap copy
-    ionic cap open android
+    ionic cordova build android
     ...
     
     #debug mode
