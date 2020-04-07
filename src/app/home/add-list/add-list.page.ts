@@ -1,11 +1,11 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked, ViewChildren, AfterViewInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {TodosListService} from '../../services';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {UtilsService} from 'src/app/services/utils/utils';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {NavController} from '@ionic/angular';
+import {IonInput, NavController} from '@ionic/angular';
 
 
 @Component({
@@ -13,7 +13,9 @@ import {NavController} from '@ionic/angular';
     templateUrl: './add-list.page.html',
     styleUrls: ['./add-list.page.scss'],
 })
-export class AddlistPage implements OnInit, OnDestroy {
+export class AddlistPage implements OnInit, OnDestroy, AfterViewInit {
+
+    @ViewChild('newinput', {static: true}) inputElement: IonInput;
 
     addListForm = new FormGroup({
         title: new FormControl('', [Validators.required, Validators.minLength(1)])
@@ -29,6 +31,11 @@ export class AddlistPage implements OnInit, OnDestroy {
     ngOnInit() {
     }
 
+    ngAfterViewInit() {
+        setTimeout(() => {
+            this.inputElement.setFocus();
+        }, 200);
+    }
 
     ngOnDestroy() {
         this.onDestroy$.next();
