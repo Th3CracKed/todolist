@@ -83,7 +83,7 @@ export class ListSharingPage implements OnInit, OnDestroy {
                     //         this.authService.sendEmailLink(email);
                     //     })
                     //     .catch(err => this.utilsService.presentErrorToast(err));
-                    this.utilsService.presentToast('This user is inavailable');
+                    this.utilsService.presentToast('This user is unavailable');
                 }
             }, err => this.utilsService.presentErrorToast(err));
     }
