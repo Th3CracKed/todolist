@@ -73,12 +73,12 @@ export class TasksPage implements OnInit, OnDestroy {
     }
 
     addTask() {
-        if (this.newTaskName.length === 0 || this.newTaskName === undefined || !this.newTaskName.replace(/\s/g, '').length) {
+        const inputTask = this.newTaskName;
+        this.newTaskName = '';
+        if (inputTask.length === 0 || inputTask === undefined || !inputTask.replace(/\s/g, '').length) {
             this.presentAlert('Empty field', 'Sorry you can\'t create empty tasks');
         } else {
-            this.tasksService.add({name: this.newTaskName, listId: this.id})
-                .then(() => this.newTaskName = '')
-                .catch(() => this.newTaskName = '');
+            this.tasksService.add({name: inputTask, listId: this.id});
         }
     }
 
