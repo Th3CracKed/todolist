@@ -67,7 +67,7 @@ export class MainPage implements OnInit, OnDestroy {
     // When user click on settings
     async presentActionSheet(list: TodoList) {
         const textToSpeechOption = this.platform.is('cordova') ? [{
-            text: 'Read task',
+            text: 'Read tasks',
             icon: 'volume-high',
             handler: () => {
                 this.readListTasks(list.id);
@@ -207,14 +207,12 @@ export class MainPage implements OnInit, OnDestroy {
                 takeUntil(this.onDestroy$),
                 take(1))
             .subscribe(tasks => {
-                const funcs: (() => Promise<string>)[] = [];
-                tasks.forEach(task => {
-                    funcs.push(() => new Promise((resolve) => {
+                const funcs: (() => Promise<string>)[] = tasks.map(task => {
+                    return () => new Promise<string>((resolve) => {
                         resolve(this.textToSpeech.speak(task.name));
-                    }));
+                    });
                 });
                 this.utilsService.chainAllTasksInSeries(funcs);
-                return tasks;
             }, err => console.log(err));
     }
 
