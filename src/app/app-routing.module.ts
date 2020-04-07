@@ -4,8 +4,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AngularFireAuthGuard, redirectUnauthorizedTo, redirectLoggedInTo } from '@angular/fire/auth-guard';
 import { IsOwnerGuard } from './auth/guards/is-owner.guard';
 import { AuthFingerprintGuard } from './auth/guards/auth-fingerprint.guard';
-import { FirstLaunchGuard } from './auth/guards/first-launch.guard';
-import { ListResolver } from './resolvers';
+import {FirstLaunchGuard} from './auth/guards/first-launch.guard';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectAuthorizedToHome = () => redirectLoggedInTo(['']);
@@ -14,7 +13,7 @@ const routes: Routes = [
     {
         path: '',
         loadChildren: () => import('./home/main/main.module').then(m => m.MainPageModule),
-        canActivate: [AuthFingerprintGuard], resolve: { todoLists: ListResolver }
+        canActivate: [AuthFingerprintGuard]
     },
     {
         path: 'help',
