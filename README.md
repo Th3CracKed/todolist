@@ -95,7 +95,6 @@ How to install the project on your local machine from the source code.
 
 For desktop:
 ```bash
-    #TODO
     git clone url
     npm install -g ionic
     npm install
