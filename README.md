@@ -129,6 +129,11 @@ Running the tests
 Deployment
 ==========
 
+ * Build Web Application
+ * Build Apk
+ * Build & Deploy Web Application, on push to master
+ * GitHub Actions
+ * Deploy to Firebase Host
 
 Built With
 ==========
