@@ -69,7 +69,7 @@ Features
   * Edit todolist color
   * Filter todolists with search bar
   * Add new task in todolist
-  * Delete task
+  * Delete task (Swipe)
   * Check / uncheck task
   * Edit user account profil data
     - Edit app theme
@@ -77,7 +77,7 @@ Features
   * Load picture from device gallery
     - Resize image
     - Image to base64
-  * Offline data access
+  * Offline list and task creation
   * Forms & errors handling
   * Notifications
   * Vibrator
