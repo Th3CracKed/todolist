@@ -74,13 +74,16 @@ export class ListSharingPage implements OnInit, OnDestroy {
                 if (user) {
                     this.addUserToListCore(user.id, user.email);
                 } else {
-                    const randomPassword = Array(15).fill(null).map(() => Math.random().toString(12).substr(2)).join('');
-                    this.registerService.signupUser({ email: email }, randomPassword)
-                        .then((user) => {
-                            this.addUserToListCore(user.uid, user.email);
-                            this.authService.sendEmailLink(email);
-                        })
-                        .catch(err => this.utilsService.presentErrorToast(err));
+                    // remove this feature, causing user to login as a new one.
+                    // should be replaced with cloud function.
+                    // const randomPassword = Array(15).fill(null).map(() => Math.random().toString(12).substr(2)).join('');
+                    // this.registerService.signupUser({ email: email }, randomPassword)
+                    //     .then((user) => {
+                    //         this.addUserToListCore(user.uid, user.email);
+                    //         this.authService.sendEmailLink(email);
+                    //     })
+                    //     .catch(err => this.utilsService.presentErrorToast(err));
+                    this.utilsService.presentToast('This user is inavailable');
                 }
             }, err => this.utilsService.presentErrorToast(err));
     }
