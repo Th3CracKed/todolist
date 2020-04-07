@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { MessagingService } from './services/messaging/messaging.service';
 import { UtilsService } from './services/utils/utils';
 import * as R from 'ramda';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
 @Component({
     selector: 'app-root',
@@ -31,7 +32,8 @@ export class AppComponent implements OnInit, OnDestroy {
         private firebaseUtilsService: FirebaseUtilsService,
         private menuCtrl: MenuController,
         private utils: UtilsService,
-        private messagingService: MessagingService
+        private messagingService: MessagingService,
+        private nativeStorage: NativeStorage
     ) {
         this.initializeApp();
         this.conditionallyHideSideMenu();
@@ -40,7 +42,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        window.localStorage.removeItem('first_login');
     }
 
     logout() {
@@ -48,14 +49,21 @@ export class AppComponent implements OnInit, OnDestroy {
         this.firebaseUtilsService.unSetCurrentUser();
         this.navCtrl.navigateRoot(['login']);
     }
-    
+
     ngOnDestroy(): void {
         this.onDestroy$.next();
         this.onDestroy$.complete();
     }
 
     private initializeApp() {
-        this.platform.ready().then(() => {
+        this.platform.ready().then(async () => {
+            if (this.platform.is('cordova')) {
+                try {
+                    await this.nativeStorage.setItem('first_login', false);
+                } catch (error) {
+                    console.error('Error storing item', error);
+                }
+            }
             this.statusBar.styleDefault();
             this.splashScreen.hide();
         });
