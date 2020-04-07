@@ -40,7 +40,7 @@ Getting Started
 
 ## Installing prebuilt APK
 
-Find latest APK from `Build APK` folder.
+Find the latest APK in the `Build APK` folder.
 Copy paste APK file into your mobile device. Locate the .apk file. Install it following the steps.
 After the installation run the app from the app launcher.
 
