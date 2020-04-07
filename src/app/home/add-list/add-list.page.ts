@@ -29,7 +29,7 @@ export class AddlistPage implements OnInit, OnDestroy {
     ngOnInit() {
     }
 
-    
+
     ngOnDestroy() {
         this.onDestroy$.next();
         this.onDestroy$.complete();
@@ -43,8 +43,7 @@ export class AddlistPage implements OnInit, OnDestroy {
             .subscribe(list => {
                 this.addListForm.reset();
                 this.utils.presentToast('List Created Successfully', 1000);
-                this.navCtrl.pop();
-                this.router.navigate([`list/${list.id}`]);
+                this.navCtrl.navigateBack('').then(() => this.navCtrl.navigateForward([`list/${list.id}`]));
             }, err => this.utils.presentErrorToast(err));
     }
 
