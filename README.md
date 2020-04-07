@@ -57,6 +57,7 @@ Features
   * Google authentication
   * Facebook authentication
   * Register / Create new account
+    - Errors handling (User already exist)
   * Remember session (Remember me)
   * Passwordless authentication
   * Fingerprint quick login after app relaunch
