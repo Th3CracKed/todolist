@@ -106,6 +106,7 @@ For android device:
 ```bash
     ionic build
     ionic cordova build android
+    ionic cordova run android
     ...
     
     #debug mode
