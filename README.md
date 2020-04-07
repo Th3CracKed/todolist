@@ -57,9 +57,11 @@ Features
   * Google authentication
   * Facebook authentication
   * Register / Create new account
-    - Errors handling (User already exist)
+    - Errors handling (UserName/Email already exist)
+    - Password Confimation checking
   * Remember session (Remember me)
   * Passwordless authentication
+    - Require Dynamic link to redirect user to the app
   * Fingerprint quick login after app relaunch
   * Help pages on initial launch
   * Shared todo list by email
@@ -80,7 +82,10 @@ Features
     - Image to base64
   * Offline list and task creation
   * Forms & errors handling
-  * Notifications
+  * FCM Notifications, that work even if the app is not launched (powered with cloud functions)
+  * Batch delete for tasks when collection is deleted. (cloud functions)
+  * Some Security rules
+  * Ionic Native Storage for Various Implementation
   * Vibrator
 
 
