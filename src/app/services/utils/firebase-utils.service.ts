@@ -37,7 +37,7 @@ export class FirebaseUtilsService {
         this.currentUser = null;
     }
 
-    private fetchUser = (): Observable<User> => {
+    fetchUser = (): Observable<User> => {
         return this.afAuth.user.pipe(
             first(),
             flatMap(firebaseUser => {

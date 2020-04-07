@@ -49,7 +49,7 @@ export class ProfilPage implements OnInit, OnDestroy {
     ngOnInit() {
         this.themeService.currentTheme
             .pipe(takeUntil(this.onDestroy$)).subscribe((theme) => this.selectedTheme = theme);
-        this.firebaseUtilsService.getCurrentUser()
+        this.firebaseUtilsService.fetchUser()
             .pipe(takeUntil(this.onDestroy$))
             .subscribe(currentUser => {
                 this.profilForm.setValue({
