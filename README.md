@@ -58,6 +58,7 @@ Features
   * Facebook authentication
   * Register / Create new account
   * Remember session (Remember me)
+  * Passwordless authentication
   * Fingerprint quick login after app relaunch
   * Help pages on initial launch
   * Shared todo list by email
@@ -65,7 +66,7 @@ Features
   * Add new todolist
   * Delete todolist
   * Rename todolist
-  * Edit todolist color
+  * Edit todolist color / Select app theme
   * Filter todolists with search bar
   * Add new task in todolist
   * Delete task
@@ -73,9 +74,12 @@ Features
   * Edit user account profil data
   * Take picture with the camera for custom user profil picture (**Mobile only**)
   * Load picture from device gallery
+    - Resize image
+    - Image to base64
   * Offline data access
   * Forms & errors handling
-  * Notifications (**Desktop only**)
+  * Notifications
+  * Vibrator
 
 
 Installation
