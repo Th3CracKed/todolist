@@ -66,12 +66,13 @@ Features
   * Add new todolist
   * Delete todolist
   * Rename todolist
-  * Edit todolist color / Select app theme
+  * Edit todolist color
   * Filter todolists with search bar
   * Add new task in todolist
   * Delete task
   * Check / uncheck task
   * Edit user account profil data
+    - Edit app theme
   * Take picture with the camera for custom user profil picture (**Mobile only**)
   * Load picture from device gallery
     - Resize image
