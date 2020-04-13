@@ -3,7 +3,22 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  googleWebClientId: '201259008916-6t19tnn8a88kmeeage0vprvn4t6vbto8.apps.googleusercontent.com',
+  actionCodeSettings: {
+    // Your redirect URL
+    url: 'http://localhost:8100/login',
+    handleCodeInApp: true,
+    dynamicLinkDomain: 'todolistuga.page.link',
+    iOS: {
+      dynamicLinkDomain: 'todolistuga.page.link',
+      bundleId: 'uga.open.todolist'
+    },
+    android: {
+      dynamicLinkDomain: 'todolistuga.page.link',
+      packageName: 'uga.open.todolist'
+    }
+  }
 };
 
 export const firebaseConfig = {
@@ -12,9 +27,9 @@ export const firebaseConfig = {
   databaseURL: "DATABASE_URL",
   projectId: "PROJECT_ID",
   storageBucket: "STORAGE_BUCKET",
-  messagingSenderId: "MESSAGINGSENDERID",
+  messagingSenderId: "Messaging_Sender_ID",
   appId: "APP_ID",
-  measurementId: "measurementId"
+  measurementId: "Measurement_Id"
 };
 
 /*
