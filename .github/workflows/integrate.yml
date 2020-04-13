@@ -10,7 +10,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - name: Replace environments
-        run: python ./.github/workflows/replacer.py --envPath ../../src/environments --apiKey ${{ secrets.apiKey }} --authDomain ${{ secrets.authDomain }} --databaseURL ${{ secrets.databaseURL }} --projectId ${{ secrets.projectId }} --storageBucket ${{ secrets.storageBucket }} --messagingSenderId ${{ secrets.messagingSenderId }} --appId ${{ secrets.appId }} --measurementId ${{ secrets.measurementId }}
+        run: python ./.github/workflows/replacer.py --envPath ../../src/environments/ --apiKey ${{ secrets.apiKey }} --authDomain ${{ secrets.authDomain }} --databaseURL ${{ secrets.databaseURL }} --projectId ${{ secrets.projectId }} --storageBucket ${{ secrets.storageBucket }} --messagingSenderId ${{ secrets.messagingSenderId }} --appId ${{ secrets.appId }} --measurementId ${{ secrets.measurementId }}
       - name: Use coturiv/setup-ionic
         uses: coturiv/setup-ionic@v1
         with:
