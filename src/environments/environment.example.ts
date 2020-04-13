@@ -12,9 +12,9 @@ export const firebaseConfig = {
   databaseURL: "DATABASE_URL",
   projectId: "PROJECT_ID",
   storageBucket: "STORAGE_BUCKET",
-  messagingSenderId: "MESSAGINGSENDERID",
+  messagingSenderId: "Messaging_Sender_ID",
   appId: "APP_ID",
-  measurementId: "measurementId"
+  measurementId: "Measurement_Id"
 };
 
 /*

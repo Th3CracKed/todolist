@@ -11,6 +11,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Use coturiv/setup-ionic
+      - name: Replace environments
+        run: python ./.github/workflows/replacer.py --envPath ../../src/environments --apiKey ${{ secrets.apiKey }} --authDomain ${{ secrets.authDomain }} --databaseURL ${{ secrets.databaseURL }} --projectId ${{ secrets.projectId }} --storageBucket ${{ secrets.storageBucket }} --messagingSenderId ${{ secrets.messagingSenderId }} --appId ${{ secrets.appId }} --measurementId ${{ secrets.measurementId }}
         uses: coturiv/setup-ionic@v1
         with:
           cordova-version: 9
