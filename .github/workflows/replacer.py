@@ -31,6 +31,7 @@ try:
         line = line.replace('APP_ID', args.appId)
         line = line.replace('Measurement_Id', args.measurementId)
         envDev.write(line)
+        line = line.replace('production: false', 'production: true')
         envProd.write(line)
 except IOError as e:
   print 'Operation failed: %s' % e.strerror
